@@ -2,9 +2,9 @@ import logging
 import random
 import time
 
-from engines.engines_general_util import open_engines_tab
-from rail_utils.rail_utils import move_mouse_to_center, wait_rail_response, image_on_screen, find_image_and_click, \
-    click_on_rect_area
+from rail_utils.rail_utils import find_image_and_click, click_on_rect_area
+from rail_utils.tabs_enum import Tabs
+from rail_utils.tabs_util import open_tab
 
 PAX_ENGINE_HEADER = "data/tab_engine/enginename_hades.png"
 POPUP_TIMETABLE_BASE = "data/engine_schedule/popup_engine_timetable_calculator_base.png"
@@ -21,9 +21,7 @@ logging.basicConfig(level=logging.INFO)
 
 def set_schedule():
     try:
-        move_mouse_to_center()
-        wait_rail_response()
-        open_engines_tab()
+        open_tab(Tabs.ENGINES)
         find_image_and_click([PAX_ENGINE_HEADER],
                              on_screen_msg="Open pax engine",
                              on_fail_msg="Fail open pax engine")
@@ -45,8 +43,3 @@ def set_schedule():
     except Exception as exception:
         logging.error(str(exception))
         return
-
-
-def check_finish_load_engine_tab():
-    on_screen, _ = image_on_screen("data/tabs/tab_header_engine.png", precision=0.99)
-    return on_screen
