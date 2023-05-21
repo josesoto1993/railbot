@@ -79,6 +79,8 @@ def image_on_screen(img_str, precision=0.8):
 
 
 def get_screenshot(save=False, filename='screenshot.png'):
+    if '.' not in filename:
+        filename += '.png'
     screenshot = pyautogui.screenshot()
     if save:
         screenshot.save("data/" + filename)
