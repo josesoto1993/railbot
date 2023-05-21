@@ -64,9 +64,11 @@ def get_image_size(image_path):
         return width, height
 
 
-def image_on_screen(img_str, precision=0.8):
-    img = pyautogui.screenshot()
-    img_rgb = np.array(img)
+def image_on_screen(img_str, precision=0.8, screenshot=None):
+    if screenshot is None:
+        screenshot = pyautogui.screenshot()
+
+    img_rgb = np.array(screenshot)
     template = cv2.imread(img_str)
 
     res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
