@@ -20,7 +20,7 @@ class Tabs(Enum):
         "tab_name": "Licences",
         "prefix": "licence_",
         "on_load_image_path": "data/tabs_status/licence_on_load.png",
-        "precision_icon": 0.95,
+        "precision_icon": 0.70,
         "precision_header": 0.95
     }
 

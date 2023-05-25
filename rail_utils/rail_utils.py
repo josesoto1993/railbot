@@ -74,6 +74,8 @@ def image_on_screen(img_str, precision=0.8, screenshot=None):
     res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
     _, max_val, _, max_loc = cv2.minMaxLoc(res)
 
+    logging.debug(f"path: {img_str}, max_val: {max_val}")
+
     if max_val < precision:
         return False, None
     else:

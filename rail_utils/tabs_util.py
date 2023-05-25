@@ -65,7 +65,7 @@ def _find_tab_state(tab_enum):
     tabs_state = []
     screenshot = get_screenshot()
     for file_name in os.listdir(TAB_STATUS_DIR):
-        if file_name.startswith(tab_enum.prefix) and file_name.endswith(DEFAULT_IMG_SUFFIX):
+        if file_name.startswith(tab_enum.prefix) and (BASE_REGEX in file_name or SELECTED_REGEX in file_name):
             file_path = os.path.join(TAB_STATUS_DIR, file_name)
             is_on_screen, position = image_on_screen(file_path, precision=tab_enum.precision_icon,
                                                      screenshot=screenshot)
@@ -83,7 +83,7 @@ def _log_find_tab_state(file_name, is_on_screen, position):
     log_msg = f"Image: {file_name} | Is on screen? {is_on_screen}"
     if is_on_screen:
         log_msg += f" | Position: {position}"
-    logging.info(log_msg)
+    logging.debug(log_msg)
 
 
 def _check_if_tab_open(tab_enum):
