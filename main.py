@@ -19,7 +19,7 @@ def main_loop():
     while True:
         try:
             run_pax_schedule()
-            target_time = get_next_target_time()
+            target_time = get_next_target_time(start_minute=5)
             sleep_till_target_time(target_time)
         except Exception as exception:
             logging.error(str(exception))
@@ -29,10 +29,10 @@ def run_pax_schedule():
     pax_schedule_max_money.set_schedule()
 
 
-def get_next_target_time():
+def get_next_target_time(start_minute=5):
     current_datetime = datetime.datetime.now()
     target_hour = (current_datetime.hour + 1) % 24
-    target_minute = random.randint(35, 45)
+    target_minute = random.randint(start_minute, start_minute + 10)
     target_datetime = current_datetime.replace(hour=target_hour, minute=target_minute)
 
     if target_datetime < current_datetime:
