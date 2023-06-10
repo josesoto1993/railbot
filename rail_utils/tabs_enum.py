@@ -23,8 +23,8 @@ class Tabs(Enum):
     RANKINGS = {
         "tab_name": "Rankings",
         "prefix": "ranking_",
-        "precision_icon": 0.90,
-        "precision_header": 0.85
+        "precision_icon": 0.85,
+        "precision_header": 0.80
     }
 
     @property

@@ -5,6 +5,7 @@ import time
 import cv2
 import numpy as np
 import pyautogui
+import winsound
 from PIL import Image
 
 RETRIES_TO_LOAD = 5
@@ -88,11 +89,8 @@ def get_screenshot(save=False, filename='screenshot.png'):
     screenshot = pyautogui.screenshot()
     if save:
         screenshot.save("data/" + filename)
-        print(f"Screenshot captured and saved as {filename}.")
+        logging.debug(f"Screenshot captured and saved as {filename}.")
     return screenshot
-
-
-import winsound
 
 
 def beep():
