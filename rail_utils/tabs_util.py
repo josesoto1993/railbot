@@ -25,8 +25,7 @@ def open_tab(tab_enum):
     on_screen_tabs = [tab_state for tab_state in tabs_state if tab_state[1]]
 
     if not on_screen_tabs:
-        tab_name = tab_enum.tab_name
-        raise Exception(f"{tab_name} tab not found.")
+        raise Exception(f"{tab_enum.tab_name} tab not found.")
     else:
         _open_or_reopen_tab(on_screen_tabs=on_screen_tabs, tab_enum=tab_enum)
         _check_if_tab_open(tab_enum)
@@ -74,7 +73,7 @@ def _find_tab_state(tab_enum):
 
     on_screen_images = len([tab_state for tab_state in tabs_state if tab_state[1]])
     if on_screen_images > 1:
-        logging.warning(f"Found {on_screen_images} images, expected 1 or 0.")
+        logging.warning(f"Found {on_screen_images} images for tab {tab_enum.tab_name}, expected 1 or 0.")
 
     return tabs_state
 
@@ -89,7 +88,8 @@ def _log_find_tab_state(file_name, is_on_screen, position):
 def _check_if_tab_open(tab_enum):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
-        on_screen, _ = image_on_screen(tab_enum.on_load_image_path, precision=tab_enum.precision_header)
+        tab_on_load_path = "data/tabs_status/" + tab_enum.prefix + "on_load.png"
+        on_screen, _ = image_on_screen(tab_on_load_path, precision=tab_enum.precision_header)
         if on_screen:
             logging.info(f"Tab {tab_enum.tab_name} opened")
             return
