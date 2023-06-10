@@ -74,15 +74,18 @@ class PaxSchedule:
         self.sleep_lets_go = 30
 
     def set_schedule(self):
-        if self.should_run():
+        if self._should_run():
             try:
-                self.run_pax_engine_schedule()
-                self.update_next_run_time()
+                self._run_pax_engine_schedule()
+                self._update_next_run_time()
             except Exception as exception:
                 logging.error(str(exception))
                 return
 
-    def run_pax_engine_schedule(self):
+    def _should_run(self):
+        return datetime.datetime.now() >= self.next_run_time
+
+    def _run_pax_engine_schedule(self):
         logging.info(f"----- Run pax engine schedule: Start -----")
         open_tab(Tabs.ENGINES)
         select_pax_engine(self.sleep_select_pax_engine)
@@ -91,7 +94,7 @@ class PaxSchedule:
         select_all_engines(self.sleep_select_all)
         select_lets_go(self.sleep_lets_go)
 
-    def update_next_run_time(self):
+    def _update_next_run_time(self):
         current_datetime = datetime.datetime.now()
         target_hour = (current_datetime.hour + 1) % 24
         target_minute = random.randint(self.start_minute, self.start_minute + 10)
@@ -106,6 +109,3 @@ class PaxSchedule:
 
         self.next_run_time = target_datetime
         logging.info(f"----- Next run at {target_datetime.time()} -----")
-
-    def should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
