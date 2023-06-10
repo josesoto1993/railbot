@@ -152,4 +152,4 @@ cython_debug/
 #.idea/
 
 # worthless data
-./data/screenshot.png
+/data/screenshot.png
