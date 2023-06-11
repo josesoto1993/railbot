@@ -5,6 +5,7 @@ import time
 import cv2
 import numpy as np
 import pyautogui
+import winsound
 from PIL import Image
 
 RETRIES_TO_LOAD = 5
@@ -12,17 +13,23 @@ RETRIES_TO_LOAD = 5
 logging.basicConfig(level=logging.INFO)
 
 
-def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95):
+def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95, screenshot=None,
+                         gray_scale=True):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
         for filepath in filepaths:
-            on_screen, position = image_on_screen(filepath, precision=precision)
+            on_screen, position = image_on_screen(filepath, precision=precision, screenshot=screenshot,
+                                                  gray_scale=gray_scale)
             if on_screen:
                 if on_screen_msg:
                     logging.info(on_screen_msg)
                 click_on_rect_area(top_left_corner=position, filepath=filepath)
                 return
-    raise Exception(on_fail_msg)
+    raise ImageNotFoundException(on_fail_msg)
+
+
+def sleep_random(sleep_time):
+    time.sleep(random.uniform(sleep_time, sleep_time * 1.5))
 
 
 def wait_rail_response():
@@ -30,16 +37,18 @@ def wait_rail_response():
     time.sleep(sleep_duration)
 
 
-def move_mouse_to_center():
+def move_mouse_close_to_center():
     screen_width, screen_height = pyautogui.size()
     center_x = screen_width // 2
     center_y = screen_height // 2
-    pyautogui.moveTo(center_x, center_y)
+    almost_center_x = random.uniform(center_x - 100, center_x + 100)
+    almost_center_y = random.uniform(center_y - 100, center_y + 100)
+    pyautogui.moveTo(almost_center_x, almost_center_y)
 
 
 def click_on_rect_area(top_left_corner, size=None, filepath=None):
     if size is None and filepath is None:
-        raise Exception("Cannot use size and filepath as None at the same time")
+        raise ValueError("Cannot use size and filepath as None at the same time")
 
     x, y = top_left_corner
 
@@ -64,13 +73,23 @@ def get_image_size(image_path):
         return width, height
 
 
-def image_on_screen(img_str, precision=0.8):
-    img = pyautogui.screenshot()
-    img_rgb = np.array(img)
-    template = cv2.imread(img_str)
+def image_on_screen(img_str, precision=0.8, screenshot=None, gray_scale=True):
+    if screenshot is None:
+        screenshot = pyautogui.screenshot()
+
+    img_rgb = np.array(screenshot)
+
+    # Check if we need to convert image to grayscale
+    if gray_scale:
+        img_rgb = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+        template = cv2.imread(img_str, 0)
+    else:
+        template = cv2.imread(img_str)
 
     res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
     _, max_val, _, max_loc = cv2.minMaxLoc(res)
+
+    logging.debug(f"path: {img_str}, max_val: {max_val}")
 
     if max_val < precision:
         return False, None
@@ -79,17 +98,20 @@ def image_on_screen(img_str, precision=0.8):
 
 
 def get_screenshot(save=False, filename='screenshot.png'):
+    if '.' not in filename:
+        filename += '.png'
     screenshot = pyautogui.screenshot()
     if save:
         screenshot.save("data/" + filename)
-        print(f"Screenshot captured and saved as {filename}.")
+        logging.debug(f"Screenshot captured and saved as {filename}.")
     return screenshot
-
-
-import winsound
 
 
 def beep():
     frequency = 1000
     duration = 200
     winsound.Beep(frequency, duration)
+
+
+class ImageNotFoundException(Exception):
+    pass

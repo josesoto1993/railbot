@@ -1,54 +1,49 @@
-import datetime
 import logging
-import random
 import time
 
-from engines.pax_schedule import max_money as pax_schedule_max_money
+from engines.pax_schedule.max_money import PaxSchedule
+from invest.industry_invest.industry_invest import IndustryInvest
 from rail_utils.rail_utils import get_screenshot
 
+MAIN_LOOP_TIME = 60
+RUN_PAX_SCHEDULE_FLAG = True
+RUN_INDUSTRY_INVEST_FLAG = True
+
 logging.basicConfig(level=logging.INFO)
+# logging.root.setLevel(logging.DEBUG)
 
 
 def main():
     get_screenshot(save=True)
-    print("Program started.")
-    main_loop()
+
+    pax_schedule = PaxSchedule(start_minute=5)
+    industry_invest = IndustryInvest()
+    logging.info("Program started.")
+    main_loop(pax_schedule, industry_invest)
 
 
-def main_loop():
+def main_loop(pax_schedule: PaxSchedule, industry_invest: IndustryInvest):
     while True:
-        try:
-            run_pax_schedule()
-            target_time = get_next_target_time()
-            sleep_till_target_time(target_time)
-        except Exception as exception:
-            logging.error(str(exception))
+        if RUN_PAX_SCHEDULE_FLAG:
+            run_pax_schedule(pax_schedule)
+        if RUN_INDUSTRY_INVEST_FLAG:
+            run_industry_invest(industry_invest)
+
+        time.sleep(MAIN_LOOP_TIME)
 
 
-def run_pax_schedule():
-    pax_schedule_max_money.set_schedule()
+def run_pax_schedule(pax_schedule: PaxSchedule):
+    try:
+        pax_schedule.set_schedule()
+    except Exception as exception:
+        logging.error(str(exception))
 
 
-def get_next_target_time():
-    current_datetime = datetime.datetime.now()
-    target_hour = (current_datetime.hour + 1) % 24
-    target_minute = random.randint(35, 45)
-    target_datetime = current_datetime.replace(hour=target_hour, minute=target_minute)
-
-    if target_datetime < current_datetime:
-        target_datetime += datetime.timedelta(days=1)
-
-    print(f"Next run at {target_datetime.time()}")
-
-    return target_datetime
-
-
-def sleep_till_target_time(target_time):
-    remaining_time = target_time - datetime.datetime.now()
-    remaining_seconds = remaining_time.total_seconds()
-    print(f"Sleeping {remaining_seconds}'")
-    time.sleep(remaining_seconds)
-    print(f"----- Run Start -----")
+def run_industry_invest(industry_invest: IndustryInvest):
+    try:
+        industry_invest.invest()
+    except Exception as exception:
+        logging.error(str(exception))
 
 
 if __name__ == "__main__":
