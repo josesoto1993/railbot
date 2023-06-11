@@ -13,11 +13,13 @@ RETRIES_TO_LOAD = 5
 logging.basicConfig(level=logging.INFO)
 
 
-def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95, screenshot=None):
+def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95, screenshot=None,
+                         gray_scale=True):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
         for filepath in filepaths:
-            on_screen, position = image_on_screen(filepath, precision=precision, screenshot=screenshot)
+            on_screen, position = image_on_screen(filepath, precision=precision, screenshot=screenshot,
+                                                  gray_scale=gray_scale)
             if on_screen:
                 if on_screen_msg:
                     logging.info(on_screen_msg)
@@ -35,11 +37,13 @@ def wait_rail_response():
     time.sleep(sleep_duration)
 
 
-def move_mouse_to_center():
+def move_mouse_close_to_center():
     screen_width, screen_height = pyautogui.size()
     center_x = screen_width // 2
     center_y = screen_height // 2
-    pyautogui.moveTo(center_x, center_y)
+    almost_center_x = random.uniform(center_x - 100, center_x + 100)
+    almost_center_y = random.uniform(center_y - 100, center_y + 100)
+    pyautogui.moveTo(almost_center_x, almost_center_y)
 
 
 def click_on_rect_area(top_left_corner, size=None, filepath=None):
@@ -69,12 +73,18 @@ def get_image_size(image_path):
         return width, height
 
 
-def image_on_screen(img_str, precision=0.8, screenshot=None):
+def image_on_screen(img_str, precision=0.8, screenshot=None, gray_scale=True):
     if screenshot is None:
         screenshot = pyautogui.screenshot()
 
     img_rgb = np.array(screenshot)
-    template = cv2.imread(img_str)
+
+    # Check if we need to convert image to grayscale
+    if gray_scale:
+        img_rgb = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+        template = cv2.imread(img_str, 0)
+    else:
+        template = cv2.imread(img_str)
 
     res = cv2.matchTemplate(img_rgb, template, cv2.TM_CCOEFF_NORMED)
     _, max_val, _, max_loc = cv2.minMaxLoc(res)
