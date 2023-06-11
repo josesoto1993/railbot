@@ -6,8 +6,11 @@ from invest.industry_invest.industry_invest import IndustryInvest
 from rail_utils.rail_utils import get_screenshot
 
 MAIN_LOOP_TIME = 60
+RUN_PAX_SCHEDULE_FLAG = True
+RUN_INDUSTRY_INVEST_FLAG = True
 
 logging.basicConfig(level=logging.INFO)
+# logging.root.setLevel(logging.DEBUG)
 
 
 def main():
@@ -21,8 +24,10 @@ def main():
 
 def main_loop(pax_schedule: PaxSchedule, industry_invest: IndustryInvest):
     while True:
-        run_pax_schedule(pax_schedule)
-        run_industry_invest(industry_invest)
+        if RUN_PAX_SCHEDULE_FLAG:
+            run_pax_schedule(pax_schedule)
+        if RUN_INDUSTRY_INVEST_FLAG:
+            run_industry_invest(industry_invest)
 
         time.sleep(MAIN_LOOP_TIME)
 
