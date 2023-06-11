@@ -46,7 +46,7 @@ def show_last(sleep_time=10):
 
 
 def select_zero_investment(sleep_time=10):
-    on_screen, position = image_on_screen(RANKING_SUBSUBTAB_INVEST_ZERO)
+    on_screen, position = image_on_screen(RANKING_SUBSUBTAB_INVEST_ZERO, precision=0.95)
     if on_screen:
         find_image_and_click([RANKING_SUBSUBTAB_INVEST_ZERO],
                              on_screen_msg="Select zero investment",
