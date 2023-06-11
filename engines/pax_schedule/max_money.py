@@ -1,9 +1,8 @@
 import datetime
 import logging
 import random
-import time
 
-from rail_utils.rail_utils import find_image_and_click, click_on_rect_area
+from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, sleep_random
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -57,10 +56,6 @@ def select_lets_go(sleep_lets_go=30):
                          on_screen_msg="Select lets go",
                          on_fail_msg="Fail select lets go")
     sleep_random(sleep_lets_go)
-
-
-def sleep_random(sleep_time):
-    time.sleep(random.uniform(sleep_time, sleep_time * 1.5))
 
 
 class PaxSchedule:

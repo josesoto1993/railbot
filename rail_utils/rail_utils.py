@@ -13,17 +13,21 @@ RETRIES_TO_LOAD = 5
 logging.basicConfig(level=logging.INFO)
 
 
-def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95):
+def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95, screenshot=None):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
         for filepath in filepaths:
-            on_screen, position = image_on_screen(filepath, precision=precision)
+            on_screen, position = image_on_screen(filepath, precision=precision, screenshot=screenshot)
             if on_screen:
                 if on_screen_msg:
                     logging.info(on_screen_msg)
                 click_on_rect_area(top_left_corner=position, filepath=filepath)
                 return
-    raise Exception(on_fail_msg)
+    raise ImageNotFoundException(on_fail_msg)
+
+
+def sleep_random(sleep_time):
+    time.sleep(random.uniform(sleep_time, sleep_time * 1.5))
 
 
 def wait_rail_response():
@@ -40,7 +44,7 @@ def move_mouse_to_center():
 
 def click_on_rect_area(top_left_corner, size=None, filepath=None):
     if size is None and filepath is None:
-        raise Exception("Cannot use size and filepath as None at the same time")
+        raise ValueError("Cannot use size and filepath as None at the same time")
 
     x, y = top_left_corner
 
@@ -97,3 +101,7 @@ def beep():
     frequency = 1000
     duration = 200
     winsound.Beep(frequency, duration)
+
+
+class ImageNotFoundException(Exception):
+    pass
