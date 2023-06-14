@@ -9,7 +9,7 @@ from rail_utils.rail_utils import get_screenshot
 MAIN_LOOP_TIME = 60
 RUN_PAX_SCHEDULE_FLAG = True
 RUN_INDUSTRY_INVEST_FLAG = True
-RUN_CITY_INVEST_FLAG = False
+RUN_CITY_INVEST_FLAG = True
 
 logging.basicConfig(level=logging.INFO)
 # logging.root.setLevel(logging.DEBUG)

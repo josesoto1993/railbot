@@ -4,7 +4,8 @@ import logging
 import pyautogui
 
 from rail_utils.rail_utils import sleep_random, find_image_and_click, move_mouse_close_to_center, image_on_screen, \
-    click_on_rect_area, close_all_pop_ups, get_screenshot, ImageNotFoundException, get_image_size
+    click_on_rect_area, close_all_pop_ups, get_screenshot, ImageNotFoundException, get_image_size, GENERAL_BTN_X_CLOSE, \
+    get_screenshot_with_black_out_of_box
 
 MAX_ZOOM_CLICKS = 10
 CITY_HEIGHT = 80
@@ -17,6 +18,10 @@ BTN_ZOOM_IN_DISABLED = "data/map/btn_zoom_in_disabled.png"
 CITY_SUBTAB_CITY_PROJECT = "data/city/city_subtab_city_project.png"
 CITY_LABEL_LEFT = "data/city/city_label_left.png"
 CITY_LABEL_RIGHT = "data/city/city_label_right.png"
+USER_LABEL = "data/city/user_donation_label.png"
+CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE = "data/city/city_subtab_city_project_contribute.png"
+CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_HEADER = "data/city/city_subtab_city_project_contribute_header.png"
+CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_SUBBTN = "data/city/city_subtab_city_project_contribute_subbtn.png"
 
 
 def get_city_label():
@@ -41,6 +46,21 @@ def get_city_label():
     return city_label
 
 
+def get_screenshot_contribute_pop_up():
+    screenshot = get_screenshot()
+    on_screen, position = image_on_screen(CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_HEADER, screenshot=screenshot)
+    if not on_screen:
+        raise ImageNotFoundException(
+            f"Failed to find header on screen: {CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_HEADER}")
+    top_left_corner = (0, position[1])
+    screenshot_width, screenshot_height = screenshot.size
+    size = (screenshot_width, screenshot_height - position[1])
+    screenshot_contribute_pop_up = get_screenshot_with_black_out_of_box(top_left_corner, size,
+                                                                        save=True,
+                                                                        filename="test_donate_if_needed.png")
+    return screenshot_contribute_pop_up
+
+
 class CityInvest:
     def __init__(self):
         self.next_run_time = datetime.datetime.now()
@@ -48,7 +68,7 @@ class CityInvest:
         self.sleep_zoom = 2
         self.sleep_select_city = 10
         self.sleep_select_subtab_city_project = 5
-        self.sleep_donate_if_needed = 5
+        self.sleep_donate = 5
         self.sleep_select_next_city = 5
 
     def run(self):
@@ -110,11 +130,20 @@ class CityInvest:
             on_screen, position = image_on_screen(start_city_label_filename)
 
     def _donate_if_needed(self):
-        logging.error("Implement donate_if_needed")
-        sleep_random(self.sleep_donate_if_needed)
+        have_contributions, position = image_on_screen(USER_LABEL)
+        if not have_contributions:
+            find_image_and_click([CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE], msg="city contribute")
+            find_image_and_click([CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_SUBBTN], msg="city contribute sub btn")
+            screenshot_contribute_pop_up = get_screenshot_contribute_pop_up()
+            find_image_and_click([GENERAL_BTN_X_CLOSE], screenshot=screenshot_contribute_pop_up,
+                                 msg="close city contribute pop-up")
+            sleep_random(self.sleep_donate)
+        else:
+            logging.info(f"No need donation")
+
 
     def _select_next_city(self):
-        find_image_and_click([CITY_LABEL_RIGHT], msg="select next city")
+        find_image_and_click([CITY_LABEL_RIGHT], msg="next city")
         sleep_random(self.sleep_select_next_city)
 
     def _update_next_run_time(self):

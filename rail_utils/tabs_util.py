@@ -2,7 +2,7 @@ import logging
 import os
 
 from rail_utils.rail_utils import image_on_screen, wait_rail_response, get_screenshot, click_on_rect_area, \
-    get_image_size, move_mouse_close_to_center
+    get_image_size, move_mouse_close_to_top_right
 from rail_utils.tabs_enum import Tabs
 
 BASE_REGEX = "_base"
@@ -32,7 +32,7 @@ def open_tab(tab_enum):
 
 
 def _prepare_screen():
-    move_mouse_close_to_center()
+    move_mouse_close_to_top_right()
     wait_rail_response()
 
 
