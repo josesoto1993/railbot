@@ -68,7 +68,7 @@ class PaxSchedule:
         self.sleep_select_all = 30
         self.sleep_lets_go = 30
 
-    def set_schedule(self):
+    def run(self):
         if self._should_run():
             try:
                 self._run_pax_engine_schedule()

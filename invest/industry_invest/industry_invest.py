@@ -92,7 +92,7 @@ class IndustryInvest:
         self.sleep_select_zero_investment = 5
         self.sleep_industry_invest = 5
 
-    def invest(self):
+    def run(self):
         if self._should_run():
             try:
                 invest_done = self._run_invest()
