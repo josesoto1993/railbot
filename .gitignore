@@ -153,3 +153,4 @@ cython_debug/
 
 # worthless data
 /data/screenshot.png
+data/city/start_city_label.png
