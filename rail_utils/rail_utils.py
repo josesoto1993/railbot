@@ -9,23 +9,44 @@ import winsound
 from PIL import Image
 
 RETRIES_TO_LOAD = 5
+GENERAL_BTN_X_CLOSE = "data/general/btn_x_close.png"
 
 logging.basicConfig(level=logging.INFO)
 
 
-def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95, screenshot=None,
-                         gray_scale=True):
-    for _ in range(RETRIES_TO_LOAD):
+def close_all_pop_ups():
+    precision = 0.8
+    on_screen, position = image_on_screen(GENERAL_BTN_X_CLOSE, precision=precision)
+    while on_screen:
+        find_image_and_click([GENERAL_BTN_X_CLOSE], msg="close pop-up", retries=1, precision=precision)
+        sleep_random(1)
+        move_mouse_close_to_center()
+        sleep_random(1)
+        on_screen, position = image_on_screen(GENERAL_BTN_X_CLOSE)
+
+
+def find_image_and_click(
+        filepaths,
+        msg=None,
+        precision=0.95,
+        screenshot=None,
+        gray_scale=True,
+        retries=RETRIES_TO_LOAD
+):
+    for _ in range(retries):
         wait_rail_response()
         for filepath in filepaths:
             on_screen, position = image_on_screen(filepath, precision=precision, screenshot=screenshot,
                                                   gray_scale=gray_scale)
             if on_screen:
-                if on_screen_msg:
-                    logging.info(on_screen_msg)
+                if msg:
+                    logging.info(f"Select: {msg}")
                 click_on_rect_area(top_left_corner=position, filepath=filepath)
                 return
-    raise ImageNotFoundException(on_fail_msg)
+    if msg:
+        raise ImageNotFoundException(f"Fail select: {msg}")
+    else:
+        raise ImageNotFoundException("Failed to select the image.")
 
 
 def sleep_random(sleep_time):
@@ -44,6 +65,12 @@ def move_mouse_close_to_center():
     almost_center_x = random.uniform(center_x - 100, center_x + 100)
     almost_center_y = random.uniform(center_y - 100, center_y + 100)
     pyautogui.moveTo(almost_center_x, almost_center_y)
+
+
+def move_mouse_close_to_top_right():
+    screen_width, screen_height = pyautogui.size()
+    offset = 10
+    pyautogui.moveTo(screen_width - offset, offset)
 
 
 def click_on_rect_area(top_left_corner, size=None, filepath=None):
@@ -101,6 +128,36 @@ def get_screenshot(save=False, filename='screenshot.png'):
     if '.' not in filename:
         filename += '.png'
     screenshot = pyautogui.screenshot()
+    if save:
+        screenshot.save("data/" + filename)
+        logging.debug(f"Screenshot captured and saved as {filename}.")
+    return screenshot
+
+
+def get_screenshot_with_black_out_of_box(top_left_corner, size, save=False, filename='screenshot.png'):
+    if '.' not in filename:
+        filename += '.png'
+    screenshot = pyautogui.screenshot()
+
+    # Get the width and height of the image
+    width, height = screenshot.size
+
+    # Use the `load` method to get the pixel data
+    pixels = screenshot.load()
+
+    # Define the box coordinates
+    box_x_start, box_y_start = top_left_corner
+    box_width, box_height = size
+    box_x_end = box_x_start + box_width
+    box_y_end = box_y_start + box_height
+
+    # Loop over all pixels in the image
+    for y in range(height):
+        for x in range(width):
+            # If the pixel is outside of the box, set it to black
+            if x < box_x_start or box_x_end < x or y < box_y_start or box_y_end < y:
+                pixels[x, y] = (0, 0, 0)
+
     if save:
         screenshot.save("data/" + filename)
         logging.debug(f"Screenshot captured and saved as {filename}.")
