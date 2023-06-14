@@ -13,19 +13,31 @@ RETRIES_TO_LOAD = 5
 logging.basicConfig(level=logging.INFO)
 
 
-def find_image_and_click(filepaths, on_screen_msg=None, on_fail_msg=None, precision=0.95, screenshot=None,
-                         gray_scale=True):
+def close_all_pop_ups():
+    on_screen, position = image_on_screen(GENERAL_BTN_X_CLOSE)
+    while on_screen:
+        find_image_and_click([GENERAL_BTN_X_CLOSE], msg="close pop-up")
+        sleep_random(1)
+        move_mouse_close_to_center()
+        sleep_random(1)
+        on_screen, position = image_on_screen(GENERAL_BTN_X_CLOSE)
+
+
+def find_image_and_click(filepaths, msg=None, precision=0.95, screenshot=None, gray_scale=True):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
         for filepath in filepaths:
             on_screen, position = image_on_screen(filepath, precision=precision, screenshot=screenshot,
                                                   gray_scale=gray_scale)
             if on_screen:
-                if on_screen_msg:
-                    logging.info(on_screen_msg)
+                if msg:
+                    logging.info(f"Select: {msg}")
                 click_on_rect_area(top_left_corner=position, filepath=filepath)
                 return
-    raise ImageNotFoundException(on_fail_msg)
+    if msg:
+        raise ImageNotFoundException(f"Fail select: {msg}")
+    else:
+        raise ImageNotFoundException("Failed to select the image.")
 
 
 def sleep_random(sleep_time):

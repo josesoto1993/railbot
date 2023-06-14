@@ -1,8 +1,6 @@
 import datetime
 import logging
 
-import pyautogui
-
 from rail_utils.rail_utils import find_image_and_click, sleep_random, image_on_screen, \
     move_mouse_close_to_center
 from rail_utils.tabs_enum import Tabs
@@ -17,70 +15,6 @@ INDUSTRY_INVEST_BASE = "data/industry/industry_invest_base.png"
 INDUSTRY_INVEST_VOUCHER_BASE = "data/industry/industry_invest_voucher_base.png"
 
 logging.basicConfig(level=logging.INFO)
-
-
-def select_subtab_industries(sleep_time=10):
-    find_image_and_click([RANKING_SUBTAB_INDUSTRIES],
-                         on_screen_msg="Select subtab industries",
-                         on_fail_msg="Fail select subtab industries")
-    sleep_random(sleep_time)
-
-
-def select_subsubtab_invest(sleep_time=10):
-    find_image_and_click([RANKING_SUBSUBTAB_INVEST],
-                         on_screen_msg="Select subsubtab invest",
-                         on_fail_msg="Fail select subsubtab invest")
-    sleep_random(sleep_time)
-
-
-def show_last(sleep_time=10):
-    on_screen = True
-    while on_screen:
-        find_image_and_click([RANKING_SHOW_MORE],
-                             on_screen_msg="Select show more",
-                             on_fail_msg="Fail select show more")
-        sleep_random(sleep_time / 2)
-        move_mouse_close_to_center()
-        sleep_random(sleep_time / 2)
-        on_screen, position = image_on_screen(RANKING_SHOW_MORE, precision=0.9)
-
-
-def select_zero_investment(sleep_time=10):
-    on_screen, position = image_on_screen(RANKING_SUBSUBTAB_INVEST_ZERO, precision=0.95)
-    if on_screen:
-        find_image_and_click([RANKING_SUBSUBTAB_INVEST_ZERO],
-                             on_screen_msg="Select zero investment",
-                             on_fail_msg="Fail select zero investment")
-        sleep_random(sleep_time)
-        return True
-    else:
-        logging.info("Nothing to invest, no one with zero")
-        return False
-
-
-def industry_invest(sleep_time=10):
-    find_image_and_click([INDUSTRY_INVEST_BASE, INDUSTRY_INVEST_VOUCHER_BASE],
-                         on_screen_msg="Select invest",
-                         on_fail_msg="Fail select invest")
-    sleep_random(sleep_time)
-
-
-def get_screenshot_only_left_bottom():
-    screenshot = pyautogui.screenshot()
-
-    width, height = screenshot.size
-
-    pixels = screenshot.load()
-
-    for y in range(height):
-        for x in range(width // 2, width):
-            pixels[x, y] = (0, 0, 0)
-
-    for y in range(0, height // 2):
-        for x in range(width):
-            pixels[x, y] = (0, 0, 0)
-
-    return screenshot
 
 
 class IndustryInvest:
@@ -107,13 +41,13 @@ class IndustryInvest:
     def _run_invest(self):
         logging.info(f"----- Run industry invest: Start -----")
         open_tab(Tabs.RANKINGS)
-        select_subtab_industries(self.sleep_select_subtab_industries)
-        select_subsubtab_invest(self.sleep_select_subsubtab_invest)
-        show_last(self.sleep_show_last)
-        any_zero_invest_industry = select_zero_investment(self.sleep_select_zero_investment)
+        self._select_subtab_industries()
+        self._select_subsubtab_invest()
+        self._show_last()
+        any_zero_invest_industry = self._select_zero_investment()
         if not any_zero_invest_industry:
             return False
-        industry_invest(self.sleep_industry_invest)
+        self._industry_invest()
         return True
 
     def _update_next_run_time(self, invest_done=True):
@@ -124,3 +58,34 @@ class IndustryInvest:
 
             self.next_run_time = target_datetime
             logging.info(f"----- Next industry invest at {target_datetime.time()} -----")
+
+    def _select_subtab_industries(self):
+        find_image_and_click([RANKING_SUBTAB_INDUSTRIES], msg="subtab industries")
+        sleep_random(self.sleep_select_subtab_industries)
+
+    def _select_subsubtab_invest(self):
+        find_image_and_click([RANKING_SUBSUBTAB_INVEST], msg="subsubtab invest")
+        sleep_random(self.sleep_select_subsubtab_invest)
+
+    def _show_last(self):
+        on_screen = True
+        while on_screen:
+            find_image_and_click([RANKING_SHOW_MORE], msg="show more")
+            sleep_random(self.sleep_show_last / 2)
+            move_mouse_close_to_center()
+            sleep_random(self.sleep_show_last / 2)
+            on_screen, position = image_on_screen(RANKING_SHOW_MORE, precision=0.9)
+
+    def _select_zero_investment(self):
+        on_screen, position = image_on_screen(RANKING_SUBSUBTAB_INVEST_ZERO, precision=0.95)
+        if on_screen:
+            find_image_and_click([RANKING_SUBSUBTAB_INVEST_ZERO], msg="zero investment")
+            sleep_random(self.sleep_select_zero_investment)
+            return True
+        else:
+            logging.info("Nothing to invest, no one with zero")
+            return False
+
+    def _industry_invest(self):
+        find_image_and_click([INDUSTRY_INVEST_BASE, INDUSTRY_INVEST_VOUCHER_BASE], msg="invest")
+        sleep_random(self.sleep_industry_invest)
