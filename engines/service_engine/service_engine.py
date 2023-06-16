@@ -33,7 +33,7 @@ class ServiceEngine:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_service(self):
-        logging.info(f"----- Run service engine: Start -----")
+        logging.info(f"----- Run service engine: Start at {datetime.datetime.now()} -----")
         open_tab(Tabs.ENGINES)
         self._select_service_multiple()  # 5s
         self._select_all_needing_service()  # 3s

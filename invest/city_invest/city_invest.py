@@ -82,7 +82,7 @@ class CityInvest:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_invest(self):
-        logging.info(f"----- Run city invest: Start -----")
+        logging.info(f"----- Run city invest: Start at {datetime.datetime.now()} -----")
         self._center_and_zoom_to_city()
         self._select_city()
         self._select_subtab_city_project()
@@ -138,7 +138,6 @@ class CityInvest:
             sleep_random(self.sleep_donate)
         else:
             logging.info(f"No need donation")
-
 
     def _select_next_city(self):
         find_image_and_click([CITY_LABEL_RIGHT], msg="next city")

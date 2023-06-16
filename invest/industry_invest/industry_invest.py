@@ -39,7 +39,7 @@ class IndustryInvest:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_invest(self):
-        logging.info(f"----- Run industry invest: Start -----")
+        logging.info(f"----- Run industry invest: Start at {datetime.datetime.now()} -----")
         open_tab(Tabs.RANKINGS)
         self._select_subtab_industries()
         self._select_subsubtab_invest()
