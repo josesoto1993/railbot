@@ -55,9 +55,7 @@ def get_screenshot_contribute_pop_up():
     top_left_corner = (0, position[1])
     screenshot_width, screenshot_height = screenshot.size
     size = (screenshot_width, screenshot_height - position[1])
-    screenshot_contribute_pop_up = get_screenshot_with_black_out_of_box(top_left_corner, size,
-                                                                        save=True,
-                                                                        filename="test_donate_if_needed.png")
+    screenshot_contribute_pop_up = get_screenshot_with_black_out_of_box(top_left_corner, size)
     return screenshot_contribute_pop_up
 
 
