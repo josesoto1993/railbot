@@ -6,7 +6,8 @@ from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, slee
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
-PAX_ENGINE_HEADER = "data/tab_engine/paxengine_main.png"
+PAX_ENGINE_HEADER_MAIN = "data/tab_engine/paxengine_main.png"
+PAX_ENGINE_HEADER_CHEETAH = "data/tab_engine/paxengine_cheetah.png"
 POPUP_TIMETABLE_BASE = "data/engine_schedule/popup_engine_timetable_calculator_base.png"
 POPUP_TIMETABLE_HOVER = "data/engine_schedule/popup_engine_timetable_calculator_hover.png"
 POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE = "data/engine_schedule/popup_engine_timetable_adopt_schedule_base.png"
@@ -67,7 +68,8 @@ class PaxSchedule:
         logging.info(f"----- Next run at {target_datetime.time()} -----")
 
     def _select_pax_engine(self):
-        find_image_and_click([PAX_ENGINE_HEADER], msg="pax engine")
+        pax_engine_headers = [PAX_ENGINE_HEADER_MAIN, PAX_ENGINE_HEADER_CHEETAH]
+        find_image_and_click(pax_engine_headers, msg="pax engine")
         sleep_random(self.sleep_select_pax_engine)
 
     def _open_timetable(self):
