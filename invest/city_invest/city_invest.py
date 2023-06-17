@@ -93,7 +93,7 @@ class CityInvest:
     def _center_and_zoom_to_city(self):
         close_all_pop_ups()
 
-        precision = 0.992
+        precision = 0.95
         on_screen, position = image_on_screen(BTN_ZOOM_IN_BASE, precision=precision)
         tries = 0
         while on_screen and tries < MAX_ZOOM_CLICKS:
