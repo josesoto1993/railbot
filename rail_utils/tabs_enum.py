@@ -11,7 +11,7 @@ class Tabs(Enum):
     ASSOCIATION = {
         "tab_name": "Association",
         "prefix": "association_",
-        "precision_icon": 0.95,
+        "precision_icon": 0.85,
         "precision_header": 0.95
     }
     LICENCES = {
