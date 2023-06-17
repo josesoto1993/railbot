@@ -19,7 +19,7 @@ ASSOCIATION_WORKER_DETAILS_USER_LABEL_HOVER = "data/tab_association/user_bid_lab
 
 
 def is_bid_disabled():
-    on_screen_disabled, _ = image_on_screen(ASSOCIATION_BID_DISABLED)
+    on_screen_disabled, _ = image_on_screen(ASSOCIATION_BID_DISABLED, gray_scale=False)
     on_screen_no_room, _ = image_on_screen(ASSOCIATION_NO_ROOM_FOR_WORKER)
     on_screen_no_worker, _ = image_on_screen(ASSOCIATION_NO_WORKER_AVAILABLE)
 
