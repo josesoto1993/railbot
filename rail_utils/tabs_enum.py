@@ -18,7 +18,7 @@ class Tabs(Enum):
         "tab_name": "Licences",
         "prefix": "licence_",
         "precision_icon": 0.70,
-        "precision_header": 0.95
+        "precision_header": 0.90
     }
     RANKINGS = {
         "tab_name": "Rankings",
