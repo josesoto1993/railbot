@@ -17,6 +17,8 @@ RUN_SERVICE_ENGINE_FLAG = True
 RUN_WORKER_BID_FLAG = True
 
 logging.basicConfig(level=logging.INFO)
+
+
 # logging.root.setLevel(logging.DEBUG)
 
 
@@ -24,7 +26,8 @@ def get_worker_data():
     return [
         (WORKER_CITY_CONNECTOR, 750_000),
         (WORKER_COMPETITION, 750_000),
-        (WORKER_PAX, 2_500_000)
+        (WORKER_PAX, 2_500_000),
+        (WORKER_BUILD_DISCOUNT, 2_500_000)
     ]
 
 
