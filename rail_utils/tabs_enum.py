@@ -30,6 +30,13 @@ class Tabs(Enum):
         "precision_header": 0.80,
         "needs_be_on_world_map": False
     }
+    MEDALS = {
+        "tab_name": "Medals",
+        "prefix": "medals_",
+        "precision_icon": 0.85,
+        "precision_header": 0.95,
+        "needs_be_on_world_map": True
+    }
     WORLD_MAP = {
         "tab_name": "World_map",
         "prefix": "world_map_",
