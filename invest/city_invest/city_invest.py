@@ -23,6 +23,8 @@ CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE = "data/city/city_subtab_city_project_contri
 CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_HEADER = "data/city/city_subtab_city_project_contribute_header.png"
 CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_SUBBTN = "data/city/city_subtab_city_project_contribute_subbtn.png"
 
+logging.basicConfig(level=logging.INFO)
+
 
 def get_city_label():
     left_on_screen, left_position, _ = image_on_screen(CITY_LABEL_LEFT)

@@ -26,6 +26,8 @@ CURRENT_WORKER_LABEL = "data/tab_association/current_worker_label.png"
 BIDS_BY_YOUR_ASSOCIATION_LABEL = "data/tab_association/bids_by_aso_label.png"
 HIGHEST_BID_LABEL = "data/tab_association/highest_bid_label.png"
 
+logging.basicConfig(level=logging.INFO)
+
 
 def have_bid():
     on_screen, _, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_USER_LABEL)
@@ -140,7 +142,7 @@ class WorkerBid:
 
         screenshot = get_screenshot_with_black_out_of_box(position, size)
 
-        find_image_and_click([ASSOCIATION_WORKER_DETAILS], msg="select worker details", screenshot=screenshot)
+        find_image_and_click([ASSOCIATION_WORKER_DETAILS], msg="worker details", screenshot=screenshot)
         sleep_random(self.sleep_select_worker_details)
 
     def _get_bid_amount(self):
