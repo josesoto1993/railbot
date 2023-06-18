@@ -31,7 +31,7 @@ def have_bid():
     return on_screen or on_screen_hover
 
 
-def get_investment_amount():
+def get_bid_amount():
     # TODO: create a real function
     return 77777
 
@@ -76,9 +76,7 @@ class WorkerBid:
         self.next_run_time = datetime.datetime.now()
         self.sleep_is_bid_disabled = 5
         self.sleep_select_worker_details = 5
-        self.sleep_bid_worker = 10
-        self.sleep_set_investment_amount = 5
-        self.sleep_send_bid = 10
+        self.sleep_click_send_bid = 10
         self.sleep_character_input = 0.5
 
     def run(self):
@@ -103,12 +101,11 @@ class WorkerBid:
         if have_bid():
             logging.info(f"Already bid")
             return
-        investment_amount = get_investment_amount()
-        if investment_amount == 0:
+        bid_amount = get_bid_amount()
+        if bid_amount == 0:
             logging.info(f"Not interested in this worker")
             return
-        self._set_investment_amount(investment_amount)
-        self._send_bid()
+        self._do_bid(bid_amount)
 
     def _is_bid_disabled(self):
         sleep_random(self.sleep_is_bid_disabled)
@@ -129,12 +126,11 @@ class WorkerBid:
         find_image_and_click([ASSOCIATION_WORKER_DETAILS], msg="select worker details", screenshot=screenshot)
         sleep_random(self.sleep_select_worker_details)
 
-    def _set_investment_amount(self, investment_amount):
+    def _do_bid(self, bid_amount):
         click_amount_input()
         self._delete_actual_value()
-        self._type_investment_amount(investment_amount)
-
-        sleep_random(self.sleep_set_investment_amount)
+        self._type_investment_amount(bid_amount)
+        self._click_send_bid()
 
     def _delete_actual_value(self):
         for _ in range(10):
@@ -146,9 +142,9 @@ class WorkerBid:
             pyautogui.typewrite(char)
             sleep_random(self.sleep_character_input)
 
-    def _send_bid(self):
-        sleep_random(self.sleep_send_bid)
-        raise Exception(f"Implement: _send_bid")
+    def _click_send_bid(self):
+        find_image_and_click([ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN], msg="bid send btn")
+        sleep_random(self.sleep_click_send_bid)
 
     def _update_next_run_time(self):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=WORKER_BID_MINUTES_TO_RECHECK)
