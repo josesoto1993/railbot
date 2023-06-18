@@ -116,9 +116,9 @@ def any_image_on_screen(img_str_array, precision=0.8, screenshot=None, gray_scal
             best_image = img_str
 
     if best_image is None:
-        return False, None, None
+        return False, None, None, None
     else:
-        return True, best_max_loc, best_image
+        return True, best_max_loc, best_max_val, best_image
 
 
 def image_on_screen(img_str, precision=0.8, screenshot=None, gray_scale=True):
