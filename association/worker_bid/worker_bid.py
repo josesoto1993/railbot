@@ -4,7 +4,7 @@ import logging
 import pyautogui
 
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
-    find_image_and_click, sleep_random, click_on_rect_area
+    find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -22,11 +22,14 @@ ASSOCIATION_WORKER_DETAILS_BID_LESS_DISABLED = "data/tab_association/minus_bid_b
 ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED = "data/tab_association/plus_bid_btn_enabled.png"
 ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED = "data/tab_association/plus_bid_btn_disabled.png"
 ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN = "data/tab_association/send_bid_btn.png"
+CURRENT_WORKER_LABEL = "data/tab_association/current_worker_label.png"
+BIDS_BY_YOUR_ASSOCIATION_LABEL = "data/tab_association/bids_by_aso_label.png"
+HIGHEST_BID_LABEL = "data/tab_association/highest_bid_label.png"
 
 
 def have_bid():
-    on_screen, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_USER_LABEL)
-    on_screen_hover, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_USER_LABEL_HOVER)
+    on_screen, _, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_USER_LABEL)
+    on_screen_hover, _, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_USER_LABEL_HOVER)
 
     return on_screen or on_screen_hover
 
@@ -37,23 +40,23 @@ def get_bid_amount():
 
 
 def get_bid_left_corner():
-    on_screen_enabled, left_corner_enabled = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_LESS_ENABLED)
+    on_screen_enabled, left_corner_enabled, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_LESS_ENABLED)
     if on_screen_enabled:
         return left_corner_enabled
-    on_screen_disabled, left_corner_disabled = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_LESS_DISABLED)
+    on_screen_disabled, left_corner_disabled, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_LESS_DISABLED)
     if on_screen_disabled:
         return left_corner_disabled
-    raise Exception(f"Cant find left corner of bid")
+    raise ImageNotFoundException(f"Cant find left corner of bid")
 
 
 def get_bid_right_corner():
-    on_screen_enabled, right_corner_enabled = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED)
+    on_screen_enabled, right_corner_enabled, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED)
     if on_screen_enabled:
         return right_corner_enabled
-    on_screen_disabled, right_corner_disabled = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED)
+    on_screen_disabled, right_corner_disabled, _ = image_on_screen(ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED)
     if on_screen_disabled:
         return right_corner_disabled
-    raise Exception(f"Cant find right corner of bid")
+    raise ImageNotFoundException(f"Cant find right corner of bid")
 
 
 def click_amount_input():
@@ -109,14 +112,14 @@ class WorkerBid:
 
     def _is_bid_disabled(self):
         sleep_random(self.sleep_is_bid_disabled)
-        on_screen_disabled, _ = image_on_screen(ASSOCIATION_BID_DISABLED, gray_scale=False)
-        on_screen_no_room, _ = image_on_screen(ASSOCIATION_NO_ROOM_FOR_WORKER)
-        on_screen_no_worker, _ = image_on_screen(ASSOCIATION_NO_WORKER_AVAILABLE)
+        on_screen_disabled, _, _ = image_on_screen(ASSOCIATION_BID_DISABLED, gray_scale=False)
+        on_screen_no_room, _, _ = image_on_screen(ASSOCIATION_NO_ROOM_FOR_WORKER)
+        on_screen_no_worker, _, _ = image_on_screen(ASSOCIATION_NO_WORKER_AVAILABLE)
 
         return on_screen_disabled or on_screen_no_room or on_screen_no_worker
 
     def _select_worker_details(self):
-        on_screen, position = image_on_screen(ASSOCIATION_WORKER_LABEL)
+        on_screen, position, _ = image_on_screen(ASSOCIATION_WORKER_LABEL)
         image_width, image_height = get_image_size(ASSOCIATION_WORKER_LABEL)
 
         size = (pyautogui.size()[0], image_height)

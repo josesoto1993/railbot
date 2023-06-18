@@ -74,10 +74,10 @@ class IndustryInvest:
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
-            on_screen, position = image_on_screen(RANKING_SHOW_MORE, precision=0.9)
+            on_screen, position, _ = image_on_screen(RANKING_SHOW_MORE, precision=0.9)
 
     def _select_zero_investment(self):
-        on_screen, position = image_on_screen(RANKING_SUBSUBTAB_INVEST_ZERO, precision=0.95)
+        on_screen, position, _ = image_on_screen(RANKING_SUBSUBTAB_INVEST_ZERO, precision=0.95)
         if on_screen:
             find_image_and_click([RANKING_SUBSUBTAB_INVEST_ZERO], msg="zero investment")
             sleep_random(self.sleep_select_zero_investment)

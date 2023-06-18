@@ -50,7 +50,7 @@ class ServiceEngine:
         sleep_random(self.sleep_all_needing_service)
 
     def _select_service_all(self):
-        on_screen, position = image_on_screen(SERVICE_ALL_LABEL)
+        on_screen, position, _ = image_on_screen(SERVICE_ALL_LABEL)
         if on_screen:
             find_image_and_click([SERVICE_ALL_LABEL], msg="service all")
             sleep_random(self.sleep_service_all)

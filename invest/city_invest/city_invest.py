@@ -25,8 +25,8 @@ CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_SUBBTN = "data/city/city_subtab_city_project
 
 
 def get_city_label():
-    left_on_screen, left_position = image_on_screen(CITY_LABEL_LEFT)
-    right_on_screen, right_position = image_on_screen(CITY_LABEL_RIGHT)
+    left_on_screen, left_position, _ = image_on_screen(CITY_LABEL_LEFT)
+    right_on_screen, right_position, _ = image_on_screen(CITY_LABEL_RIGHT)
 
     if not left_on_screen and not right_on_screen:
         raise ImageNotFoundException(f"Fail cet city label.")
@@ -48,7 +48,7 @@ def get_city_label():
 
 def get_screenshot_contribute_pop_up():
     screenshot = get_screenshot()
-    on_screen, position = image_on_screen(CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_HEADER, screenshot=screenshot)
+    on_screen, position, _ = image_on_screen(CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_HEADER, screenshot=screenshot)
     if not on_screen:
         raise ImageNotFoundException(
             f"Failed to find header on screen: {CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_HEADER}")
@@ -92,7 +92,7 @@ class CityInvest:
         close_all_pop_ups()
 
         precision = 0.95
-        on_screen, position = image_on_screen(BTN_ZOOM_IN_BASE, precision=precision)
+        on_screen, position, _ = image_on_screen(BTN_ZOOM_IN_BASE, precision=precision)
         tries = 0
         while on_screen and tries < MAX_ZOOM_CLICKS:
             tries += 1
@@ -100,7 +100,7 @@ class CityInvest:
             sleep_random(self.sleep_zoom / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_zoom / 2)
-            on_screen, position = image_on_screen(BTN_ZOOM_IN_BASE, precision=precision)
+            on_screen, position, _ = image_on_screen(BTN_ZOOM_IN_BASE, precision=precision)
 
         find_image_and_click([MAP_BTN_CENTER], msg="center map")
         sleep_random(self.sleep_center_city)
@@ -125,10 +125,10 @@ class CityInvest:
         while not on_screen:
             self._donate_if_needed()
             self._select_next_city()
-            on_screen, position = image_on_screen(start_city_label_filename)
+            on_screen, position, _ = image_on_screen(start_city_label_filename)
 
     def _donate_if_needed(self):
-        have_contributions, position = image_on_screen(USER_LABEL)
+        have_contributions, position, _ = image_on_screen(USER_LABEL)
         if not have_contributions:
             find_image_and_click([CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE], msg="city contribute")
             find_image_and_click([CITY_SUBTAB_CITY_PROJECT_CONTRIBUTE_SUBBTN], msg="city contribute sub btn")

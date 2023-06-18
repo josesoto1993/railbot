@@ -66,8 +66,9 @@ def _find_tab_state(tab_enum):
     for file_name in os.listdir(TAB_STATUS_DIR):
         if file_name.startswith(tab_enum.prefix) and (BASE_REGEX in file_name or SELECTED_REGEX in file_name):
             file_path = os.path.join(TAB_STATUS_DIR, file_name)
-            is_on_screen, position = image_on_screen(file_path, precision=tab_enum.precision_icon,
-                                                     screenshot=screenshot)
+            is_on_screen, position, _ = image_on_screen(file_path,
+                                                        precision=tab_enum.precision_icon,
+                                                        screenshot=screenshot)
             _log_find_tab_state(file_name, is_on_screen, position)
             tabs_state.append([file_path, is_on_screen, position])
 
@@ -89,7 +90,7 @@ def _check_if_tab_open(tab_enum):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
         tab_on_load_path = "data/tabs_status/" + tab_enum.prefix + "on_load.png"
-        on_screen, _ = image_on_screen(tab_on_load_path, precision=tab_enum.precision_header)
+        on_screen, _, _ = image_on_screen(tab_on_load_path, precision=tab_enum.precision_header)
         if on_screen:
             logging.info(f"Tab {tab_enum.tab_name} opened")
             return
