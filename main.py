@@ -2,6 +2,7 @@ import logging
 import time
 
 from association.worker_bid.worker_bid import WorkerBid
+from association.worker_bid.workers import *
 from engines.pax_schedule.pax_schedule import PaxSchedule
 from engines.service_engine.service_engine import ServiceEngine
 from invest.city_invest.city_invest import CityInvest
@@ -19,6 +20,14 @@ logging.basicConfig(level=logging.INFO)
 # logging.root.setLevel(logging.DEBUG)
 
 
+def get_worker_data():
+    return [
+        (WORKER_CITY_CONNECTOR, 750_000),
+        (WORKER_COMPETITION, 750_000),
+        (WORKER_PAX, 2_500_000)
+    ]
+
+
 def main():
     get_screenshot(save=True)
 
@@ -26,7 +35,7 @@ def main():
     industry_invest = IndustryInvest()
     city_invest = CityInvest()
     service_engine = ServiceEngine()
-    worker_bid = WorkerBid()
+    worker_bid = WorkerBid(worker_data=get_worker_data())
     logging.info("Program started.")
     main_loop(pax_schedule, industry_invest, city_invest, service_engine, worker_bid)
 

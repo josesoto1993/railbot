@@ -34,9 +34,22 @@ def have_bid():
     return on_screen or on_screen_hover
 
 
-def get_bid_amount():
-    # TODO: create a real function
-    return 77777
+def get_worker_info_screenshot():
+    # Find positions of the images
+    on_screen_worker, position_worker, _ = image_on_screen(CURRENT_WORKER_LABEL)
+    on_screen_association, position_association, _ = image_on_screen(BIDS_BY_YOUR_ASSOCIATION_LABEL)
+    on_screen_bid, position_bid, _ = image_on_screen(HIGHEST_BID_LABEL)
+
+    # Raise exception if any of the images is not found
+    if not (on_screen_worker and on_screen_association and on_screen_bid):
+        raise ImageNotFoundException("Failed to find one or more required images on screen for worker info")
+
+    # Define the size and the top-left corner of the screenshot box
+    top_left_corner = position_worker
+    size = (position_association[0] - position_worker[0], position_bid[1] - position_worker[1])
+
+    # Get the screenshot
+    return get_screenshot_with_black_out_of_box(top_left_corner, size)
 
 
 def get_bid_left_corner():
@@ -75,12 +88,13 @@ def click_amount_input():
 
 
 class WorkerBid:
-    def __init__(self):
+    def __init__(self, worker_data):
         self.next_run_time = datetime.datetime.now()
         self.sleep_is_bid_disabled = 5
         self.sleep_select_worker_details = 5
         self.sleep_click_send_bid = 10
         self.sleep_character_input = 0.5
+        self.worker_data = worker_data
 
     def run(self):
         if self._should_run():
@@ -101,10 +115,10 @@ class WorkerBid:
             logging.info(f"Cant bid as is disabled")
             return
         self._select_worker_details()
-        if have_bid():
+        if have_bid() and False:
             logging.info(f"Already bid")
             return
-        bid_amount = get_bid_amount()
+        bid_amount = self._get_bid_amount()
         if bid_amount == 0:
             logging.info(f"Not interested in this worker")
             return
@@ -128,6 +142,15 @@ class WorkerBid:
 
         find_image_and_click([ASSOCIATION_WORKER_DETAILS], msg="select worker details", screenshot=screenshot)
         sleep_random(self.sleep_select_worker_details)
+
+    def _get_bid_amount(self):
+        screenshot = get_worker_info_screenshot()
+        for img_path, amount in self.worker_data:
+            on_screen, position, _ = image_on_screen(img_path, screenshot=screenshot)
+            if on_screen:
+                return amount
+
+        return 0
 
     def _do_bid(self, bid_amount):
         click_amount_input()
