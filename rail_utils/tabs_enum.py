@@ -11,14 +11,14 @@ class Tabs(Enum):
     ASSOCIATION = {
         "tab_name": "Association",
         "prefix": "association_",
-        "precision_icon": 0.95,
+        "precision_icon": 0.85,
         "precision_header": 0.95
     }
     LICENCES = {
         "tab_name": "Licences",
         "prefix": "licence_",
         "precision_icon": 0.70,
-        "precision_header": 0.95
+        "precision_header": 0.90
     }
     RANKINGS = {
         "tab_name": "Rankings",

@@ -33,7 +33,7 @@ class ServiceEngine:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_service(self):
-        logging.info(f"----- Run service engine: Start -----")
+        logging.info(f"----- Run service engine: Start at {datetime.datetime.now()} -----")
         open_tab(Tabs.ENGINES)
         self._select_service_multiple()  # 5s
         self._select_all_needing_service()  # 3s
@@ -50,7 +50,7 @@ class ServiceEngine:
         sleep_random(self.sleep_all_needing_service)
 
     def _select_service_all(self):
-        on_screen, position = image_on_screen(SERVICE_ALL_LABEL)
+        on_screen, position, _ = image_on_screen(SERVICE_ALL_LABEL)
         if on_screen:
             find_image_and_click([SERVICE_ALL_LABEL], msg="service all")
             sleep_random(self.sleep_service_all)

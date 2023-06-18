@@ -15,7 +15,10 @@ class IsImageOnScreen(unittest.TestCase):
         screenshot = get_screenshot()
         screenshot.save("data/screenshot.png")
         precision = 0.1
-        is_on_screen, position = image_on_screen(file_path, precision=precision, screenshot=screenshot, gray_scale=True)
+        is_on_screen, position, _ = image_on_screen(file_path,
+                                                    precision=precision,
+                                                    screenshot=screenshot,
+                                                    gray_scale=True)
         x, y = position
         pyautogui.moveTo(x=x, y=y)
 

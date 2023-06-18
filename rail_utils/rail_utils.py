@@ -16,13 +16,13 @@ logging.basicConfig(level=logging.INFO)
 
 def close_all_pop_ups():
     precision = 0.8
-    on_screen, position = image_on_screen(GENERAL_BTN_X_CLOSE, precision=precision)
+    on_screen, position, _ = image_on_screen(GENERAL_BTN_X_CLOSE, precision=precision)
     while on_screen:
         find_image_and_click([GENERAL_BTN_X_CLOSE], msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
-        on_screen, position = image_on_screen(GENERAL_BTN_X_CLOSE)
+        on_screen, position, _ = image_on_screen(GENERAL_BTN_X_CLOSE)
 
 
 def find_image_and_click(
@@ -36,8 +36,10 @@ def find_image_and_click(
     for _ in range(retries):
         wait_rail_response()
         for filepath in filepaths:
-            on_screen, position = image_on_screen(filepath, precision=precision, screenshot=screenshot,
-                                                  gray_scale=gray_scale)
+            on_screen, position, _ = image_on_screen(filepath,
+                                                     precision=precision,
+                                                     screenshot=screenshot,
+                                                     gray_scale=gray_scale)
             if on_screen:
                 if msg:
                     logging.info(f"Select: {msg}")
@@ -100,6 +102,25 @@ def get_image_size(image_path):
         return width, height
 
 
+def any_image_on_screen(img_str_array, precision=0.8, screenshot=None, gray_scale=True):
+    best_max_val = None
+    best_max_loc = None
+    best_image = None
+
+    for img_str in img_str_array:
+        on_screen, max_loc, max_val = image_on_screen(img_str, precision, screenshot, gray_scale)
+
+        if on_screen and (best_max_val is None or max_val > best_max_val):
+            best_max_val = max_val
+            best_max_loc = max_loc
+            best_image = img_str
+
+    if best_image is None:
+        return False, None, None
+    else:
+        return True, best_max_loc, best_image
+
+
 def image_on_screen(img_str, precision=0.8, screenshot=None, gray_scale=True):
     if screenshot is None:
         screenshot = pyautogui.screenshot()
@@ -119,9 +140,9 @@ def image_on_screen(img_str, precision=0.8, screenshot=None, gray_scale=True):
     logging.debug(f"path: {img_str}, max_val: {max_val}")
 
     if max_val < precision:
-        return False, None
+        return False, None, max_val
     else:
-        return True, max_loc
+        return True, max_loc, max_val
 
 
 def get_screenshot(save=False, filename='screenshot.png'):
