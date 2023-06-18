@@ -8,11 +8,11 @@ from rail_utils.rail_utils import get_screenshot, sleep_random
 from redeem.medals.medal_redeem import MedalRedeem
 
 MAIN_LOOP_TIME = 60
-RUN_PAX_SCHEDULE_FLAG = False
-RUN_INDUSTRY_INVEST_FLAG = False
-RUN_CITY_INVEST_FLAG = False
-RUN_SERVICE_ENGINE_FLAG = False
-RUN_WORKER_BID_FLAG = False
+RUN_PAX_SCHEDULE_FLAG = True
+RUN_INDUSTRY_INVEST_FLAG = True
+RUN_CITY_INVEST_FLAG = True
+RUN_SERVICE_ENGINE_FLAG = True
+RUN_WORKER_BID_FLAG = True
 RUN_REDEEM_MEDAL = True
 
 
@@ -21,7 +21,8 @@ def get_worker_data():
         (WORKER_CITY_CONNECTOR, 750_000),
         (WORKER_COMPETITION, 750_000),
         (WORKER_PAX, 2_500_000),
-        (WORKER_BUILD_DISCOUNT, 2_500_000)
+        (WORKER_BUILD_DISCOUNT, 2_500_000),
+        (WORKER_TRACK_DISCOUNT, 2_500_000)
     ]
 
 
