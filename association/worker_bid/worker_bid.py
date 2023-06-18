@@ -114,15 +114,15 @@ class WorkerBid:
         logging.info(f"----- Run worker bid: Start at {datetime.datetime.now()} -----")
         open_tab(Tabs.ASSOCIATION)
         if self._is_bid_disabled():
-            logging.info(f"Cant bid as is disabled")
+            logging.debug(f"Cant bid as is disabled")
             return
         self._select_worker_details()
         if have_bid() and False:
-            logging.info(f"Already bid")
+            logging.debug(f"Already bid")
             return
         bid_amount = self._get_bid_amount()
         if bid_amount == 0:
-            logging.info(f"Not interested in this worker")
+            logging.debug(f"Not interested in this worker")
             return
         self._do_bid(bid_amount)
 

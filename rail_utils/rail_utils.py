@@ -42,7 +42,7 @@ def find_image_and_click(
                                                      gray_scale=gray_scale)
             if on_screen:
                 if msg:
-                    logging.info(f"Select: {msg}")
+                    logging.debug(f"Select: {msg}")
                 click_on_rect_area(top_left_corner=position, filepath=filepath)
                 return
     if msg:

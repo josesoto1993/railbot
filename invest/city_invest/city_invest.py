@@ -7,7 +7,7 @@ from rail_utils.rail_utils import sleep_random, find_image_and_click, move_mouse
     click_on_rect_area, close_all_pop_ups, get_screenshot, ImageNotFoundException, get_image_size, GENERAL_BTN_X_CLOSE, \
     get_screenshot_with_black_out_of_box
 
-MAX_ZOOM_CLICKS = 10
+MAX_ZOOM_CLICKS = 5
 CITY_HEIGHT = 80
 CITY_WIDTH = 120
 HEIGHT_OFFSET = 70
@@ -139,7 +139,7 @@ class CityInvest:
                                  msg="close city contribute pop-up")
             sleep_random(self.sleep_donate)
         else:
-            logging.info(f"No need donation")
+            logging.debug(f"No need donation")
 
     def _select_next_city(self):
         find_image_and_click([CITY_LABEL_RIGHT], msg="next city")

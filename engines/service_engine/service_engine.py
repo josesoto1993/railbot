@@ -55,7 +55,7 @@ class ServiceEngine:
             find_image_and_click([SERVICE_ALL_LABEL], msg="service all")
             sleep_random(self.sleep_service_all)
         else:
-            logging.info(f"No need to service any engine")
+            logging.debug(f"No need to service any engine")
 
     def _update_next_run_time(self):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=SERVICE_ENGINE_MINUTES_TO_RECHECK)
