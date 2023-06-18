@@ -1,13 +1,10 @@
-import logging
-import time
-
 from association.worker_bid.worker_bid import WorkerBid
 from association.worker_bid.workers import *
 from engines.pax_schedule.pax_schedule import PaxSchedule
 from engines.service_engine.service_engine import ServiceEngine
 from invest.city_invest.city_invest import CityInvest
 from invest.industry_invest.industry_invest import IndustryInvest
-from rail_utils.rail_utils import get_screenshot
+from rail_utils.rail_utils import get_screenshot, sleep_random
 
 MAIN_LOOP_TIME = 60
 RUN_PAX_SCHEDULE_FLAG = True
@@ -16,15 +13,13 @@ RUN_CITY_INVEST_FLAG = True
 RUN_SERVICE_ENGINE_FLAG = True
 RUN_WORKER_BID_FLAG = True
 
-logging.basicConfig(level=logging.INFO)
-# logging.root.setLevel(logging.DEBUG)
-
 
 def get_worker_data():
     return [
         (WORKER_CITY_CONNECTOR, 750_000),
         (WORKER_COMPETITION, 750_000),
-        (WORKER_PAX, 2_500_000)
+        (WORKER_PAX, 2_500_000),
+        (WORKER_BUILD_DISCOUNT, 2_500_000)
     ]
 
 
@@ -36,7 +31,6 @@ def main():
     city_invest = CityInvest()
     service_engine = ServiceEngine()
     worker_bid = WorkerBid(worker_data=get_worker_data())
-    logging.info("Program started.")
     main_loop(pax_schedule, industry_invest, city_invest, service_engine, worker_bid)
 
 
@@ -59,7 +53,7 @@ def main_loop(
         if RUN_WORKER_BID_FLAG:
             worker_bid.run()
 
-        time.sleep(MAIN_LOOP_TIME)
+        sleep_random(MAIN_LOOP_TIME)
 
 
 if __name__ == "__main__":
