@@ -79,7 +79,7 @@ class WorkerBid:
         self.sleep_bid_worker = 10
         self.sleep_set_investment_amount = 5
         self.sleep_send_bid = 10
-        self.sleep_delete_one_character = 0.5
+        self.sleep_character_input = 0.5
 
     def run(self):
         if self._should_run():
@@ -132,14 +132,19 @@ class WorkerBid:
     def _set_investment_amount(self, investment_amount):
         click_amount_input()
         self._delete_actual_value()
+        self._type_investment_amount(investment_amount)
 
         sleep_random(self.sleep_set_investment_amount)
-        raise Exception(f"Implement: _set_investment_amount")
 
     def _delete_actual_value(self):
         for _ in range(10):
             pyautogui.press('backspace')
-            sleep_random(self.sleep_delete_one_character)
+            sleep_random(self.sleep_character_input)
+
+    def _type_investment_amount(self, investment_amount):
+        for char in str(investment_amount):
+            pyautogui.typewrite(char)
+            sleep_random(self.sleep_character_input)
 
     def _send_bid(self):
         sleep_random(self.sleep_send_bid)
