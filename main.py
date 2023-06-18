@@ -22,7 +22,8 @@ def get_worker_data():
         (WORKER_COMPETITION, 750_000),
         (WORKER_PAX, 2_500_000),
         (WORKER_BUILD_DISCOUNT, 2_500_000),
-        (WORKER_TRACK_DISCOUNT, 2_500_000)
+        (WORKER_TRACK_DISCOUNT, 2_500_000),
+        (WORKER_REDUCE_WT, 1_000_000)
     ]
 
 
