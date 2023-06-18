@@ -30,6 +30,13 @@ class Tabs(Enum):
         "precision_header": 0.80,
         "needs_be_on_world_map": False
     }
+    WORLD_MAP = {
+        "tab_name": "World_map",
+        "prefix": "world_map_",
+        "precision_icon": 0.85,
+        "precision_header": 0.80,
+        "needs_be_on_world_map": False
+    }
 
     @property
     def tab_name(self):
