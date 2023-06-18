@@ -19,7 +19,7 @@ RETRIES_TO_LOAD = 5
 
 
 def open_tab(tab_enum):
-    _prepare_screen()
+    _prepare_screen(tab_enum)
 
     tabs_state = _find_tab_state(tab_enum)
     on_screen_tabs = [tab_state for tab_state in tabs_state if tab_state[1]]
@@ -31,9 +31,29 @@ def open_tab(tab_enum):
         _check_if_tab_open(tab_enum)
 
 
-def _prepare_screen():
+def _prepare_screen(tab_enum):
+    _open_world_map_if_needed(tab_enum)
     move_mouse_close_to_top_right()
     wait_rail_response()
+
+
+def _open_world_map_if_needed(tab_enum):
+    is_on_world_map = _is_tab_selected(Tabs.WORLD_MAP)
+    if tab_enum.needs_be_on_world_map and not is_on_world_map:
+        open_tab(Tabs.WORLD_MAP)
+
+
+def _is_tab_selected(tab_enum):
+    screenshot = get_screenshot()
+    for file_name in os.listdir(TAB_STATUS_DIR):
+        if file_name.startswith(tab_enum.prefix) and (SELECTED_REGEX in file_name):
+            file_path = os.path.join(TAB_STATUS_DIR, file_name)
+            is_on_screen, position, _ = image_on_screen(file_path,
+                                                        precision=tab_enum.precision_icon,
+                                                        screenshot=screenshot)
+            if is_on_screen:
+                return True
+    return False
 
 
 def _open_or_reopen_tab(on_screen_tabs, tab_enum):
