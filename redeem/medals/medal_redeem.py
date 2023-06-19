@@ -30,7 +30,7 @@ class MedalRedeem:
 
     def _run_medal_redeem(self):
         logging.info(f"----- Run medal redeem: Start at {datetime.datetime.now()} -----")
-        open_tab(Tabs.MEDALS)
+        open_tab(Tabs.MEDALS.value)
         self._redeem_all()
 
     def _redeem_all(self):

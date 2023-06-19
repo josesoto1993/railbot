@@ -112,7 +112,7 @@ class WorkerBid:
 
     def _run_worker_bid(self):
         logging.info(f"----- Run worker bid: Start at {datetime.datetime.now()} -----")
-        open_tab(Tabs.ASSOCIATION)
+        open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
             logging.debug(f"Cant bid as is disabled")
             return

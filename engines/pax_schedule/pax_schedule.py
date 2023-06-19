@@ -90,7 +90,7 @@ class PaxSchedule:
 
     def _run_pax_engine_schedule(self):
         logging.info(f"----- Run pax engine schedule: Start at {datetime.datetime.now()} -----")
-        open_tab(Tabs.ENGINES)
+        open_tab(Tabs.ENGINES.value)
         self._select_pax_engine()
         self._open_timetable()
         self._click_schedule()

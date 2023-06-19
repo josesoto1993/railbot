@@ -6,6 +6,8 @@ import pyautogui
 from rail_utils.rail_utils import sleep_random, find_image_and_click, move_mouse_close_to_center, image_on_screen, \
     click_on_rect_area, close_all_pop_ups, get_screenshot, ImageNotFoundException, get_image_size, GENERAL_BTN_X_CLOSE, \
     get_screenshot_with_black_out_of_box
+from rail_utils.tabs_enum import Tabs
+from rail_utils.tabs_util import open_tab
 
 MAX_ZOOM_CLICKS = 5
 CITY_HEIGHT = 80
@@ -85,6 +87,7 @@ class CityInvest:
 
     def _run_invest(self):
         logging.info(f"----- Run city invest: Start at {datetime.datetime.now()} -----")
+        open_tab(Tabs.WORLD_MAP.value)
         self._center_and_zoom_to_city()
         self._select_city()
         self._select_subtab_city_project()

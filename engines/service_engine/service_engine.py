@@ -34,7 +34,7 @@ class ServiceEngine:
 
     def _run_service(self):
         logging.info(f"----- Run service engine: Start at {datetime.datetime.now()} -----")
-        open_tab(Tabs.ENGINES)
+        open_tab(Tabs.ENGINES.value)
         self._select_service_multiple()  # 5s
         self._select_all_needing_service()  # 3s
         self._select_service_all()  # 10s

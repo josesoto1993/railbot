@@ -40,7 +40,7 @@ class IndustryInvest:
 
     def _run_invest(self):
         logging.info(f"----- Run industry invest: Start at {datetime.datetime.now()} -----")
-        open_tab(Tabs.RANKINGS)
+        open_tab(Tabs.RANKINGS.value)
         self._select_subtab_industries()
         self._select_subsubtab_invest()
         self._show_last()
