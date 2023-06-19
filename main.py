@@ -20,11 +20,11 @@ RUN_REDEEM_MEDAL = True
 
 def get_worker_data():
     return [
-        (WORKER_CITY_CONNECTOR, 750_000),
+        (WORKER_CITY_CONNECTOR, 1_500_000),
         (WORKER_COMPETITION, 750_000),
-        (WORKER_PAX, 2_500_000),
-        (WORKER_BUILD_DISCOUNT, 2_500_000),
-        (WORKER_TRACK_DISCOUNT, 2_500_000),
+        (WORKER_PAX, 3_500_000),
+        (WORKER_BUILD_DISCOUNT, 3_500_000),
+        (WORKER_TRACK_DISCOUNT, 3_500_000),
         (WORKER_REDUCE_WT, 1_000_000)
     ]
 
