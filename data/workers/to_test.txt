@@ -1,0 +1,11 @@
+worker_build_discount.png
+worker_city_connector.png
+worker_competition.png
+worker_faster_construction.png
+worker_pax.png
+worker_president.png
+worker_prestige_industry.png
+worker_reduce_wt.png
+worker_repair_discount.png
+worker_track_discount.png
+worker_waggons_discount.png

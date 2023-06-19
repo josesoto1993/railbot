@@ -148,7 +148,7 @@ class WorkerBid:
     def _get_bid_amount(self):
         screenshot = get_worker_info_screenshot()
         for img_path, amount in self.worker_data:
-            on_screen, position, _ = image_on_screen(img_path, screenshot=screenshot)
+            on_screen, position, _ = image_on_screen(img_path, screenshot=screenshot, precision=0.7)
             if on_screen:
                 return amount
 
