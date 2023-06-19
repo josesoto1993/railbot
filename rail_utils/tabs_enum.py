@@ -12,7 +12,7 @@ class Tabs(Enum):
     ASSOCIATION = {
         "tab_name": "Association",
         "prefix": "association_",
-        "precision_icon": 0.85,
+        "precision_icon": 0.80,
         "precision_header": 0.95,
         "needs_be_on_world_map": True
     }
