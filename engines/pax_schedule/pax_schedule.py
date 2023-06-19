@@ -2,7 +2,8 @@ import datetime
 import logging
 import random
 
-from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, sleep_random
+from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, sleep_random, any_image_on_screen, \
+    get_screenshot, get_image_size, get_screenshot_with_black_box_in
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -12,12 +13,57 @@ POPUP_TIMETABLE_BASE = "data/engine_schedule/popup_engine_timetable_calculator_b
 POPUP_TIMETABLE_HOVER = "data/engine_schedule/popup_engine_timetable_calculator_hover.png"
 POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE = "data/engine_schedule/popup_engine_timetable_adopt_schedule_base.png"
 POPUP_TIMETABLE_ADOPT_SCHEDULE_HOVER = "data/engine_schedule/popup_engine_timetable_adopt_schedule_hover.png"
+POPUP_TIMETABLE_KEEP_SCHEDULE_BASE = "data/engine_schedule/popup_engine_timetable_keep_schedule_base.png"
+POPUP_TIMETABLE_KEEP_SCHEDULE_HOVER = "data/engine_schedule/popup_engine_timetable_keep_schedule_hover.png"
 POPUP_SELECT_ALL_BASE = "data/engine_schedule/popup_engine_schedule_select_all_base.png"
 POPUP_SELECT_ALL_HOVER = "data/engine_schedule/popup_engine_schedule_select_all_hover.png"
 POPUP_SELECT_LETS_GO_BASE = "data/engine_schedule/popup_engine_schedule_lests_go_base.png"
 POPUP_SELECT_LETS_GO_HOVER = "data/engine_schedule/popup_engine_schedule_lests_go_hover.png"
 
 logging.basicConfig(level=logging.INFO)
+
+
+def get_top_schedule():
+    schedule_labels = [POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE,
+                       POPUP_TIMETABLE_ADOPT_SCHEDULE_HOVER,
+                       POPUP_TIMETABLE_KEEP_SCHEDULE_BASE,
+                       POPUP_TIMETABLE_KEEP_SCHEDULE_HOVER]
+
+    matches = find_and_blackout_matches(schedule_labels)
+    return select_top_schedule(matches)
+
+
+def find_and_blackout_matches(schedule_labels):
+    screenshot = get_screenshot()
+    matches = []
+    loop_counter = 1
+    loop_limit = 100
+    while True:
+        on_screen, position, _, image_path = any_image_on_screen(
+            paths_array=schedule_labels,
+            screenshot=screenshot)
+
+        if on_screen:
+            matches.append((position, image_path))
+            size = get_image_size(image_path)
+            screenshot = get_screenshot_with_black_box_in(
+                top_left_corner=position,
+                size=size,
+                screenshot=screenshot)
+            loop_counter += 1
+            if loop_counter > loop_limit:
+                raise RuntimeError("Exceeded loop limit in _click_schedule function.")
+        else:
+            break
+    return matches
+
+
+def select_top_schedule(matches):
+    # Sort the matches based on the y-coordinate (position[1]) in ascending order
+    matches.sort(key=lambda match: match[0][1])
+    # Select the match with the lowest y-coordinate (which is the first one in the sorted list)
+    top_left_corner, image_path = matches[0]
+    return top_left_corner, image_path
 
 
 class PaxSchedule:
@@ -47,7 +93,7 @@ class PaxSchedule:
         open_tab(Tabs.ENGINES)
         self._select_pax_engine()
         self._open_timetable()
-        self._open_adopt_schedule()
+        self._click_schedule()
         self._select_all_engines()
         self._select_lets_go()
 
@@ -76,9 +122,9 @@ class PaxSchedule:
         find_image_and_click([POPUP_TIMETABLE_BASE, POPUP_TIMETABLE_HOVER], msg="timetable")
         sleep_random(self.sleep_timetable)
 
-    def _open_adopt_schedule(self):
-        find_image_and_click([POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE, POPUP_TIMETABLE_ADOPT_SCHEDULE_HOVER],
-                             msg="adopt schedule")
+    def _click_schedule(self):
+        top_left_corner, image_path = get_top_schedule()
+        click_on_rect_area(top_left_corner=top_left_corner, filepath=image_path)
         sleep_random(self.sleep_adopt_schedule)
 
     def _select_all_engines(self):
