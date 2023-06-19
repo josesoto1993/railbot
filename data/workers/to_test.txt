@@ -1,5 +1,4 @@
 to test:
-worker_build_discount.png
 worker_competition.png
 worker_faster_construction.png
 worker_president.png
