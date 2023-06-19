@@ -1,3 +1,5 @@
+import logging
+
 from association.worker_bid.worker_bid import WorkerBid
 from association.worker_bid.workers import *
 from engines.pax_schedule.pax_schedule import PaxSchedule
@@ -48,6 +50,7 @@ def main_loop(
         redeem_medal: MedalRedeem
 ):
     while True:
+        logging.info(f"---------- Start loop ----------")
         if RUN_PAX_SCHEDULE_FLAG:
             pax_schedule.run()
         if RUN_INDUSTRY_INVEST_FLAG:
@@ -60,6 +63,7 @@ def main_loop(
             worker_bid.run()
         if RUN_REDEEM_MEDAL:
             redeem_medal.run()
+        logging.info(f"---------- End loop ----------")
 
         sleep_random(MAIN_LOOP_TIME)
 
