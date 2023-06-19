@@ -81,6 +81,9 @@ def click_on_rect_area(top_left_corner, size=None, filepath=None):
 
     x, y = top_left_corner
 
+    width = 0
+    height = 0
+
     if size:
         width, height = size
 
@@ -102,12 +105,12 @@ def get_image_size(image_path):
         return width, height
 
 
-def any_image_on_screen(img_str_array, precision=0.8, screenshot=None, gray_scale=True):
+def any_image_on_screen(paths_array, precision=0.8, screenshot=None, gray_scale=True):
     best_max_val = None
     best_max_loc = None
     best_image = None
 
-    for img_str in img_str_array:
+    for img_str in paths_array:
         on_screen, max_loc, max_val = image_on_screen(img_str, precision, screenshot, gray_scale)
 
         if on_screen and (best_max_val is None or max_val > best_max_val):
@@ -155,10 +158,43 @@ def get_screenshot(save=False, filename='screenshot.png'):
     return screenshot
 
 
-def get_screenshot_with_black_out_of_box(top_left_corner, size, save=False, filename='screenshot.png'):
+def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, save=False, filename='screenshot.png'):
     if '.' not in filename:
         filename += '.png'
-    screenshot = pyautogui.screenshot()
+    if screenshot is None:
+        screenshot = pyautogui.screenshot()
+
+    # Get the width and height of the image
+    width, height = screenshot.size
+
+    # Use the `load` method to get the pixel data
+    pixels = screenshot.load()
+
+    # Define the box coordinates
+    box_x_start, box_y_start = top_left_corner
+    box_width, box_height = size
+    box_x_end = box_x_start + box_width
+    box_y_end = box_y_start + box_height
+
+    # Loop over all pixels in the image
+    for y in range(height):
+        for x in range(width):
+            # If the pixel is inside of the box, set it to black
+            if box_x_start <= x <= box_x_end and box_y_start <= y <= box_y_end:
+                pixels[x, y] = (0, 0, 0)
+
+    if save:
+        screenshot.save("data/" + filename)
+        logging.debug(f"Screenshot captured and saved as {filename}.")
+
+    return screenshot
+
+
+def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None, save=False, filename='screenshot.png'):
+    if '.' not in filename:
+        filename += '.png'
+    if screenshot is None:
+        screenshot = pyautogui.screenshot()
 
     # Get the width and height of the image
     width, height = screenshot.size

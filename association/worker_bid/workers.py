@@ -1,3 +1,4 @@
+WORKER_ACCELERATION = "data/workers/worker_acceleration.png"
 WORKER_BUILD_DISCOUNT = "data/workers/worker_build_discount.png"
 WORKER_CITY_CONNECTOR = "data/workers/worker_city_connector.png"
 WORKER_COMPETITION = "data/workers/worker_competition.png"

@@ -82,14 +82,10 @@ class PaxSchedule:
         sleep_random(self.sleep_adopt_schedule)
 
     def _select_all_engines(self):
-        # TODO: use the function, not the hardcoded
-        # find_image_and_click([POPUP_SELECT_ALL_BASE, POPUP_SELECT_ALL_HOVER],
-        #                       on_screen_msg="Select all engines",
-        #                       on_fail_msg="Fail select all engines",
-        #                       precision=0.8)
-        click_on_rect_area(top_left_corner=(250, 500), size=(25, 25))
+        select_all_btn = [POPUP_SELECT_ALL_BASE, POPUP_SELECT_ALL_HOVER]
+        find_image_and_click(select_all_btn, msg="all engines")
+
         sleep_random(self.sleep_select_all)
-        # ENDTODO
 
     def _select_lets_go(self):
         find_image_and_click([POPUP_SELECT_LETS_GO_BASE, POPUP_SELECT_LETS_GO_HOVER], msg="lets go")
