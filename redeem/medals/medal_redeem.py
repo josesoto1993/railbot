@@ -37,7 +37,7 @@ class MedalRedeem:
         redeem_label_on_screen, _, _ = image_on_screen(MEDAL_REDEEM_LABEL)
 
         if not redeem_label_on_screen:
-            logging.info("No medal to redeem")
+            logging.debug("No medal to redeem")
             return
 
         while redeem_label_on_screen:

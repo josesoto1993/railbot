@@ -61,7 +61,7 @@ def _open_or_reopen_tab(on_screen_tabs, tab_enum):
     if base_images:
         _click_on_tab(base_images[0])
     else:
-        logging.info(f"{tab_enum.tab_name} tab is already opened, open another then open.")
+        logging.debug(f"{tab_enum.tab_name} tab is already opened, open another then open.")
         _open_another(tab_enum)
         selected_images = [item for item in on_screen_tabs if SELECTED_REGEX in item[0]]
         _click_on_tab(selected_images[0])
@@ -112,6 +112,6 @@ def _check_if_tab_open(tab_enum):
         tab_on_load_path = "data/tabs_status/" + tab_enum.prefix + "on_load.png"
         on_screen, _, _ = image_on_screen(tab_on_load_path, precision=tab_enum.precision_header)
         if on_screen:
-            logging.info(f"Tab {tab_enum.tab_name} opened")
+            logging.debug(f"Tab {tab_enum.tab_name} opened")
             return
     raise Exception(f"{tab_enum.tab_name} tab not opened.")

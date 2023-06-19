@@ -83,7 +83,7 @@ class IndustryInvest:
             sleep_random(self.sleep_select_zero_investment)
             return True
         else:
-            logging.info("Nothing to invest, no one with zero")
+            logging.debug("Nothing to invest, no one with zero")
             return False
 
     def _industry_invest(self):
