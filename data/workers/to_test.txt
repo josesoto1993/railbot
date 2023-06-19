@@ -2,7 +2,6 @@ to test:
 worker_build_discount.png
 worker_competition.png
 worker_faster_construction.png
-worker_pax.png
 worker_president.png
 worker_prestige_industry.png
 worker_reduce_wt.png
