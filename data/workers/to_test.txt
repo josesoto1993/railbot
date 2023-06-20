@@ -1,6 +1,4 @@
 to test:
 worker_president.png
 worker_prestige_industry.png
-worker_reduce_wt.png
 worker_repair_discount.png
-worker_track_discount.png
