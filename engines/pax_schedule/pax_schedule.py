@@ -8,7 +8,11 @@ from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 PAX_ENGINE_HEADER_MAIN = "data/tab_engine/paxengine_main.png"
+PAX_ENGINE_HEADER_KANGAROO = "data/tab_engine/paxengine_kangaroo.png"
 PAX_ENGINE_HEADER_CHEETAH = "data/tab_engine/paxengine_cheetah.png"
+PAX_ENGINE_HEADER_GIRAFFE = "data/tab_engine/paxengine_giraffe.png"
+PAX_ENGINE_HEADER_GREYHOUND = "data/tab_engine/paxengine_greyhound.png"
+PAX_ENGINE_HEADER_WHALE = "data/tab_engine/paxengine_whale.png"
 POPUP_TIMETABLE_BASE = "data/engine_schedule/popup_engine_timetable_calculator_base.png"
 POPUP_TIMETABLE_HOVER = "data/engine_schedule/popup_engine_timetable_calculator_hover.png"
 POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE = "data/engine_schedule/popup_engine_timetable_adopt_schedule_base.png"
@@ -114,7 +118,12 @@ class PaxSchedule:
         logging.info(f"----- Next run at {target_datetime.time()} -----")
 
     def _select_pax_engine(self):
-        pax_engine_headers = [PAX_ENGINE_HEADER_MAIN, PAX_ENGINE_HEADER_CHEETAH]
+        pax_engine_headers = [PAX_ENGINE_HEADER_MAIN,
+                              PAX_ENGINE_HEADER_KANGAROO,
+                              PAX_ENGINE_HEADER_CHEETAH,
+                              PAX_ENGINE_HEADER_GIRAFFE,
+                              PAX_ENGINE_HEADER_GREYHOUND,
+                              PAX_ENGINE_HEADER_WHALE]
         find_image_and_click(pax_engine_headers, msg="pax engine")
         sleep_random(self.sleep_select_pax_engine)
 
