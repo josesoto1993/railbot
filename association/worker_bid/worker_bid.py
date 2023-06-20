@@ -117,7 +117,7 @@ class WorkerBid:
             logging.debug(f"Cant bid as is disabled")
             return
         self._select_worker_details()
-        if have_bid() and False:
+        if have_bid():
             logging.debug(f"Already bid")
             return
         bid_amount = self._get_bid_amount()
