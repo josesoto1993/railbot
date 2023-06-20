@@ -1,6 +1,5 @@
 to test:
 worker_competition.png
-worker_faster_construction.png
 worker_president.png
 worker_prestige_industry.png
 worker_reduce_wt.png
