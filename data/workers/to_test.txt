@@ -1,4 +1,2 @@
 to test:
-worker_president.png
-worker_prestige_industry.png
 worker_repair_discount.png
