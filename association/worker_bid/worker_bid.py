@@ -9,7 +9,7 @@ from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 INVESTMENT_TARGET_RDM_PX = 5
-WORKER_BID_MINUTES_TO_RECHECK = 45
+WORKER_BID_MINUTES_TO_RECHECK = 15
 ASSOCIATION_BID_DISABLED = "data/tab_association/bid_disabled.png"
 ASSOCIATION_NO_ROOM_FOR_WORKER = "data/tab_association/no_room_for_worker.png"
 ASSOCIATION_NO_WORKER_AVAILABLE = "data/tab_association/no_worker_available.png"
