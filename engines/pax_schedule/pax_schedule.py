@@ -8,6 +8,7 @@ from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 PAX_ENGINE_HEADER_MAIN = "data/tab_engine/paxengine_main.png"
+PAX_ENGINE_HEADER_AJAX = "data/tab_engine/paxengine_ajax.png"
 PAX_ENGINE_HEADER_KANGAROO = "data/tab_engine/paxengine_kangaroo.png"
 PAX_ENGINE_HEADER_CHEETAH = "data/tab_engine/paxengine_cheetah.png"
 PAX_ENGINE_HEADER_GIRAFFE = "data/tab_engine/paxengine_giraffe.png"
@@ -119,6 +120,7 @@ class PaxSchedule:
 
     def _select_pax_engine(self):
         pax_engine_headers = [PAX_ENGINE_HEADER_MAIN,
+                              PAX_ENGINE_HEADER_AJAX,
                               PAX_ENGINE_HEADER_KANGAROO,
                               PAX_ENGINE_HEADER_CHEETAH,
                               PAX_ENGINE_HEADER_GIRAFFE,
