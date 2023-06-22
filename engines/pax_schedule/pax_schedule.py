@@ -116,7 +116,7 @@ class PaxSchedule:
             target_datetime += datetime.timedelta(days=1)
 
         self.next_run_time = target_datetime
-        logging.info(f"----- Next run at {target_datetime.time()} -----")
+        logging.info(f"----- Next pax engine schedule at {target_datetime.time()} -----")
 
     def _select_pax_engine(self):
         pax_engine_headers = [PAX_ENGINE_HEADER_MAIN,
