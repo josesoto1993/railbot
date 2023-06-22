@@ -3,6 +3,7 @@ import logging
 
 import pyautogui
 
+from association.worker_bid.workers import WORKER_TRACK_DISCOUNT, WORKER_PAX, WORKER_COMPETITION
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
     find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException
 from rail_utils.tabs_enum import Tabs
@@ -27,6 +28,14 @@ BIDS_BY_YOUR_ASSOCIATION_LABEL = "data/tab_association/bids_by_aso_label.png"
 HIGHEST_BID_LABEL = "data/tab_association/highest_bid_label.png"
 
 logging.basicConfig(level=logging.INFO)
+
+
+def get_worker_data():
+    return [
+        (WORKER_PAX, 3_500_000),
+        (WORKER_TRACK_DISCOUNT, 3_500_000),
+        (WORKER_COMPETITION, 3_500_000)
+    ]
 
 
 def have_bid():
@@ -90,13 +99,13 @@ def click_amount_input():
 
 
 class WorkerBid:
-    def __init__(self, worker_data):
+    def __init__(self):
         self.next_run_time = datetime.datetime.now()
         self.sleep_is_bid_disabled = 5
         self.sleep_select_worker_details = 5
         self.sleep_click_send_bid = 10
         self.sleep_character_input = 0.5
-        self.worker_data = worker_data
+        self.worker_data = get_worker_data()
 
     def run(self):
         if self._should_run():

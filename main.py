@@ -1,5 +1,4 @@
 from association.worker_bid.worker_bid import WorkerBid
-from association.worker_bid.workers import *
 from engines.pax_schedule.pax_schedule import PaxSchedule
 from engines.service_engine.service_engine import ServiceEngine
 from invest.city_invest.city_invest import CityInvest
@@ -16,15 +15,6 @@ RUN_WORKER_BID_FLAG = True
 RUN_REDEEM_MEDAL = True
 
 
-def get_worker_data():
-    return [
-        (WORKER_PAX, 3_500_000),
-        (WORKER_TRACK_DISCOUNT, 3_500_000),
-        (WORKER_BUILD_DISCOUNT, 3_500_000),
-        (WORKER_COMPETITION, 1_500_000)
-    ]
-
-
 def main():
     get_screenshot(save=True)
 
@@ -32,7 +22,7 @@ def main():
     industry_invest = IndustryInvest()
     city_invest = CityInvest()
     service_engine = ServiceEngine()
-    worker_bid = WorkerBid(worker_data=get_worker_data())
+    worker_bid = WorkerBid()
     redeem_medal = MedalRedeem()
     main_loop(pax_schedule, industry_invest, city_invest, service_engine, worker_bid, redeem_medal)
 
