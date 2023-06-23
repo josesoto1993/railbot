@@ -3,7 +3,7 @@ import logging
 
 import pyautogui
 
-from association.worker_bid.workers import WORKER_TRACK_DISCOUNT, WORKER_PAX, WORKER_COMPETITION
+from association.worker_bid.workers import WORKER_TRACK_DISCOUNT, WORKER_PAX, WORKER_COMPETITION, WORKER_PRESIDENT
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
     find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException
 from rail_utils.tabs_enum import Tabs
@@ -34,7 +34,8 @@ def get_worker_data():
     return [
         (WORKER_PAX, 3_500_000),
         (WORKER_TRACK_DISCOUNT, 3_500_000),
-        (WORKER_COMPETITION, 3_500_000)
+        (WORKER_COMPETITION, 3_500_000),
+        (WORKER_PRESIDENT, 3_500_000)
     ]
 
 
