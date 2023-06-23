@@ -24,6 +24,7 @@ POPUP_SELECT_ALL_BASE = "data/engine_schedule/popup_engine_schedule_select_all_b
 POPUP_SELECT_ALL_HOVER = "data/engine_schedule/popup_engine_schedule_select_all_hover.png"
 POPUP_SELECT_LETS_GO_BASE = "data/engine_schedule/popup_engine_schedule_lests_go_base.png"
 POPUP_SELECT_LETS_GO_HOVER = "data/engine_schedule/popup_engine_schedule_lests_go_hover.png"
+POPUP_SELECT_LETS_GO_DISABLED = "data/engine_schedule/popup_engine_schedule_lests_go_disabled.png"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -145,5 +146,8 @@ class PaxSchedule:
         sleep_random(self.sleep_select_all)
 
     def _select_lets_go(self):
-        find_image_and_click([POPUP_SELECT_LETS_GO_BASE, POPUP_SELECT_LETS_GO_HOVER], msg="lets go")
+        lets_go_paths = [POPUP_SELECT_LETS_GO_BASE,
+                         POPUP_SELECT_LETS_GO_HOVER,
+                         POPUP_SELECT_LETS_GO_DISABLED]
+        find_image_and_click(lets_go_paths, msg="lets go")
         sleep_random(self.sleep_lets_go)
