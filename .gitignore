@@ -152,5 +152,6 @@ cython_debug/
 #.idea/
 
 # worthless data
-/data/screenshot.png
+data/screenshot.png
 data/city/start_city_label.png
+association/worker_bid/worker_price_data.py
