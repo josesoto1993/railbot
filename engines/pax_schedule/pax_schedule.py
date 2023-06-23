@@ -8,12 +8,19 @@ from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 PAX_ENGINE_HEADER_MAIN = "data/tab_engine/paxengine_main.png"
+PAX_ENGINE_HEADER_MAIN_SMALL = "data/tab_engine/paxengine_main_small.png"
 PAX_ENGINE_HEADER_AJAX = "data/tab_engine/paxengine_ajax.png"
+PAX_ENGINE_HEADER_AJAX_SMALL = "data/tab_engine/paxengine_ajax_small.png"
 PAX_ENGINE_HEADER_KANGAROO = "data/tab_engine/paxengine_kangaroo.png"
+PAX_ENGINE_HEADER_KANGAROO_SMALL = "data/tab_engine/paxengine_kangaroo_small.png"
 PAX_ENGINE_HEADER_CHEETAH = "data/tab_engine/paxengine_cheetah.png"
+PAX_ENGINE_HEADER_CHEETAH_SMALL = "data/tab_engine/paxengine_cheetah_small.png"
 PAX_ENGINE_HEADER_GIRAFFE = "data/tab_engine/paxengine_giraffe.png"
+PAX_ENGINE_HEADER_GIRAFFE_SMALL = "data/tab_engine/paxengine_giraffe_small.png"
 PAX_ENGINE_HEADER_GREYHOUND = "data/tab_engine/paxengine_greyhound.png"
+PAX_ENGINE_HEADER_GREYHOUND_SMALL = "data/tab_engine/paxengine_greyhound_small.png"
 PAX_ENGINE_HEADER_WHALE = "data/tab_engine/paxengine_whale.png"
+PAX_ENGINE_HEADER_WHALE_SMALL = "data/tab_engine/paxengine_whale_small.png"
 POPUP_TIMETABLE_BASE = "data/engine_schedule/popup_engine_timetable_calculator_base.png"
 POPUP_TIMETABLE_HOVER = "data/engine_schedule/popup_engine_timetable_calculator_hover.png"
 POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE = "data/engine_schedule/popup_engine_timetable_adopt_schedule_base.png"
@@ -121,12 +128,19 @@ class PaxSchedule:
 
     def _select_pax_engine(self):
         pax_engine_headers = [PAX_ENGINE_HEADER_MAIN,
+                              PAX_ENGINE_HEADER_MAIN_SMALL,
                               PAX_ENGINE_HEADER_AJAX,
+                              PAX_ENGINE_HEADER_AJAX_SMALL,
                               PAX_ENGINE_HEADER_KANGAROO,
+                              PAX_ENGINE_HEADER_KANGAROO_SMALL,
                               PAX_ENGINE_HEADER_CHEETAH,
+                              PAX_ENGINE_HEADER_CHEETAH_SMALL,
                               PAX_ENGINE_HEADER_GIRAFFE,
+                              PAX_ENGINE_HEADER_GIRAFFE_SMALL,
                               PAX_ENGINE_HEADER_GREYHOUND,
-                              PAX_ENGINE_HEADER_WHALE]
+                              PAX_ENGINE_HEADER_GREYHOUND_SMALL,
+                              PAX_ENGINE_HEADER_WHALE,
+                              PAX_ENGINE_HEADER_WHALE_SMALL]
         find_image_and_click(pax_engine_headers, msg="pax engine")
         sleep_random(self.sleep_select_pax_engine)
 
