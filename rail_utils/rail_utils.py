@@ -10,19 +10,21 @@ from PIL import Image
 
 RETRIES_TO_LOAD = 5
 GENERAL_BTN_X_CLOSE = "data/general/btn_x_close.png"
+GENERAL_BTN_X_CLOSE_SMALL = "data/general/btn_x_close_small.png"
 
 logging.basicConfig(level=logging.INFO)
 
 
 def close_all_pop_ups():
     precision = 0.8
-    on_screen, position, _ = image_on_screen(GENERAL_BTN_X_CLOSE, precision=precision)
+    btn_x_close = [GENERAL_BTN_X_CLOSE, GENERAL_BTN_X_CLOSE_SMALL]
+    on_screen, _, _ = any_image_on_screen(btn_x_close, precision=precision)
     while on_screen:
         find_image_and_click([GENERAL_BTN_X_CLOSE], msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
-        on_screen, position, _ = image_on_screen(GENERAL_BTN_X_CLOSE)
+        on_screen, _, _ = any_image_on_screen(btn_x_close, precision=precision)
 
 
 def find_image_and_click(
