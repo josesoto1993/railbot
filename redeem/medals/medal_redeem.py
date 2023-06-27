@@ -1,12 +1,14 @@
 import datetime
 import logging
 
-from rail_utils.rail_utils import image_on_screen, find_image_and_click, sleep_random
+from rail_utils.rail_utils import find_image_and_click, sleep_random, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 MEDAL_REDEEM_MINUTES_TO_RECHECK = 120
+
 MEDAL_REDEEM_LABEL = "data/tab_medal/redeem_label.png"
+MEDAL_REDEEM_LABEL_SMALL = "data/tab_medal/redeem_label_small.png"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -34,7 +36,8 @@ class MedalRedeem:
         self._redeem_all()
 
     def _redeem_all(self):
-        redeem_label_on_screen, _, _ = image_on_screen(MEDAL_REDEEM_LABEL)
+        medal_redeem_label = [MEDAL_REDEEM_LABEL, MEDAL_REDEEM_LABEL_SMALL]
+        redeem_label_on_screen, _, _ = any_image_on_screen(medal_redeem_label)
 
         if not redeem_label_on_screen:
             logging.debug("No medal to redeem")
@@ -43,7 +46,7 @@ class MedalRedeem:
         while redeem_label_on_screen:
             find_image_and_click([MEDAL_REDEEM_LABEL], msg="redeem medal")
             sleep_random(self.sleep_redeem_all)
-            redeem_label_on_screen, _, _ = image_on_screen(MEDAL_REDEEM_LABEL)
+            redeem_label_on_screen, _, _ = any_image_on_screen(medal_redeem_label)
 
     def _update_next_run_time(self):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=MEDAL_REDEEM_MINUTES_TO_RECHECK)
