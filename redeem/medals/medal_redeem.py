@@ -37,16 +37,16 @@ class MedalRedeem:
 
     def _redeem_all(self):
         medal_redeem_label = [MEDAL_REDEEM_LABEL, MEDAL_REDEEM_LABEL_SMALL]
-        redeem_label_on_screen, _, _ = any_image_on_screen(medal_redeem_label)
+        on_screen, _, _, _ = any_image_on_screen(medal_redeem_label)
 
-        if not redeem_label_on_screen:
+        if not on_screen:
             logging.debug("No medal to redeem")
             return
 
-        while redeem_label_on_screen:
+        while on_screen:
             find_image_and_click([MEDAL_REDEEM_LABEL], msg="redeem medal")
             sleep_random(self.sleep_redeem_all)
-            redeem_label_on_screen, _, _ = any_image_on_screen(medal_redeem_label)
+            on_screen, _, _, _ = any_image_on_screen(medal_redeem_label)
 
     def _update_next_run_time(self):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=MEDAL_REDEEM_MINUTES_TO_RECHECK)
