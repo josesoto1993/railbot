@@ -66,7 +66,7 @@ def get_screenshot_contribute_pop_up():
 class CityInvest:
     def __init__(self):
         self.next_run_time = datetime.datetime.now()
-        self.sleep_center_city = 3
+        self.sleep_center_city = 10
         self.sleep_zoom = 2
         self.sleep_select_city = 10
         self.sleep_select_subtab_city_project = 5
