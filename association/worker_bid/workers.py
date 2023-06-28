@@ -15,7 +15,7 @@ WORKER_GOLD_DISCOUNT_SMALL = "data/workers/worker_gold_discount_small.png"
 WORKER_PAX = "data/workers/worker_pax.png"
 WORKER_PAX_SMALL = "data/workers/worker_pax_small.png"
 WORKER_PRESIDENT = "data/workers/worker_president.png"
-# TODO: WORKER_PRESIDENT SMALL
+WORKER_PRESIDENT_SMALL = "data/workers/worker_president_small.png"
 WORKER_PRESTIGE_HOURLY = "data/workers/worker_prestige_hourly.png"
 WORKER_PRESTIGE_HOURLY_SMALL = "data/workers/worker_prestige_hourly_small.png"
 WORKER_PRESTIGE_INDUSTRY = "data/workers/worker_prestige_industry.png"
