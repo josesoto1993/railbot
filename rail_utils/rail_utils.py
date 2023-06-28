@@ -20,7 +20,7 @@ def close_all_pop_ups():
     btn_x_close = [GENERAL_BTN_X_CLOSE, GENERAL_BTN_X_CLOSE_SMALL]
     on_screen, _, _, _ = any_image_on_screen(btn_x_close, precision=precision)
     while on_screen:
-        find_image_and_click([GENERAL_BTN_X_CLOSE], msg="close pop-up", retries=1, precision=precision)
+        find_image_and_click(btn_x_close, msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
