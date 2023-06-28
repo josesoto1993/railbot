@@ -7,18 +7,21 @@ from rail_utils.tabs_util import open_tab
 
 INVEST_MINUTES_TO_RECHECK = 60
 
-RANKING_SUBTAB_INDUSTRIES = "data/tab_ranking/ranking_subtab_industries_base.png"
-RANKING_SUBTAB_INDUSTRIES_SMALL = "data/tab_ranking/ranking_subtab_industries_base_small.png"
-RANKING_SUBSUBTAB_INVEST = "data/tab_ranking/ranking_subtab_industries_invest_base.png"
-RANKING_SUBSUBTAB_INVEST_SMALL = "data/tab_ranking/ranking_subtab_industries_invest_base_small.png"
-RANKING_SHOW_MORE = "data/tab_ranking/ranking_subtab_industries_show_more_base.png"
-RANKING_SHOW_MORE_SMALL = "data/tab_ranking/ranking_subtab_industries_show_more_base_small.png"
-RANKING_SUBSUBTAB_INVEST_ZERO = "data/tab_ranking/ranking_subtab_industries_invest_zero_base.png"
-RANKING_SUBSUBTAB_INVEST_ZERO_SMALL = "data/tab_ranking/ranking_subtab_industries_invest_zero_base_small.png"
-INDUSTRY_INVEST_BASE = "data/industry/industry_invest_base.png"
-INDUSTRY_INVEST_BASE_SMALL = "data/industry/industry_invest_base_small.png"
-INDUSTRY_INVEST_VOUCHER_BASE = "data/industry/industry_invest_voucher_base.png"
-INDUSTRY_INVEST_VOUCHER_BASE_SMALL = "data/industry/industry_invest_voucher_base_small.png"
+RANKING_FOLDER = "data/tab_ranking"
+RANKING_SUBTAB_INDUSTRIES = RANKING_FOLDER + "/ranking_subtab_industries_base.png"
+RANKING_SUBTAB_INDUSTRIES_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_base_small.png"
+RANKING_SUBSUBTAB_INVEST = RANKING_FOLDER + "/ranking_subtab_industries_invest_base.png"
+RANKING_SUBSUBTAB_INVEST_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_invest_base_small.png"
+RANKING_SHOW_MORE = RANKING_FOLDER + "/ranking_subtab_industries_show_more_base.png"
+RANKING_SHOW_MORE_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_show_more_base_small.png"
+RANKING_SUBSUBTAB_INVEST_ZERO = RANKING_FOLDER + "/ranking_subtab_industries_invest_zero_base.png"
+RANKING_SUBSUBTAB_INVEST_ZERO_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_invest_zero_base_small.png"
+
+INDUSTRY_FOLDER = "data/industry"
+INDUSTRY_INVEST_BASE = INDUSTRY_FOLDER + "/industry_invest_base.png"
+INDUSTRY_INVEST_BASE_SMALL = INDUSTRY_FOLDER + "/industry_invest_base_small.png"
+INDUSTRY_INVEST_VOUCHER_BASE = INDUSTRY_FOLDER + "/industry_invest_voucher_base.png"
+INDUSTRY_INVEST_VOUCHER_BASE_SMALL = INDUSTRY_FOLDER + "/industry_invest_voucher_base_small.png"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -79,7 +82,7 @@ class IndustryInvest:
         show_more_btn = [RANKING_SHOW_MORE, RANKING_SHOW_MORE_SMALL]
         on_screen = True
         while on_screen:
-            find_image_and_click(show_more_btn, msg="show more")
+            find_image_and_click(show_more_btn, msg="show more", precision=0.9)
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
