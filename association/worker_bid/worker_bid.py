@@ -118,18 +118,19 @@ def click_amount_input():
     click_on_rect_area(target, size=size)
 
 
-def get_target_datetime(bid_done, current_datetime):
-    if bid_done:
-        target_datetime = get_target_datetime_if_bid(current_datetime)
+def get_target_datetime(skip_till_next_worker):
+    current_datetime = datetime.datetime.now()
+    if skip_till_next_worker:
+        target_datetime = get_target_datetime_if_skip_till_next_worker(current_datetime)
     else:
         target_datetime = current_datetime + datetime.timedelta(minutes=WORKER_BID_MINUTES_TO_RECHECK)
     return target_datetime
 
 
-def get_target_datetime_if_bid(current_datetime):
+def get_target_datetime_if_skip_till_next_worker(current_datetime):
     # Set next run time to the next hour with adjusted minutes
     target_hour = (current_datetime.hour + 1) % 24
-    target_minute = WORKER_BID_MINUTE_FINISH - WORKER_BID_MINUTES_TO_RECHECK // 2
+    target_minute = WORKER_BID_MINUTE_FINISH - WORKER_BID_MINUTES_TO_RECHECK * 3 // 4
     target_datetime = current_datetime.replace(hour=target_hour, minute=target_minute, second=0, microsecond=0)
 
     # If the target time is in the past, add 1 day
@@ -151,8 +152,8 @@ class WorkerBid:
     def run(self):
         if self._should_run():
             try:
-                bid_done = self._run_worker_bid()
-                self._update_next_run_time(bid_done)
+                skip_till_next_worker = self._run_worker_bid()
+                self._update_next_run_time(skip_till_next_worker)
             except Exception as exception:
                 logging.error(str(exception))
                 return
@@ -169,11 +170,11 @@ class WorkerBid:
         self._select_worker_details()
         if have_bid():
             logging.debug(f"Already bid")
-            return False
+            return True
         bid_amount = self._get_bid_amount()
         if bid_amount == 0:
             logging.debug(f"Not interested in this worker")
-            return False
+            return True
         self._do_bid(bid_amount)
         return True
 
@@ -232,7 +233,6 @@ class WorkerBid:
         find_image_and_click(worker_details_send_btn, msg="bid send btn")
         sleep_random(self.sleep_click_send_bid)
 
-    def _update_next_run_time(self, bid_done=True):
-        current_datetime = datetime.datetime.now()
-        self.next_run_time = get_target_datetime(bid_done, current_datetime)
+    def _update_next_run_time(self, skip_till_next_worker=True):
+        self.next_run_time = get_target_datetime(skip_till_next_worker)
         logging.info(f"----- Next worker bid check at {self.next_run_time.time()} -----")
