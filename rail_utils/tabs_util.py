@@ -110,8 +110,13 @@ def _log_find_tab_state(file_name, is_on_screen, position):
 def _check_if_tab_open(tab_enum: Tab):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
-        tab_on_load_path = "data/tabs_status/" + tab_enum.prefix + "on_load.png"
-        on_screen, _, _ = image_on_screen(tab_on_load_path, precision=tab_enum.precision_header)
+
+        partial_path = TAB_STATUS_DIR + "/" + tab_enum.prefix + "on_load"
+        tab_on_load_base = partial_path + ".png"
+        tab_on_load_small = partial_path + "_small.png"
+
+        tab_on_load = [tab_on_load_base, tab_on_load_small]
+        on_screen, _, _ = image_on_screen(tab_on_load, precision=tab_enum.precision_header)
         if on_screen:
             logging.debug(f"Tab {tab_enum.name} opened")
             return
