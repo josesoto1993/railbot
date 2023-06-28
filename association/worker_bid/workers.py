@@ -9,11 +9,11 @@ WORKER_COMPETITION = "data/workers/worker_competition.png"
 WORKER_FASTER_BONUS = "data/workers/worker_faster_bonus.png"
 # TODO: WORKER_FASTER_BONUS SMALL
 WORKER_FASTER_CONSTRUCTION = "data/workers/worker_faster_construction.png"
-# TODO: WORKER_FASTER_CONSTRUCTION SMALL
+WORKER_FASTER_CONSTRUCTION_SMALL = "data/workers/worker_faster_construction_small.png"
 WORKER_GOLD_DISCOUNT = "data/workers/worker_gold_discount.png"
 WORKER_GOLD_DISCOUNT_SMALL = "data/workers/worker_gold_discount_small.png"
 WORKER_PAX = "data/workers/worker_pax.png"
-# TODO: WORKER_PAX SMALL
+WORKER_PAX_SMALL = "data/workers/worker_pax_small.png"
 WORKER_PRESIDENT = "data/workers/worker_president.png"
 # TODO: WORKER_PRESIDENT SMALL
 WORKER_PRESTIGE_HOURLY = "data/workers/worker_prestige_hourly.png"
@@ -31,4 +31,4 @@ WORKER_SPEED = "data/workers/worker_speed.png"
 WORKER_TRACK_DISCOUNT = "data/workers/worker_track_discount.png"
 WORKER_TRACK_DISCOUNT_SMALL = "data/workers/worker_track_discount_small.png"
 WORKER_WAGGONS_DISCOUNT = "data/workers/worker_waggons_discount.png"
-# TODO: WORKER_WAGGONS_DISCOUNT SMALL
+WORKER_WAGGONS_DISCOUNT_SMALL = "data/workers/worker_waggons_discount_small.png"
