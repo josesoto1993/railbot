@@ -11,6 +11,7 @@ from rail_utils.tabs_util import open_tab
 
 INVESTMENT_TARGET_RDM_PX = 5
 WORKER_BID_MINUTES_TO_RECHECK = 15
+WORKER_BID_MINUTE_FINISH = 55
 
 ASSOCIATION_FOLDER = "data/tab_association"
 ASSOCIATION_BID_DISABLED = ASSOCIATION_FOLDER + "/bid_disabled.png"
@@ -117,6 +118,27 @@ def click_amount_input():
     click_on_rect_area(target, size=size)
 
 
+def get_target_datetime(bid_done, current_datetime):
+    if bid_done:
+        target_datetime = get_target_datetime_if_bid(current_datetime)
+    else:
+        target_datetime = current_datetime + datetime.timedelta(minutes=WORKER_BID_MINUTES_TO_RECHECK)
+    return target_datetime
+
+
+def get_target_datetime_if_bid(current_datetime):
+    # Set next run time to the next hour with adjusted minutes
+    target_hour = (current_datetime.hour + 1) % 24
+    target_minute = WORKER_BID_MINUTE_FINISH - WORKER_BID_MINUTES_TO_RECHECK // 2
+    target_datetime = current_datetime.replace(hour=target_hour, minute=target_minute, second=0, microsecond=0)
+
+    # If the target time is in the past, add 1 day
+    if target_datetime < current_datetime:
+        target_datetime += datetime.timedelta(days=1)
+
+    return target_datetime
+
+
 class WorkerBid:
     def __init__(self):
         self.next_run_time = datetime.datetime.now()
@@ -129,8 +151,8 @@ class WorkerBid:
     def run(self):
         if self._should_run():
             try:
-                self._run_worker_bid()
-                self._update_next_run_time()
+                bid_done = self._run_worker_bid()
+                self._update_next_run_time(bid_done)
             except Exception as exception:
                 logging.error(str(exception))
                 return
@@ -143,16 +165,17 @@ class WorkerBid:
         open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
             logging.debug(f"Cant bid as is disabled")
-            return
+            return False
         self._select_worker_details()
         if have_bid():
             logging.debug(f"Already bid")
-            return
+            return False
         bid_amount = self._get_bid_amount()
         if bid_amount == 0:
             logging.debug(f"Not interested in this worker")
-            return
+            return False
         self._do_bid(bid_amount)
+        return True
 
     def _is_bid_disabled(self):
         sleep_random(self.sleep_is_bid_disabled)
@@ -209,8 +232,7 @@ class WorkerBid:
         find_image_and_click(worker_details_send_btn, msg="bid send btn")
         sleep_random(self.sleep_click_send_bid)
 
-    def _update_next_run_time(self):
-        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=WORKER_BID_MINUTES_TO_RECHECK)
-
-        self.next_run_time = target_datetime
-        logging.info(f"----- Next worker bid check at {target_datetime.time()} -----")
+    def _update_next_run_time(self, bid_done=True):
+        current_datetime = datetime.datetime.now()
+        self.next_run_time = get_target_datetime(bid_done, current_datetime)
+        logging.info(f"----- Next worker bid check at {self.next_run_time.time()} -----")
