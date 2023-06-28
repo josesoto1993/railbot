@@ -1,14 +1,18 @@
 import datetime
 import logging
 
-from rail_utils.rail_utils import sleep_random, find_image_and_click, image_on_screen
+from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 SERVICE_ENGINE_MINUTES_TO_RECHECK = 90
+
 SERVICE_MULTIPLE_BTN = "data/tab_engine/service_multiple_btn.png"
+SERVICE_MULTIPLE_BTN_SMALL = "data/tab_engine/service_multiple_btn_small.png"
 ALL_NEEDING_SERVICE_BTN = "data/tab_engine/all_needing_service_btn.png"
+ALL_NEEDING_SERVICE_BTN_SMALL = "data/tab_engine/all_needing_service_btn_small.png"
 SERVICE_ALL_LABEL = "data/tab_engine/service_all_label.png"
+SERVICE_ALL_LABEL_SMALL = "data/tab_engine/service_all_label_small.png"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -42,17 +46,20 @@ class ServiceEngine:
         return
 
     def _select_service_multiple(self):
-        find_image_and_click([SERVICE_MULTIPLE_BTN], msg="service multiple btn")
+        service_multiple_btn = [SERVICE_MULTIPLE_BTN, SERVICE_MULTIPLE_BTN_SMALL]
+        find_image_and_click(service_multiple_btn, msg="service multiple btn")
         sleep_random(self.sleep_service_multiple)
 
     def _select_all_needing_service(self):
-        find_image_and_click([ALL_NEEDING_SERVICE_BTN], msg="all needing service btn")
+        all_needing_service_btn = [ALL_NEEDING_SERVICE_BTN, ALL_NEEDING_SERVICE_BTN_SMALL]
+        find_image_and_click(all_needing_service_btn, msg="all needing service btn")
         sleep_random(self.sleep_all_needing_service)
 
     def _select_service_all(self):
-        on_screen, position, _ = image_on_screen(SERVICE_ALL_LABEL)
+        service_all_label = [SERVICE_ALL_LABEL, SERVICE_ALL_LABEL_SMALL]
+        on_screen, position, _, _ = any_image_on_screen(service_all_label)
         if on_screen:
-            find_image_and_click([SERVICE_ALL_LABEL], msg="service all")
+            find_image_and_click(service_all_label, msg="service all")
             sleep_random(self.sleep_service_all)
         else:
             logging.debug(f"No need to service any engine")
