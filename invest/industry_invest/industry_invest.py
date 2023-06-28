@@ -5,7 +5,7 @@ from rail_utils.rail_utils import find_image_and_click, sleep_random, move_mouse
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
-INVEST_MINUTES_TO_RECHECK = 60
+INVEST_MINUTES_TO_RECHECK = 180
 
 RANKING_FOLDER = "data/tab_ranking"
 RANKING_SUBTAB_INDUSTRIES = RANKING_FOLDER + "/ranking_subtab_industries_base.png"
