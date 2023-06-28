@@ -19,7 +19,7 @@ WORKER_PRESIDENT = "data/workers/worker_president.png"
 WORKER_PRESTIGE_HOURLY = "data/workers/worker_prestige_hourly.png"
 WORKER_PRESTIGE_HOURLY_SMALL = "data/workers/worker_prestige_hourly_small.png"
 WORKER_PRESTIGE_INDUSTRY = "data/workers/worker_prestige_industry.png"
-# TODO: WORKER_PRESTIGE_INDUSTRY SMALL
+WORKER_PRESTIGE_INDUSTRY_SMALL = "data/workers/worker_prestige_industry_small.png"
 WORKER_REDUCE_WT = "data/workers/worker_reduce_wt.png"
 # TODO: WORKER_REDUCE_WT SMALL
 WORKER_SCIENCE = "data/workers/worker_science.png"
