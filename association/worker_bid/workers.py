@@ -1,7 +1,7 @@
 WORKER_ACCELERATION = "data/workers/worker_acceleration.png"
 WORKER_ACCELERATION_SMALL = "data/workers/worker_acceleration_small.png"
 WORKER_BUILD_DISCOUNT = "data/workers/worker_build_discount.png"
-# TODO: WORKER_BUILD_DISCOUNT_SMALL
+WORKER_BUILD_DISCOUNT_SMALL = "data/workers/worker_build_discount_small.png"
 WORKER_CITY_CONNECTOR = "data/workers/worker_city_connector.png"
 # TODO: WORKER_CITY_CONNECTOR SMALL
 WORKER_COMPETITION = "data/workers/worker_competition.png"
