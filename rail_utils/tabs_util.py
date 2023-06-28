@@ -2,7 +2,7 @@ import logging
 import os
 
 from rail_utils.rail_utils import image_on_screen, wait_rail_response, get_screenshot, click_on_rect_area, \
-    get_image_size, move_mouse_close_to_top_right
+    get_image_size, move_mouse_close_to_top_right, any_image_on_screen
 from rail_utils.tabs_enum import *
 
 BASE_REGEX = "_base"
@@ -116,7 +116,7 @@ def _check_if_tab_open(tab_enum: Tab):
         tab_on_load_small = partial_path + "_small.png"
 
         tab_on_load = [tab_on_load_base, tab_on_load_small]
-        on_screen, _, _ = image_on_screen(tab_on_load, precision=tab_enum.precision_header)
+        on_screen, _, _, _ = any_image_on_screen(tab_on_load, precision=tab_enum.precision_header)
         if on_screen:
             logging.debug(f"Tab {tab_enum.name} opened")
             return
