@@ -28,7 +28,7 @@ def close_all_pop_ups():
 
 
 def find_image_and_click(
-        filepaths,
+        filepaths: list[str],
         msg=None,
         precision=0.95,
         screenshot=None,
@@ -101,13 +101,13 @@ def click_on_rect_area(top_left_corner, size=None, filepath=None):
     pyautogui.click()
 
 
-def get_image_size(image_path):
+def get_image_size(image_path: str):
     with Image.open(image_path) as img:
         width, height = img.size
         return width, height
 
 
-def any_image_on_screen(paths_array, precision=0.8, screenshot=None, gray_scale=True):
+def any_image_on_screen(paths_array: list[str], precision=0.8, screenshot=None, gray_scale=True):
     best_max_val = None
     best_max_loc = None
     best_image = None
@@ -126,7 +126,7 @@ def any_image_on_screen(paths_array, precision=0.8, screenshot=None, gray_scale=
         return True, best_max_loc, best_max_val, best_image
 
 
-def image_on_screen(img_str, precision=0.8, screenshot=None, gray_scale=True):
+def image_on_screen(img_str: str, precision=0.8, screenshot=None, gray_scale=True):
     if screenshot is None:
         screenshot = pyautogui.screenshot()
 
