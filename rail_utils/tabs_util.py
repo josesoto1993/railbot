@@ -2,7 +2,7 @@ import logging
 import os
 
 from rail_utils.rail_utils import image_on_screen, wait_rail_response, get_screenshot, click_on_rect_area, \
-    get_image_size, move_mouse_close_to_top_right
+    get_image_size, move_mouse_close_to_top_right, any_image_on_screen
 from rail_utils.tabs_enum import *
 
 BASE_REGEX = "_base"
@@ -110,8 +110,13 @@ def _log_find_tab_state(file_name, is_on_screen, position):
 def _check_if_tab_open(tab_enum: Tab):
     for _ in range(RETRIES_TO_LOAD):
         wait_rail_response()
-        tab_on_load_path = "data/tabs_status/" + tab_enum.prefix + "on_load.png"
-        on_screen, _, _ = image_on_screen(tab_on_load_path, precision=tab_enum.precision_header)
+
+        partial_path = TAB_STATUS_DIR + "/" + tab_enum.prefix + "on_load"
+        tab_on_load_base = partial_path + ".png"
+        tab_on_load_small = partial_path + "_small.png"
+
+        tab_on_load = [tab_on_load_base, tab_on_load_small]
+        on_screen, _, _, _ = any_image_on_screen(tab_on_load, precision=tab_enum.precision_header)
         if on_screen:
             logging.debug(f"Tab {tab_enum.name} opened")
             return
