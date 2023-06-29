@@ -19,38 +19,27 @@ RETRIES_TO_LOAD = 5
 
 
 def open_tab(tab_enum: Tab):
-    print("open_tab")
     _prepare_screen(tab_enum)
 
     tabs_state = _find_tab_state(tab_enum)
     on_screen_tabs = [tab_state for tab_state in tabs_state if tab_state[1]]
 
-    print(f"on_screen_tabs {on_screen_tabs}")
-
     if not on_screen_tabs:
         raise Exception(f"{tab_enum.name} tab not found.")
     else:
-        print("_open_or_reopen_tab")
         _open_or_reopen_tab(on_screen_tabs=on_screen_tabs, tab_enum=tab_enum)
-        print("_check_if_tab_open")
         _check_if_tab_open(tab_enum)
 
 
 def _prepare_screen(tab_enum: Tab):
-    print("_prepare_screen")
     _open_world_map_if_needed(tab_enum)
     close_all_pop_ups()
-    print("close_all_pop_ups")
     move_mouse_close_to_top_right()
-    print("move_mouse_close_to_top_right")
     wait_rail_response()
-    print("wait_rail_response")
 
 
 def _open_world_map_if_needed(tab_enum: Tab):
-    print("_open_world_map_if_needed")
     is_on_world_map = _is_tab_selected(Tabs.WORLD_MAP.value)
-    print(f"is_on_world_map {is_on_world_map}")
     if tab_enum.needs_be_on_world_map and not is_on_world_map:
         open_tab(Tabs.WORLD_MAP.value)
 
@@ -72,16 +61,13 @@ def _is_tab_selected(tab_enum: Tab):
 def _open_or_reopen_tab(on_screen_tabs, tab_enum: Tab):
     base_images = [tab for tab in on_screen_tabs if BASE_REGEX in tab[0]]
     if base_images:
-        print("if base_images _click_on_tab")
         _click_on_tab(base_images[0])
     else:
-        print("if not base_images _reopen_tab")
         _reopen_tab(on_screen_tabs, tab_enum)
 
 
 def _reopen_tab(on_screen_tabs, tab_enum: Tab):
     if tab_enum != Tabs.WORLD_MAP.value:
-        print("if tab_enum != Tabs.WORLD_MAP")
         logging.debug(f"{tab_enum.name} tab is already opened, open another then open.")
         _open_another(tab_enum)
         selected_images = [item for item in on_screen_tabs if SELECTED_REGEX in item[0]]
