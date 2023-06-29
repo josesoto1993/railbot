@@ -9,22 +9,34 @@ import winsound
 from PIL import Image
 
 RETRIES_TO_LOAD = 5
-GENERAL_BTN_X_CLOSE = "data/general/btn_x_close.png"
-GENERAL_BTN_X_CLOSE_SMALL = "data/general/btn_x_close_small.png"
-GENERAL_BTN_X = [GENERAL_BTN_X_CLOSE, GENERAL_BTN_X_CLOSE_SMALL]
+
+GENERAL_FOLDER = "data/general"
+BTN_X_CLOSE_BASE = GENERAL_FOLDER + "/btn_x_close.png"
+BTN_X_CLOSE_SMALL = GENERAL_FOLDER + "/btn_x_close_small.png"
+BTN_X_CLOSE = [BTN_X_CLOSE_BASE, BTN_X_CLOSE_SMALL]
+BTN_X_TICKET_BASE = GENERAL_FOLDER + "/close_redeem_ticket.png"
+BTN_X_TICKET_BASE_SMALL = GENERAL_FOLDER + "/close_redeem_ticket_small.png"
+BTN_CONTINUE_BASE = GENERAL_FOLDER + "/continue_playing.png"
+BTN_CONTINUE_BASE_SMALL = GENERAL_FOLDER + "/continue_playing_small.png"
+ALL_CLOSE_BTN = [BTN_X_CLOSE_BASE,
+                 BTN_X_CLOSE_SMALL,
+                 BTN_X_TICKET_BASE,
+                 BTN_X_TICKET_BASE_SMALL,
+                 BTN_CONTINUE_BASE,
+                 BTN_CONTINUE_BASE_SMALL]
 
 logging.basicConfig(level=logging.INFO)
 
 
 def close_all_pop_ups():
-    precision = 0.8
-    on_screen, _, _, _ = any_image_on_screen(GENERAL_BTN_X, precision=precision)
+    precision = 0.9
+    on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
     while on_screen:
-        find_image_and_click(GENERAL_BTN_X, msg="close pop-up", retries=1, precision=precision)
+        find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
-        on_screen, _, _, _ = any_image_on_screen(GENERAL_BTN_X, precision=precision)
+        on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
 
 
 def find_image_and_click(
