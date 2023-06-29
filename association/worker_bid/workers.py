@@ -21,7 +21,7 @@ WORKER_PRESTIGE_HOURLY_SMALL = "data/workers/worker_prestige_hourly_small.png"
 WORKER_PRESTIGE_INDUSTRY = "data/workers/worker_prestige_industry.png"
 WORKER_PRESTIGE_INDUSTRY_SMALL = "data/workers/worker_prestige_industry_small.png"
 WORKER_REDUCE_WT = "data/workers/worker_reduce_wt.png"
-# TODO: WORKER_REDUCE_WT SMALL
+WORKER_REDUCE_WT_SMALL = "data/workers/worker_reduce_wt_small.png"
 WORKER_SCIENCE = "data/workers/worker_science.png"
 # TODO: WORKER_SCIENCE SMALL
 WORKER_SERVICE_DISCOUNT = "data/workers/worker_service_discount.png"
