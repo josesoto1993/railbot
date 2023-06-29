@@ -122,7 +122,7 @@ class PaxSchedule:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_pax_engine_schedule(self):
-        logging.info(f"----- Run pax engine schedule: Start at {datetime.datetime.now()} -----")
+        logging.info(f"----- Run pax engine schedule: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.ENGINES.value)
         self._select_pax_engine()
         self._open_timetable()

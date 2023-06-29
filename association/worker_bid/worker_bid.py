@@ -96,7 +96,7 @@ def get_bid_right_corner():
                                ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED_SMALL,
                                ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED,
                                ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED_SMALL]
-    on_screen, position, _, image_path = image_on_screen(worker_details_bid_more)
+    on_screen, position, _, image_path = any_image_on_screen(worker_details_bid_more)
     if on_screen:
         return position, image_path
 
@@ -162,7 +162,7 @@ class WorkerBid:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_worker_bid(self):
-        logging.info(f"----- Run worker bid: Start at {datetime.datetime.now()} -----")
+        logging.info(f"----- Run worker bid: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
             logging.debug(f"Cant bid as is disabled")

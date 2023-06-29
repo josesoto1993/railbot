@@ -9,6 +9,7 @@ MEDAL_REDEEM_MINUTES_TO_RECHECK = 120
 
 MEDAL_REDEEM_LABEL = "data/tab_medal/redeem_label.png"
 MEDAL_REDEEM_LABEL_SMALL = "data/tab_medal/redeem_label_small.png"
+REDEEM_MEDAL_LABEL = [MEDAL_REDEEM_LABEL, MEDAL_REDEEM_LABEL_SMALL]
 
 logging.basicConfig(level=logging.INFO)
 
@@ -31,22 +32,21 @@ class MedalRedeem:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_medal_redeem(self):
-        logging.info(f"----- Run medal redeem: Start at {datetime.datetime.now()} -----")
+        logging.info(f"----- Run medal redeem: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.MEDALS.value)
         self._redeem_all()
 
     def _redeem_all(self):
-        medal_redeem_label = [MEDAL_REDEEM_LABEL, MEDAL_REDEEM_LABEL_SMALL]
-        on_screen, _, _, _ = any_image_on_screen(medal_redeem_label)
+        on_screen, _, _, _ = any_image_on_screen(REDEEM_MEDAL_LABEL)
 
         if not on_screen:
             logging.debug("No medal to redeem")
             return
 
         while on_screen:
-            find_image_and_click([MEDAL_REDEEM_LABEL], msg="redeem medal")
+            find_image_and_click(REDEEM_MEDAL_LABEL, msg="redeem medal")
             sleep_random(self.sleep_redeem_all)
-            on_screen, _, _, _ = any_image_on_screen(medal_redeem_label)
+            on_screen, _, _, _ = any_image_on_screen(REDEEM_MEDAL_LABEL)
 
     def _update_next_run_time(self):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=MEDAL_REDEEM_MINUTES_TO_RECHECK)

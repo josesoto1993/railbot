@@ -11,24 +11,24 @@ from PIL import Image
 RETRIES_TO_LOAD = 5
 GENERAL_BTN_X_CLOSE = "data/general/btn_x_close.png"
 GENERAL_BTN_X_CLOSE_SMALL = "data/general/btn_x_close_small.png"
+GENERAL_BTN_X = [GENERAL_BTN_X_CLOSE, GENERAL_BTN_X_CLOSE_SMALL]
 
 logging.basicConfig(level=logging.INFO)
 
 
 def close_all_pop_ups():
     precision = 0.8
-    btn_x_close = [GENERAL_BTN_X_CLOSE, GENERAL_BTN_X_CLOSE_SMALL]
-    on_screen, _, _, _ = any_image_on_screen(btn_x_close, precision=precision)
+    on_screen, _, _, _ = any_image_on_screen(GENERAL_BTN_X, precision=precision)
     while on_screen:
-        find_image_and_click(btn_x_close, msg="close pop-up", retries=1, precision=precision)
+        find_image_and_click(GENERAL_BTN_X, msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
-        on_screen, _, _, _ = any_image_on_screen(btn_x_close, precision=precision)
+        on_screen, _, _, _ = any_image_on_screen(GENERAL_BTN_X, precision=precision)
 
 
 def find_image_and_click(
-        filepaths,
+        filepaths: list[str],
         msg=None,
         precision=0.95,
         screenshot=None,
@@ -101,13 +101,13 @@ def click_on_rect_area(top_left_corner, size=None, filepath=None):
     pyautogui.click()
 
 
-def get_image_size(image_path):
+def get_image_size(image_path: str):
     with Image.open(image_path) as img:
         width, height = img.size
         return width, height
 
 
-def any_image_on_screen(paths_array, precision=0.8, screenshot=None, gray_scale=True):
+def any_image_on_screen(paths_array: list[str], precision=0.8, screenshot=None, gray_scale=True):
     best_max_val = None
     best_max_loc = None
     best_image = None
@@ -126,7 +126,7 @@ def any_image_on_screen(paths_array, precision=0.8, screenshot=None, gray_scale=
         return True, best_max_loc, best_max_val, best_image
 
 
-def image_on_screen(img_str, precision=0.8, screenshot=None, gray_scale=True):
+def image_on_screen(img_str: str, precision=0.8, screenshot=None, gray_scale=True):
     if screenshot is None:
         screenshot = pyautogui.screenshot()
 

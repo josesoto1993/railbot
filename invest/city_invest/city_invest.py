@@ -5,7 +5,7 @@ import pyautogui
 
 from rail_utils.rail_utils import any_image_on_screen, image_on_screen, ImageNotFoundException, get_image_size, \
     get_screenshot, get_screenshot_with_black_out_of_box, close_all_pop_ups, sleep_random, find_image_and_click, \
-    move_mouse_close_to_center, click_on_rect_area, GENERAL_BTN_X_CLOSE
+    move_mouse_close_to_center, click_on_rect_area, GENERAL_BTN_X
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -118,7 +118,7 @@ class CityInvest:
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_invest(self):
-        logging.info(f"----- Run city invest: Start at {datetime.datetime.now()} -----")
+        logging.info(f"----- Run city invest: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.WORLD_MAP.value)
         self._center_and_zoom_to_city()
         self._select_city()
@@ -182,7 +182,7 @@ class CityInvest:
             find_image_and_click(CITY_CONTRIBUTE_BTN, msg="city contribute")
             find_image_and_click(POPUP_CONTRIBUTE_BTN, msg="city contribute sub btn")
             screenshot_contribute_pop_up = get_screenshot_contribute_pop_up()
-            find_image_and_click([GENERAL_BTN_X_CLOSE], screenshot=screenshot_contribute_pop_up,
+            find_image_and_click(GENERAL_BTN_X, screenshot=screenshot_contribute_pop_up,
                                  msg="close city contribute pop-up")
             sleep_random(self.sleep_donate)
         else:
