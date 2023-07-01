@@ -11,15 +11,22 @@ from PIL import Image
 RETRIES_TO_LOAD = 5
 
 GENERAL_FOLDER = "data/general"
-BTN_X_CLOSE_BASE = GENERAL_FOLDER + "/btn_x_close.png"
-BTN_X_CLOSE_SMALL = GENERAL_FOLDER + "/btn_x_close_small.png"
-BTN_X_CLOSE = [BTN_X_CLOSE_BASE, BTN_X_CLOSE_SMALL]
+BTN_X_CLOSE_MAIN = GENERAL_FOLDER + "/btn_x_close_main.png"
+BTN_X_CLOSE_MAIN_SMALL = GENERAL_FOLDER + "/btn_x_close_main_small.png"
+BTN_X_CLOSE_ALTER = GENERAL_FOLDER + "/btn_x_close_alter.png"
+BTN_X_CLOSE_ALTER_SMALL = GENERAL_FOLDER + "/btn_x_close_alter_small.png"
+BTN_X_CLOSE = [BTN_X_CLOSE_MAIN,
+               BTN_X_CLOSE_MAIN_SMALL,
+               BTN_X_CLOSE_ALTER,
+               BTN_X_CLOSE_ALTER_SMALL]
 BTN_X_TICKET_BASE = GENERAL_FOLDER + "/close_redeem_ticket.png"
 BTN_X_TICKET_BASE_SMALL = GENERAL_FOLDER + "/close_redeem_ticket_small.png"
 BTN_CONTINUE_BASE = GENERAL_FOLDER + "/continue_playing.png"
 BTN_CONTINUE_BASE_SMALL = GENERAL_FOLDER + "/continue_playing_small.png"
-ALL_CLOSE_BTN = [BTN_X_CLOSE_BASE,
-                 BTN_X_CLOSE_SMALL,
+ALL_CLOSE_BTN = [BTN_X_CLOSE_MAIN,
+                 BTN_X_CLOSE_MAIN_SMALL,
+                 BTN_X_CLOSE_ALTER,
+                 BTN_X_CLOSE_ALTER_SMALL,
                  BTN_X_TICKET_BASE,
                  BTN_X_TICKET_BASE_SMALL,
                  BTN_CONTINUE_BASE,
@@ -30,13 +37,15 @@ logging.basicConfig(level=logging.INFO)
 
 def close_all_pop_ups():
     precision = 0.9
-    on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+    on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+    print(f"is any on screen? {on_screen} - {a}")
     while on_screen:
         find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
-        on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+        on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+        print(f"is any on screen? {on_screen} - {a}")
 
 
 def find_image_and_click(
