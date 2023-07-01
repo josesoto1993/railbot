@@ -8,6 +8,10 @@ import pyautogui
 import winsound
 from PIL import Image
 
+DATA_FOLDER = "data/"
+
+BASE_SCREENSHOT_NAME = 'screenshot.png'
+
 RETRIES_TO_LOAD = 5
 
 GENERAL_FOLDER = "data/general"
@@ -37,13 +41,13 @@ logging.basicConfig(level=logging.INFO)
 
 def close_all_pop_ups():
     precision = 0.9
-    on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+    on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
     while on_screen:
         find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
-        on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+        on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
 
 
 def find_image_and_click(
@@ -91,7 +95,7 @@ def move_mouse_close_to_center():
 
 
 def move_mouse_close_to_top_right():
-    screen_width, screen_height = pyautogui.size()
+    screen_width, _ = pyautogui.size()
     offset = 10
     pyautogui.moveTo(screen_width - offset, offset)
 
@@ -169,17 +173,17 @@ def image_on_screen(img_str: str, precision=0.8, screenshot=None, gray_scale=Tru
         return True, max_loc, max_val
 
 
-def get_screenshot(save=False, filename='screenshot.png'):
+def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME):
     if '.' not in filename:
         filename += '.png'
     screenshot = pyautogui.screenshot()
     if save:
-        screenshot.save("data/" + filename)
+        screenshot.save(DATA_FOLDER + filename)
         logging.debug(f"Screenshot captured and saved as {filename}.")
     return screenshot
 
 
-def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, save=False, filename='screenshot.png'):
+def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, save=False, filename=BASE_SCREENSHOT_NAME):
     if '.' not in filename:
         filename += '.png'
     if screenshot is None:
@@ -205,13 +209,13 @@ def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, sav
                 pixels[x, y] = (0, 0, 0)
 
     if save:
-        screenshot.save("data/" + filename)
+        screenshot.save(DATA_FOLDER + filename)
         logging.debug(f"Screenshot captured and saved as {filename}.")
 
     return screenshot
 
 
-def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None, save=False, filename='screenshot.png'):
+def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None, save=False, filename=BASE_SCREENSHOT_NAME):
     if '.' not in filename:
         filename += '.png'
     if screenshot is None:
@@ -237,7 +241,7 @@ def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None,
                 pixels[x, y] = (0, 0, 0)
 
     if save:
-        screenshot.save("data/" + filename)
+        screenshot.save(DATA_FOLDER + filename)
         logging.debug(f"Screenshot captured and saved as {filename}.")
     return screenshot
 

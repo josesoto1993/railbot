@@ -3,7 +3,7 @@ import os
 
 from rail_utils.rail_utils import image_on_screen, wait_rail_response, get_screenshot, click_on_rect_area, \
     get_image_size, move_mouse_close_to_top_right, any_image_on_screen, close_all_pop_ups
-from rail_utils.tabs_enum import *
+from rail_utils.tabs_enum import Tab, Tabs
 
 BASE_REGEX = "_base"
 
@@ -25,7 +25,7 @@ def open_tab(tab_enum: Tab):
     on_screen_tabs = [tab_state for tab_state in tabs_state if tab_state[1]]
 
     if not on_screen_tabs:
-        raise Exception(f"{tab_enum.name} tab not found.")
+        raise TabNotFoundException(f"{tab_enum.name} tab not found.")
     else:
         _open_or_reopen_tab(on_screen_tabs=on_screen_tabs, tab_enum=tab_enum)
         _check_if_tab_open(tab_enum)
@@ -49,7 +49,7 @@ def _is_tab_selected(tab_enum: Tab):
     for file_name in os.listdir(TAB_STATUS_DIR):
         if file_name.startswith(tab_enum.prefix) and (SELECTED_REGEX in file_name):
             file_path = os.path.join(TAB_STATUS_DIR, file_name)
-            is_on_screen, position, _ = image_on_screen(
+            is_on_screen, _, _ = image_on_screen(
                 file_path,
                 precision=tab_enum.precision_icon,
                 screenshot=screenshot)
@@ -126,4 +126,8 @@ def _check_if_tab_open(tab_enum: Tab):
         if on_screen:
             logging.debug(f"Tab {tab_enum.name} opened")
             return
-    raise Exception(f"{tab_enum.name} tab not opened.")
+    raise TabNotFoundException(f"{tab_enum.name} tab not opened.")
+
+
+class TabNotFoundException(Exception):
+    pass

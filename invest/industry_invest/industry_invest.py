@@ -61,12 +61,12 @@ class IndustryInvest:
 
     def _update_next_run_time(self, invest_done=True):
         if invest_done:
-            logging.info(f"----- May have more industries to invest, next loop invest another one -----")
+            logging.info("----- May have more industries to invest, next loop invest another one -----")
         else:
             target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
             self.next_run_time = target_datetime
-            logging.info(f"----- Next industry invest at {target_datetime.time()} -----")
+            logging.info("----- Next industry invest at {target_datetime.time()} -----")
 
     def _select_subtab_industries(self):
         subtab_industries = [RANKING_SUBTAB_INDUSTRIES, RANKING_SUBTAB_INDUSTRIES_SMALL]
@@ -86,11 +86,11 @@ class IndustryInvest:
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
-            on_screen, position, _, _ = any_image_on_screen(show_more_btn, precision=0.9)
+            on_screen, _, _, _ = any_image_on_screen(show_more_btn, precision=0.9)
 
     def _select_zero_investment(self):
         invest_zero_label = [RANKING_SUBSUBTAB_INVEST_ZERO, RANKING_SUBSUBTAB_INVEST_ZERO_SMALL]
-        on_screen, position, _, _ = any_image_on_screen(invest_zero_label, precision=0.95)
+        on_screen, _, _, _ = any_image_on_screen(invest_zero_label, precision=0.95)
         if on_screen:
             find_image_and_click(invest_zero_label, msg="zero investment")
             sleep_random(self.sleep_select_zero_investment)

@@ -39,11 +39,9 @@ class ServiceEngine:
     def _run_service(self):
         logging.info(f"----- Run service engine: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.ENGINES.value)
-        self._select_service_multiple()  # 5s
-        self._select_all_needing_service()  # 3s
-        self._select_service_all()  # 10s
-
-        return
+        self._select_service_multiple()
+        self._select_all_needing_service()
+        self._select_service_all()
 
     def _select_service_multiple(self):
         service_multiple_btn = [SERVICE_MULTIPLE_BTN, SERVICE_MULTIPLE_BTN_SMALL]
@@ -57,12 +55,12 @@ class ServiceEngine:
 
     def _select_service_all(self):
         service_all_label = [SERVICE_ALL_LABEL, SERVICE_ALL_LABEL_SMALL]
-        on_screen, position, _, _ = any_image_on_screen(service_all_label)
+        on_screen, _, _, _ = any_image_on_screen(service_all_label)
         if on_screen:
             find_image_and_click(service_all_label, msg="service all")
             sleep_random(self.sleep_service_all)
         else:
-            logging.debug(f"No need to service any engine")
+            logging.debug("No need to service any engine")
 
     def _update_next_run_time(self):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=SERVICE_ENGINE_MINUTES_TO_RECHECK)

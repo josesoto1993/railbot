@@ -59,15 +59,15 @@ logging.basicConfig(level=logging.INFO)
 
 
 def get_city_label():
-    logging.debug(f"start CityInvest.get_city_label")
+    logging.debug("start CityInvest.get_city_label")
     left_on_screen, left_position, _, left_image = any_image_on_screen(CITY_LEFT_ARROW)
     right_on_screen, right_position, _, right_image = any_image_on_screen(CITY_RIGHT_ARROW)
 
     if not left_on_screen and not right_on_screen:
-        raise ImageNotFoundException(f"Fail cet city label.")
+        raise ImageNotFoundException("Fail cet city label.")
 
-    left_width, left_height = get_image_size(left_image)
-    right_width, right_height = get_image_size(right_image)
+    left_width, _ = get_image_size(left_image)
+    _, right_height = get_image_size(right_image)
 
     x_start = left_position[0] + left_width
     y_start = left_position[1]
@@ -82,12 +82,11 @@ def get_city_label():
 
 
 def get_screenshot_contribute_pop_up():
-    logging.debug(f"start CityInvest.get_screenshot_contribute_pop_up")
+    logging.debug("start CityInvest.get_screenshot_contribute_pop_up")
     screenshot = get_screenshot()
     on_screen, position, _, _ = any_image_on_screen(POPUP_CONTRIBUTE_HEADER, screenshot=screenshot)
     if not on_screen:
-        raise ImageNotFoundException(
-            f"Failed to find header on screen for city project")
+        raise ImageNotFoundException("Failed to find header on screen for city project")
     top_left_corner = (0, position[1])
     screenshot_width, screenshot_height = screenshot.size
     size = (screenshot_width, screenshot_height - position[1])
@@ -126,19 +125,19 @@ class CityInvest:
         self._check_all_cities()
 
     def _center_and_zoom_to_city(self):
-        logging.debug(f"start CityInvest._center_and_zoom_to_city")
+        logging.debug("start CityInvest._center_and_zoom_to_city")
         close_all_pop_ups()
         self._zoom_max()
         self._center_map()
 
     def _zoom_max(self):
         precision = 0.95
-        on_screen, position, _, _ = any_image_on_screen(ZOOM_IN_BTN, precision=precision)
+        on_screen, _, _, _ = any_image_on_screen(ZOOM_IN_BTN, precision=precision)
         tries = 0
         while on_screen and tries < MAX_ZOOM_CLICKS:
             tries += 1
             self._zoom_once()
-            on_screen, position, _, _ = any_image_on_screen(ZOOM_IN_BTN, precision=precision)
+            on_screen, _, _, _ = any_image_on_screen(ZOOM_IN_BTN, precision=precision)
 
     def _zoom_once(self):
         find_image_and_click(ZOOM_IN_BTN, msg="zoom")
@@ -151,7 +150,7 @@ class CityInvest:
         sleep_random(self.sleep_center_city)
 
     def _select_city(self):
-        logging.debug(f"start CityInvest._select_city")
+        logging.debug("start CityInvest._select_city")
         screen_width, screen_height = pyautogui.size()
         top_left_corner = ((screen_width - CITY_WIDTH) // 2, (screen_height + HEIGHT_OFFSET - CITY_HEIGHT) // 2)
         size = (CITY_WIDTH, CITY_HEIGHT)
@@ -160,12 +159,12 @@ class CityInvest:
         sleep_random(self.sleep_select_city)
 
     def _select_subtab_city_project(self):
-        logging.debug(f"start CityInvest._select_subtab_city_project")
+        logging.debug("start CityInvest._select_subtab_city_project")
         find_image_and_click(CITY_PROJECT_SUBTAB_BTN, msg="subtab city project")
         sleep_random(self.sleep_select_subtab_city_project)
 
     def _check_all_cities(self):
-        logging.debug(f"start CityInvest._check_all_cities")
+        logging.debug("start CityInvest._check_all_cities")
         start_city_label = get_city_label()
         start_city_label_filename = CITY_FOLDER + "/" + TEMP_CITY_LABEL
         start_city_label.save(start_city_label_filename)
@@ -173,10 +172,10 @@ class CityInvest:
         while not on_screen:
             self._donate_if_needed()
             self._select_next_city()
-            on_screen, position, _ = image_on_screen(start_city_label_filename)
+            on_screen, _, _ = image_on_screen(start_city_label_filename)
 
     def _donate_if_needed(self):
-        logging.debug(f"start CityInvest._donate_if_needed")
+        logging.debug("start CityInvest._donate_if_needed")
         have_contributions, _, _, _ = any_image_on_screen(USER_DONATE_LABEL)
         if not have_contributions:
             find_image_and_click(CITY_CONTRIBUTE_BTN, msg="city contribute")
@@ -186,15 +185,15 @@ class CityInvest:
                                  msg="close city contribute pop-up")
             sleep_random(self.sleep_donate)
         else:
-            logging.debug(f"No need donation")
+            logging.debug("No need donation")
 
     def _select_next_city(self):
-        logging.debug(f"start CityInvest._select_next_city")
+        logging.debug("start CityInvest._select_next_city")
         find_image_and_click(CITY_RIGHT_ARROW, msg="next city")
         sleep_random(self.sleep_select_next_city)
 
     def _update_next_run_time(self):
-        logging.debug(f"start CityInvest._update_next_run_time")
+        logging.debug("start CityInvest._update_next_run_time")
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
         self.next_run_time = target_datetime

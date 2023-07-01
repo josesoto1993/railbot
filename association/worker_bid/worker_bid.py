@@ -88,7 +88,7 @@ def get_bid_left_corner():
     if on_screen:
         return position, image_path
 
-    raise ImageNotFoundException(f"Cant find left corner of bid")
+    raise ImageNotFoundException("Cant find left corner of bid")
 
 
 def get_bid_right_corner():
@@ -100,7 +100,7 @@ def get_bid_right_corner():
     if on_screen:
         return position, image_path
 
-    raise ImageNotFoundException(f"Cant find right corner of bid")
+    raise ImageNotFoundException("Cant find right corner of bid")
 
 
 def click_amount_input():
@@ -165,15 +165,15 @@ class WorkerBid:
         logging.info(f"----- Run worker bid: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
-            logging.debug(f"Cant bid as is disabled")
+            logging.debug("Cant bid as is disabled")
             return False
         self._select_worker_details()
         if have_bid():
-            logging.debug(f"Already bid")
+            logging.debug("Already bid")
             return True
         bid_amount = self._get_bid_amount()
         if bid_amount == 0:
-            logging.debug(f"Not interested in this worker")
+            logging.debug("Not interested in this worker")
             return True
         self._do_bid(bid_amount)
         return True
@@ -191,8 +191,8 @@ class WorkerBid:
 
     def _select_worker_details(self):
         worker_label = [ASSOCIATION_WORKER_LABEL, ASSOCIATION_WORKER_LABEL_SMALL]
-        on_screen, position, _, image_path = any_image_on_screen(worker_label)
-        image_width, image_height = get_image_size(image_path)
+        _, position, _, image_path = any_image_on_screen(worker_label)
+        _, image_height = get_image_size(image_path)
 
         size = (pyautogui.size()[0], image_height)
 
@@ -205,7 +205,7 @@ class WorkerBid:
     def _get_bid_amount(self):
         screenshot = get_worker_info_screenshot()
         for img_path, amount in self.worker_data:
-            on_screen, position, _ = image_on_screen(img_path, screenshot=screenshot, precision=0.95)
+            on_screen, _, _ = image_on_screen(img_path, screenshot=screenshot, precision=0.95)
             if on_screen:
                 return amount
 

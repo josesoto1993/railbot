@@ -23,11 +23,11 @@ WORKER_PRESTIGE_INDUSTRY_SMALL = "data/workers/worker_prestige_industry_small.pn
 WORKER_REDUCE_WT = "data/workers/worker_reduce_wt.png"
 WORKER_REDUCE_WT_SMALL = "data/workers/worker_reduce_wt_small.png"
 WORKER_SCIENCE = "data/workers/worker_science.png"
-# TODO: WORKER_SCIENCE SMALL
+# TODO: WORKER_SCIENCE_SMALL
 WORKER_SERVICE_DISCOUNT = "data/workers/worker_service_discount.png"
 WORKER_SERVICE_DISCOUNT_SMALL = "data/workers/worker_service_discount_small.png"
 WORKER_SPEED = "data/workers/worker_speed.png"
-# TODO: WORKER_SPEED SMALL
+# TODO: WORKER_SPEED_SMALL
 WORKER_TRACK_DISCOUNT = "data/workers/worker_track_discount.png"
 WORKER_TRACK_DISCOUNT_SMALL = "data/workers/worker_track_discount_small.png"
 WORKER_WAGGONS_DISCOUNT = "data/workers/worker_waggons_discount.png"
