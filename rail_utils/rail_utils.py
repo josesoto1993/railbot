@@ -38,14 +38,12 @@ logging.basicConfig(level=logging.INFO)
 def close_all_pop_ups():
     precision = 0.9
     on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
-    print(f"is any on screen? {on_screen} - {a}")
     while on_screen:
         find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
         on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
-        print(f"is any on screen? {on_screen} - {a}")
 
 
 def find_image_and_click(
