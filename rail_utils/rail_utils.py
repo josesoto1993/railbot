@@ -38,14 +38,12 @@ logging.basicConfig(level=logging.INFO)
 def close_all_pop_ups():
     precision = 0.9
     on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
-    print(f"is any on screen? {on_screen} - {a}")
     while on_screen:
         find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1, precision=precision)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
         on_screen, _, _, a = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
-        print(f"is any on screen? {on_screen} - {a}")
 
 
 def find_image_and_click(
@@ -202,7 +200,7 @@ def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, sav
     # Loop over all pixels in the image
     for y in range(height):
         for x in range(width):
-            # If the pixel is inside of the box, set it to black
+            # If the pixel is inside the box, set it to black
             if box_x_start <= x <= box_x_end and box_y_start <= y <= box_y_end:
                 pixels[x, y] = (0, 0, 0)
 
@@ -234,7 +232,7 @@ def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None,
     # Loop over all pixels in the image
     for y in range(height):
         for x in range(width):
-            # If the pixel is outside of the box, set it to black
+            # If the pixel is outside the box, set it to black
             if x < box_x_start or box_x_end < x or y < box_y_start or box_y_end < y:
                 pixels[x, y] = (0, 0, 0)
 
