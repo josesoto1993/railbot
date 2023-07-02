@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import find_image_and_click, sleep_random, move_mouse_close_to_center, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
@@ -26,7 +27,7 @@ INDUSTRY_INVEST_VOUCHER_BASE_SMALL = INDUSTRY_FOLDER + "/industry_invest_voucher
 logging.basicConfig(level=logging.INFO)
 
 
-class IndustryInvest:
+class IndustryInvest(RailRunnable):
     def __init__(self):
         self.next_run_time = datetime.datetime.now()
         self.sleep_select_subtab_industries = 5
@@ -35,10 +36,11 @@ class IndustryInvest:
         self.sleep_select_zero_investment = 5
         self.sleep_industry_invest = 5
 
-    def run(self):
+    def run(self) -> datetime:
         if self._should_run():
             invest_done = self._run_invest()
             self._update_next_run_time(invest_done)
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

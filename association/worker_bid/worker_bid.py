@@ -4,6 +4,7 @@ import logging
 import pyautogui
 
 from association.worker_bid.worker_price_data import get_worker_data
+from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
     find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
@@ -140,7 +141,7 @@ def get_target_datetime_if_skip_till_next_worker(current_datetime):
     return target_datetime
 
 
-class WorkerBid:
+class WorkerBid(RailRunnable):
     def __init__(self):
         self.next_run_time = datetime.datetime.now()
         self.sleep_is_bid_disabled = 5
@@ -149,10 +150,11 @@ class WorkerBid:
         self.sleep_character_input = 0.5
         self.worker_data = get_worker_data()
 
-    def run(self):
+    def run(self) -> datetime:
         if self._should_run():
             skip_till_next_worker = self._run_worker_bid()
             self._update_next_run_time(skip_till_next_worker)
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

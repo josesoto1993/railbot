@@ -3,6 +3,7 @@ import logging
 
 import pyautogui
 
+from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import any_image_on_screen, image_on_screen, ImageNotFoundException, get_image_size, \
     get_screenshot, get_screenshot_with_black_out_of_box, close_all_pop_ups, sleep_random, find_image_and_click, \
     move_mouse_close_to_center, click_on_rect_area, BTN_X_CLOSE
@@ -94,7 +95,7 @@ def get_screenshot_contribute_pop_up():
     return screenshot_contribute_pop_up
 
 
-class CityInvest:
+class CityInvest(RailRunnable):
     def __init__(self):
         self.next_run_time = datetime.datetime.now()
         self.sleep_center_city = 10
@@ -104,10 +105,11 @@ class CityInvest:
         self.sleep_donate = 5
         self.sleep_select_next_city = 5
 
-    def run(self):
+    def run(self) -> datetime:
         if self._should_run():
             self._run_invest()
             self._update_next_run_time()
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

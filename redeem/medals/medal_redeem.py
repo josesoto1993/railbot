@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import find_image_and_click, sleep_random, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
@@ -14,15 +15,16 @@ REDEEM_MEDAL_LABEL = [MEDAL_REDEEM_LABEL, MEDAL_REDEEM_LABEL_SMALL]
 logging.basicConfig(level=logging.INFO)
 
 
-class MedalRedeem:
+class MedalRedeem(RailRunnable):
     def __init__(self):
         self.next_run_time = datetime.datetime.now()
         self.sleep_redeem_all = 5
 
-    def run(self):
+    def run(self) -> datetime:
         if self._should_run():
             self._run_medal_redeem()
             self._update_next_run_time()
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

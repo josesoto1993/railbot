@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
@@ -17,17 +18,18 @@ SERVICE_ALL_LABEL_SMALL = "data/tab_engine/service_all_label_small.png"
 logging.basicConfig(level=logging.INFO)
 
 
-class ServiceEngine:
+class ServiceEngine(RailRunnable):
     def __init__(self):
         self.sleep_service_multiple = 5
         self.sleep_all_needing_service = 3
         self.sleep_service_all = 10
         self.next_run_time = datetime.datetime.now()
 
-    def run(self):
+    def run(self) -> datetime:
         if self._should_run():
             self._run_service()
             self._update_next_run_time()
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time
