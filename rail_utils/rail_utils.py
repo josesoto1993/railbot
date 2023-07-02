@@ -75,7 +75,8 @@ def find_image_and_click(
 
 
 def _find_image_and_click_log_error(filepaths, msg):
-    get_screenshot(save=True, filename=timestamped_filename(prefix="data/errors/error_"))
+    filename = timestamped_filename(prefix="errors/error_")
+    get_screenshot(save=True, filename=filename)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
 
