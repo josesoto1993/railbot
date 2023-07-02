@@ -1,5 +1,6 @@
 import datetime
 import logging
+from typing import Optional
 
 from rail_utils.rail_utils import find_image_and_click, sleep_random, move_mouse_close_to_center, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
@@ -35,10 +36,15 @@ class IndustryInvest:
         self.sleep_select_zero_investment = 5
         self.sleep_industry_invest = 5
 
-    def run(self):
-        if self._should_run():
-            invest_done = self._run_invest()
-            self._update_next_run_time(invest_done)
+    def run(self) -> Optional[datetime]:
+        try:
+            if self._should_run():
+                invest_done = self._run_invest()
+                self._update_next_run_time(invest_done)
+            return self.next_run_time
+        except Exception as exception:
+            logging.error(str(exception))
+            return None
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

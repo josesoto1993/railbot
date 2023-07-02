@@ -1,5 +1,6 @@
 import datetime
 import logging
+from typing import Optional
 
 import pyautogui
 
@@ -149,10 +150,15 @@ class WorkerBid:
         self.sleep_character_input = 0.5
         self.worker_data = get_worker_data()
 
-    def run(self):
-        if self._should_run():
-            skip_till_next_worker = self._run_worker_bid()
-            self._update_next_run_time(skip_till_next_worker)
+    def run(self) -> Optional[datetime]:
+        try:
+            if self._should_run():
+                skip_till_next_worker = self._run_worker_bid()
+                self._update_next_run_time(skip_till_next_worker)
+            return self.next_run_time
+        except Exception as exception:
+            logging.error(str(exception))
+            return None
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

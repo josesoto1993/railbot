@@ -1,5 +1,6 @@
 import datetime
 import logging
+from typing import Optional
 
 from rail_utils.rail_utils import find_image_and_click, sleep_random, any_image_on_screen
 from rail_utils.tabs_enum import Tabs
@@ -19,10 +20,15 @@ class MedalRedeem:
         self.next_run_time = datetime.datetime.now()
         self.sleep_redeem_all = 5
 
-    def run(self):
-        if self._should_run():
-            self._run_medal_redeem()
-            self._update_next_run_time()
+    def run(self) -> Optional[datetime]:
+        try:
+            if self._should_run():
+                self._run_medal_redeem()
+                self._update_next_run_time()
+            return self.next_run_time
+        except Exception as exception:
+            logging.error(str(exception))
+            return None
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time
