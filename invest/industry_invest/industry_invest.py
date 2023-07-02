@@ -37,12 +37,8 @@ class IndustryInvest:
 
     def run(self):
         if self._should_run():
-            try:
-                invest_done = self._run_invest()
-                self._update_next_run_time(invest_done)
-            except Exception as exception:
-                logging.error(str(exception))
-                return
+            invest_done = self._run_invest()
+            self._update_next_run_time(invest_done)
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time
@@ -66,7 +62,7 @@ class IndustryInvest:
             target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
             self.next_run_time = target_datetime
-            logging.info("----- Next industry invest at {target_datetime.time()} -----")
+            logging.info(f"----- Next industry invest at {target_datetime.time()} -----")
 
     def _select_subtab_industries(self):
         subtab_industries = [RANKING_SUBTAB_INDUSTRIES, RANKING_SUBTAB_INDUSTRIES_SMALL]

@@ -151,12 +151,8 @@ class WorkerBid:
 
     def run(self):
         if self._should_run():
-            try:
-                skip_till_next_worker = self._run_worker_bid()
-                self._update_next_run_time(skip_till_next_worker)
-            except Exception as exception:
-                logging.error(str(exception))
-                return
+            skip_till_next_worker = self._run_worker_bid()
+            self._update_next_run_time(skip_till_next_worker)
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time
