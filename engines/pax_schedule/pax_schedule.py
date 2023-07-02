@@ -120,7 +120,7 @@ class PaxSchedule(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_pax_engine_schedule(self):
-        logging.info(f"----- Run pax engine schedule: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.ENGINES.value)
         self._select_pax_engine()
         self._open_timetable()
@@ -142,7 +142,7 @@ class PaxSchedule(RailRunnable):
             target_datetime += datetime.timedelta(days=1)
 
         self.next_run_time = target_datetime
-        logging.info(f"----- Next pax engine schedule at {target_datetime.time()} -----")
+        logging.info(f"----- Next {self.__class__.__name__} schedule at {target_datetime.time()} -----")
 
     def _select_pax_engine(self):
         pax_engine_headers = [PAX_ENGINE_HEADER_MAIN,

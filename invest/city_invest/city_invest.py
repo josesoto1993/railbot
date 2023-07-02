@@ -115,7 +115,7 @@ class CityInvest(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_invest(self):
-        logging.info(f"----- Run city invest: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
         open_tab(Tabs.WORLD_MAP.value)
         self._center_and_zoom_to_city()
         self._select_city()
@@ -195,4 +195,4 @@ class CityInvest(RailRunnable):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
         self.next_run_time = target_datetime
-        logging.info(f"----- Next city invest at {target_datetime.time()} -----")
+        logging.info(f"----- Next {self.__class__.__name__} at {target_datetime.time()} -----")
