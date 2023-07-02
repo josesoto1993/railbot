@@ -33,8 +33,8 @@ def main():
     if RUN_REDEEM_MEDAL_FLAG:
         tasks.append(MedalRedeem())
 
-    handler = MainLoopHandler(tasks)
-    handler.main_loop()
+    loop = MainLoopHandler(tasks)
+    loop.run()
 
 
 if __name__ == "__main__":

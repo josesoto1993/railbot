@@ -9,13 +9,13 @@ from rail_utils.web_utils import reload_web
 ERRORS_TO_RELOAD = 10
 
 
-class MainLoopHandler:
+class MainLoopHandler(RailRunnable):
     def __init__(self, tasks: List[RailRunnable]):
         self.tasks = tasks
         self.next_run_times = {task.__class__.__name__: datetime.datetime.now() for task in self.tasks}
         self.error_counter = 0
 
-    def main_loop(self):
+    def run(self):
         while True:
             for task in self.tasks:
                 next_time = self._run_single_task(task)
