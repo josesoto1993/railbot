@@ -156,3 +156,4 @@ cython_debug/
 data/screenshot.png
 data/city/start_city_label.png
 association/worker_bid/worker_price_data.py
+data/errors/
