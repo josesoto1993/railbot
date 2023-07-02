@@ -111,12 +111,8 @@ class PaxSchedule:
 
     def run(self):
         if self._should_run():
-            try:
-                self._run_pax_engine_schedule()
-                self._update_next_run_time()
-            except Exception as exception:
-                logging.error(str(exception))
-                return
+            self._run_pax_engine_schedule()
+            self._update_next_run_time()
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

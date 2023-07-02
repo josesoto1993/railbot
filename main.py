@@ -1,3 +1,5 @@
+import logging
+
 from association.worker_bid.worker_bid import WorkerBid
 from engines.pax_schedule.pax_schedule import PaxSchedule
 from engines.service_engine.service_engine import ServiceEngine
@@ -36,20 +38,62 @@ def main_loop(
         redeem_medal: MedalRedeem
 ):
     while True:
-        if RUN_PAX_SCHEDULE_FLAG:
-            pax_schedule.run()
-        if RUN_INDUSTRY_INVEST_FLAG:
-            industry_invest.run()
-        if RUN_CITY_INVEST_FLAG:
-            city_invest.run()
-        if RUN_SERVICE_ENGINE_FLAG:
-            service_engine.run()
-        if RUN_WORKER_BID_FLAG:
-            worker_bid.run()
-        if RUN_REDEEM_MEDAL:
-            redeem_medal.run()
+        _run_pax_schedule(pax_schedule)
+        _run_industry_invest(industry_invest)
+        _run_city_invest(city_invest)
+        _run_service_engine(service_engine)
+        _run_worker_bid(worker_bid)
+        _run_redeem_medal(redeem_medal)
 
         sleep_random(MAIN_LOOP_TIME)
+
+
+def _run_redeem_medal(redeem_medal):
+    if RUN_REDEEM_MEDAL:
+        try:
+            redeem_medal.run()
+        except Exception as exception:
+            logging.error(str(exception))
+
+
+def _run_worker_bid(worker_bid):
+    if RUN_WORKER_BID_FLAG:
+        try:
+            worker_bid.run()
+        except Exception as exception:
+            logging.error(str(exception))
+
+
+def _run_service_engine(service_engine):
+    if RUN_SERVICE_ENGINE_FLAG:
+        try:
+            service_engine.run()
+        except Exception as exception:
+            logging.error(str(exception))
+
+
+def _run_city_invest(city_invest):
+    if RUN_CITY_INVEST_FLAG:
+        try:
+            city_invest.run()
+        except Exception as exception:
+            logging.error(str(exception))
+
+
+def _run_industry_invest(industry_invest):
+    if RUN_INDUSTRY_INVEST_FLAG:
+        try:
+            industry_invest.run()
+        except Exception as exception:
+            logging.error(str(exception))
+
+
+def _run_pax_schedule(pax_schedule):
+    if RUN_PAX_SCHEDULE_FLAG:
+        try:
+            pax_schedule.run()
+        except Exception as exception:
+            logging.error(str(exception))
 
 
 if __name__ == "__main__":
