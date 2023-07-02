@@ -75,7 +75,7 @@ def find_image_and_click(
 
 
 def _find_image_and_click_log_error(filepaths, msg):
-    filename = timestamped_filename(prefix="errors/error_")
+    filename = timestamped_filename(filename="errors/error")
     get_screenshot(save=True, filename=filename)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
@@ -139,9 +139,14 @@ def any_image_on_screen(paths_array: list[str], precision=0.8, screenshot=None, 
     best_max_val = None
     best_max_loc = None
     best_image = None
+    if screenshot is None:
+        screenshot = pyautogui.screenshot()
 
     for img_str in paths_array:
-        on_screen, max_loc, max_val = image_on_screen(img_str, precision, screenshot, gray_scale)
+        on_screen, max_loc, max_val = image_on_screen(img_str,
+                                                      precision=precision,
+                                                      screenshot=screenshot,
+                                                      gray_scale=gray_scale)
 
         if on_screen and (best_max_val is None or max_val > best_max_val):
             best_max_val = max_val
@@ -258,10 +263,10 @@ def beep():
     winsound.Beep(frequency, duration)
 
 
-def timestamped_filename(prefix=""):
+def timestamped_filename(filename=""):
     current_time = datetime.datetime.now()
     formatted_time = current_time.strftime("%Y%m%d_%H%M%S")
-    return f"{prefix}{formatted_time}"
+    return f"{filename}_{formatted_time}"
 
 
 class ImageNotFoundException(Exception):
