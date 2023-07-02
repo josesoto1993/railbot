@@ -48,7 +48,7 @@ def main_loop(
         sleep_random(MAIN_LOOP_TIME)
 
 
-def _run_redeem_medal(redeem_medal):
+def _run_redeem_medal(redeem_medal: MedalRedeem):
     if RUN_REDEEM_MEDAL:
         try:
             redeem_medal.run()
@@ -56,7 +56,7 @@ def _run_redeem_medal(redeem_medal):
             logging.error(str(exception))
 
 
-def _run_worker_bid(worker_bid):
+def _run_worker_bid(worker_bid: WorkerBid):
     if RUN_WORKER_BID_FLAG:
         try:
             worker_bid.run()
@@ -64,7 +64,7 @@ def _run_worker_bid(worker_bid):
             logging.error(str(exception))
 
 
-def _run_service_engine(service_engine):
+def _run_service_engine(service_engine: ServiceEngine):
     if RUN_SERVICE_ENGINE_FLAG:
         try:
             service_engine.run()
@@ -72,7 +72,7 @@ def _run_service_engine(service_engine):
             logging.error(str(exception))
 
 
-def _run_city_invest(city_invest):
+def _run_city_invest(city_invest: CityInvest):
     if RUN_CITY_INVEST_FLAG:
         try:
             city_invest.run()
@@ -80,7 +80,7 @@ def _run_city_invest(city_invest):
             logging.error(str(exception))
 
 
-def _run_industry_invest(industry_invest):
+def _run_industry_invest(industry_invest: IndustryInvest):
     if RUN_INDUSTRY_INVEST_FLAG:
         try:
             industry_invest.run()
@@ -88,7 +88,7 @@ def _run_industry_invest(industry_invest):
             logging.error(str(exception))
 
 
-def _run_pax_schedule(pax_schedule):
+def _run_pax_schedule(pax_schedule: PaxSchedule):
     if RUN_PAX_SCHEDULE_FLAG:
         try:
             pax_schedule.run()
