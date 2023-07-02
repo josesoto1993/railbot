@@ -1,3 +1,4 @@
+import datetime
 import logging
 import random
 import time
@@ -70,10 +71,13 @@ def find_image_and_click(
                     logging.debug(f"Select: {msg}")
                 click_on_rect_area(top_left_corner=position, filepath=filepath)
                 return
-    if msg:
-        raise ImageNotFoundException(f"Fail select: {msg}")
-    else:
-        raise ImageNotFoundException("Failed to select the image.")
+    _find_image_and_click_log_error(filepaths, msg)
+
+
+def _find_image_and_click_log_error(filepaths, msg):
+    get_screenshot(save=True, filename=timestamped_filename(prefix="data/errors/error_"))
+    msg = msg or "the image"
+    raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
 
 
 def sleep_random(sleep_time):
@@ -215,7 +219,8 @@ def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, sav
     return screenshot
 
 
-def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None, save=False, filename=BASE_SCREENSHOT_NAME):
+def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None, save=False,
+                                         filename=BASE_SCREENSHOT_NAME):
     if '.' not in filename:
         filename += '.png'
     if screenshot is None:
@@ -250,6 +255,12 @@ def beep():
     frequency = 1000
     duration = 200
     winsound.Beep(frequency, duration)
+
+
+def timestamped_filename(prefix=""):
+    current_time = datetime.datetime.now()
+    formatted_time = current_time.strftime("%Y%m%d_%H%M%S")
+    return f"{prefix}{formatted_time}"
 
 
 class ImageNotFoundException(Exception):
