@@ -1,7 +1,6 @@
 import datetime
 import logging
 import random
-from typing import Optional
 
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, sleep_random, any_image_on_screen, \
@@ -111,15 +110,11 @@ class PaxSchedule(RailRunnable):
         self.sleep_select_all = 30
         self.sleep_lets_go = 30
 
-    def run(self) -> Optional[datetime]:
-        try:
-            if self._should_run():
-                self._run_pax_engine_schedule()
-                self._update_next_run_time()
-            return self.next_run_time
-        except Exception as exception:
-            logging.error(str(exception))
-            return None
+    def run(self) -> datetime:
+        if self._should_run():
+            self._run_pax_engine_schedule()
+            self._update_next_run_time()
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

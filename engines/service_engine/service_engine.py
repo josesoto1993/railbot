@@ -1,6 +1,5 @@
 import datetime
 import logging
-from typing import Optional
 
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen
@@ -26,15 +25,11 @@ class ServiceEngine(RailRunnable):
         self.sleep_service_all = 10
         self.next_run_time = datetime.datetime.now()
 
-    def run(self) -> Optional[datetime]:
-        try:
-            if self._should_run():
-                self._run_service()
-                self._update_next_run_time()
-            return self.next_run_time
-        except Exception as exception:
-            logging.error(str(exception))
-            return None
+    def run(self) -> datetime:
+        if self._should_run():
+            self._run_service()
+            self._update_next_run_time()
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time

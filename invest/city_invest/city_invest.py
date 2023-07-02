@@ -1,6 +1,5 @@
 import datetime
 import logging
-from typing import Optional
 
 import pyautogui
 
@@ -106,15 +105,11 @@ class CityInvest(RailRunnable):
         self.sleep_donate = 5
         self.sleep_select_next_city = 5
 
-    def run(self) -> Optional[datetime]:
-        try:
-            if self._should_run():
-                self._run_invest()
-                self._update_next_run_time()
-            return self.next_run_time
-        except Exception as exception:
-            logging.error(str(exception))
-            return None
+    def run(self) -> datetime:
+        if self._should_run():
+            self._run_invest()
+            self._update_next_run_time()
+        return self.next_run_time
 
     def _should_run(self):
         return datetime.datetime.now() >= self.next_run_time
