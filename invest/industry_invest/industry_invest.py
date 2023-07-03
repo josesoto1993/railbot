@@ -51,11 +51,7 @@ class IndustryInvest(RailRunnable):
         self._select_subtab_industries()
         self._select_subsubtab_invest()
         self._show_last()
-        any_zero_invest_industry = self._select_zero_investment()
-        if not any_zero_invest_industry:
-            return False
-        self._industry_invest()
-        return True
+        return self._invest_if_needed()
 
     def _update_next_run_time(self, invest_done=True):
         if invest_done:
@@ -78,13 +74,20 @@ class IndustryInvest(RailRunnable):
 
     def _show_last(self):
         show_more_btn = [RANKING_SHOW_MORE, RANKING_SHOW_MORE_SMALL]
-        on_screen = True
+        on_screen, _, _, _ = any_image_on_screen(show_more_btn, precision=0.9)
         while on_screen:
             find_image_and_click(show_more_btn, msg="show more", precision=0.9)
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
             on_screen, _, _, _ = any_image_on_screen(show_more_btn, precision=0.9)
+
+    def _invest_if_needed(self):
+        any_zero_invest_industry = self._select_zero_investment()
+        if not any_zero_invest_industry:
+            return False
+        self._industry_invest()
+        return True
 
     def _select_zero_investment(self):
         invest_zero_label = [RANKING_SUBSUBTAB_INVEST_ZERO, RANKING_SUBSUBTAB_INVEST_ZERO_SMALL]
