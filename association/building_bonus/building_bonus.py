@@ -40,9 +40,9 @@ class BuildingBonus(RailRunnable):
         self._open_or_reopen_widget()
 
     def _open_or_reopen_widget(self):
-        on_screen, position, _, image_path = any_image_on_screen(ALL_WIDGET, precision=0.1)
+        on_screen, position, _, image_path = any_image_on_screen(ALL_WIDGET, precision=0.8)
         if not on_screen:
-            filename = timestamped_filename(filename="errors/error")
+            filename = timestamped_filename(filename="errors/error_widget")
             get_screenshot(save=True, filename=filename)
             raise ImageNotFoundException(f"Fail find any widget for images {ALL_WIDGET}")
 
