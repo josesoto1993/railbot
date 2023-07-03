@@ -2,6 +2,7 @@ import datetime
 import logging
 import random
 import time
+from typing import Tuple, Optional
 
 import cv2
 import numpy as np
@@ -129,13 +130,16 @@ def click_on_rect_area(top_left_corner, size=None, filepath=None):
     pyautogui.click()
 
 
-def get_image_size(image_path: str):
+def get_image_size(image_path: str) -> Tuple[int, int]:
     with Image.open(image_path) as img:
         width, height = img.size
         return width, height
 
 
-def any_image_on_screen(paths_array: list[str], precision=0.8, screenshot=None, gray_scale=True):
+def any_image_on_screen(paths_array: list[str],
+                        precision=0.8,
+                        screenshot=None,
+                        gray_scale=True) -> Tuple[bool, Optional[Tuple[int, int]], Optional[float], Optional[str]]:
     best_max_val = None
     best_max_loc = None
     best_image = None
@@ -159,7 +163,10 @@ def any_image_on_screen(paths_array: list[str], precision=0.8, screenshot=None, 
         return True, best_max_loc, best_max_val, best_image
 
 
-def image_on_screen(img_str: str, precision=0.8, screenshot=None, gray_scale=True):
+def image_on_screen(img_str: str,
+                    precision=0.8,
+                    screenshot=None,
+                    gray_scale=True) -> Tuple[bool, Optional[Tuple[int, int]], Optional[float]]:
     if screenshot is None:
         screenshot = pyautogui.screenshot()
 
@@ -183,7 +190,7 @@ def image_on_screen(img_str: str, precision=0.8, screenshot=None, gray_scale=Tru
         return True, max_loc, max_val
 
 
-def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME):
+def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
     if '.' not in filename:
         filename += '.png'
     screenshot = pyautogui.screenshot()
@@ -193,7 +200,11 @@ def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME):
     return screenshot
 
 
-def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, save=False, filename=BASE_SCREENSHOT_NAME):
+def get_screenshot_with_black_box_in(top_left_corner,
+                                     size,
+                                     screenshot=None,
+                                     save=False,
+                                     filename=BASE_SCREENSHOT_NAME) -> Image:
     if '.' not in filename:
         filename += '.png'
     if screenshot is None:
@@ -225,8 +236,11 @@ def get_screenshot_with_black_box_in(top_left_corner, size, screenshot=None, sav
     return screenshot
 
 
-def get_screenshot_with_black_out_of_box(top_left_corner, size, screenshot=None, save=False,
-                                         filename=BASE_SCREENSHOT_NAME):
+def get_screenshot_with_black_out_of_box(top_left_corner,
+                                         size,
+                                         screenshot=None,
+                                         save=False,
+                                         filename=BASE_SCREENSHOT_NAME) -> Image:
     if '.' not in filename:
         filename += '.png'
     if screenshot is None:
@@ -263,7 +277,7 @@ def beep():
     winsound.Beep(frequency, duration)
 
 
-def timestamped_filename(filename=""):
+def timestamped_filename(filename="") -> str:
     current_time = datetime.datetime.now()
     formatted_time = current_time.strftime("%Y%m%d_%H%M%S")
     return f"{filename}_{formatted_time}"
