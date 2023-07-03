@@ -3,7 +3,7 @@ import logging
 
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import any_image_on_screen, ImageNotFoundException, timestamped_filename, get_screenshot, \
-    click_on_rect_area, sleep_random
+    click_on_rect_area, sleep_random, get_image_size
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -44,12 +44,17 @@ class BuildingBonus(RailRunnable):
         if not on_screen:
             filename = timestamped_filename(filename="errors/error_widget")
             get_screenshot(save=True, filename=filename)
-            raise ImageNotFoundException(f"Fail find any widget for images {ALL_WIDGET}")
+            raise ImageNotFoundException(f"Fail find any widget for images: {ALL_WIDGET}")
 
-        click_on_rect_area(position, image_path)
+        self._open_or_reopen_widget_handle_click(image_path, position)
+
+    def _open_or_reopen_widget_handle_click(self, image_path, position):
+        width, height = get_image_size(image_path)
+        size_to_click = width, height * 4 // 10
+        click_on_rect_area(position, size=size_to_click)
         sleep_random(self.sleep_open_widget)
         if image_path == WIDGET_SELECTED or image_path == WIDGET_SELECTED_SMALL:
-            click_on_rect_area(position, image_path)
+            click_on_rect_area(position, size=size_to_click)
             sleep_random(self.sleep_open_widget)
 
     def _update_next_run_time(self):
