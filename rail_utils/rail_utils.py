@@ -277,6 +277,15 @@ def beep():
     winsound.Beep(frequency, duration)
 
 
+def count_down():
+    time.sleep(1)
+    beep()
+    time.sleep(1)
+    beep()
+    time.sleep(1)
+    beep()
+
+
 def timestamped_filename(filename="") -> str:
     current_time = datetime.datetime.now()
     formatted_time = current_time.strftime("%Y%m%d_%H%M%S")

@@ -1,24 +1,14 @@
 import logging
 import unittest
-from time import sleep
 
 import pyautogui
 
 from association.worker_bid.worker_bid import WorkerBid
-from rail_utils.rail_utils import get_screenshot, image_on_screen, beep
+from rail_utils.rail_utils import get_screenshot, image_on_screen, count_down
 from rail_utils.tabs_enum import Tabs, Tab
 from rail_utils.tabs_util import open_tab
 
 logging.root.setLevel(logging.DEBUG)
-
-
-def count_down():
-    sleep(1)
-    beep()
-    sleep(1)
-    beep()
-    sleep(1)
-    beep()
 
 
 def try_get_bid_amount():
