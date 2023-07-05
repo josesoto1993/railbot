@@ -11,6 +11,7 @@ from rail_utils.tabs_util import open_tab
 
 TAB_ENGINE_FOLDER = "data/tab_engine"
 PAX_ENGINE_FILES = glob.glob(f"{TAB_ENGINE_FOLDER}/paxengine_*.png")
+PAX_ENGINE_FILES.sort(key=lambda x: ("main" not in x, x))
 
 ENGINE_FOLDER = "data/engine_schedule"
 POPUP_TIMETABLE_BASE = ENGINE_FOLDER + "/popup_engine_timetable_calculator_base.png"
@@ -95,7 +96,6 @@ class PaxSchedule(RailRunnable):
         self.sleep_adopt_schedule = 20
         self.sleep_select_all = 30
         self.sleep_lets_go = 30
-        print(f"PAX_ENGINE_FILES: {PAX_ENGINE_FILES}")
 
     def run(self) -> datetime:
         if self._should_run():
