@@ -1,4 +1,5 @@
 import datetime
+import glob
 import logging
 import random
 
@@ -9,22 +10,7 @@ from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 TAB_ENGINE_FOLDER = "data/tab_engine"
-PAX_ENGINE_HEADER_MAIN = TAB_ENGINE_FOLDER + "/paxengine_main.png"
-PAX_ENGINE_HEADER_MAIN_SMALL = TAB_ENGINE_FOLDER + "/paxengine_main_small.png"
-PAX_ENGINE_HEADER_HERMES = TAB_ENGINE_FOLDER + "/paxengine_hermes.png"
-PAX_ENGINE_HEADER_HERMES_SMALL = TAB_ENGINE_FOLDER + "/paxengine_hermes_small.png"
-PAX_ENGINE_HEADER_AJAX = TAB_ENGINE_FOLDER + "/paxengine_ajax.png"
-PAX_ENGINE_HEADER_AJAX_SMALL = TAB_ENGINE_FOLDER + "/paxengine_ajax_small.png"
-PAX_ENGINE_HEADER_KANGAROO = TAB_ENGINE_FOLDER + "/paxengine_kangaroo.png"
-PAX_ENGINE_HEADER_KANGAROO_SMALL = TAB_ENGINE_FOLDER + "/paxengine_kangaroo_small.png"
-PAX_ENGINE_HEADER_CHEETAH = TAB_ENGINE_FOLDER + "/paxengine_cheetah.png"
-PAX_ENGINE_HEADER_CHEETAH_SMALL = TAB_ENGINE_FOLDER + "/paxengine_cheetah_small.png"
-PAX_ENGINE_HEADER_GIRAFFE = TAB_ENGINE_FOLDER + "/paxengine_giraffe.png"
-PAX_ENGINE_HEADER_GIRAFFE_SMALL = TAB_ENGINE_FOLDER + "/paxengine_giraffe_small.png"
-PAX_ENGINE_HEADER_GREYHOUND = TAB_ENGINE_FOLDER + "/paxengine_greyhound.png"
-PAX_ENGINE_HEADER_GREYHOUND_SMALL = TAB_ENGINE_FOLDER + "/paxengine_greyhound_small.png"
-PAX_ENGINE_HEADER_WHALE = TAB_ENGINE_FOLDER + "/paxengine_whale.png"
-PAX_ENGINE_HEADER_WHALE_SMALL = TAB_ENGINE_FOLDER + "/paxengine_whale_small.png"
+PAX_ENGINE_FILES = glob.glob(f"{TAB_ENGINE_FOLDER}/paxengine_*.png")
 
 ENGINE_FOLDER = "data/engine_schedule"
 POPUP_TIMETABLE_BASE = ENGINE_FOLDER + "/popup_engine_timetable_calculator_base.png"
@@ -109,6 +95,7 @@ class PaxSchedule(RailRunnable):
         self.sleep_adopt_schedule = 20
         self.sleep_select_all = 30
         self.sleep_lets_go = 30
+        print(f"PAX_ENGINE_FILES: {PAX_ENGINE_FILES}")
 
     def run(self) -> datetime:
         if self._should_run():
@@ -145,23 +132,7 @@ class PaxSchedule(RailRunnable):
         logging.info(f"Next {self.__class__.__name__} schedule at {target_datetime.time()}")
 
     def _select_pax_engine(self):
-        pax_engine_headers = [PAX_ENGINE_HEADER_MAIN,
-                              PAX_ENGINE_HEADER_MAIN_SMALL,
-                              PAX_ENGINE_HEADER_HERMES,
-                              PAX_ENGINE_HEADER_HERMES_SMALL,
-                              PAX_ENGINE_HEADER_AJAX,
-                              PAX_ENGINE_HEADER_AJAX_SMALL,
-                              PAX_ENGINE_HEADER_KANGAROO,
-                              PAX_ENGINE_HEADER_KANGAROO_SMALL,
-                              PAX_ENGINE_HEADER_CHEETAH,
-                              PAX_ENGINE_HEADER_CHEETAH_SMALL,
-                              PAX_ENGINE_HEADER_GIRAFFE,
-                              PAX_ENGINE_HEADER_GIRAFFE_SMALL,
-                              PAX_ENGINE_HEADER_GREYHOUND,
-                              PAX_ENGINE_HEADER_GREYHOUND_SMALL,
-                              PAX_ENGINE_HEADER_WHALE,
-                              PAX_ENGINE_HEADER_WHALE_SMALL]
-        find_image_and_click(pax_engine_headers, msg="pax engine")
+        find_image_and_click(PAX_ENGINE_FILES, msg="pax engine")
         sleep_random(self.sleep_select_pax_engine)
 
     def _open_timetable(self):
