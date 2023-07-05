@@ -32,7 +32,7 @@ class MainLoopHandler(RailRunnable):
         min_task, min_time = min(self.next_run_times.items(), key=lambda x: x[1])
         raw_seconds = (min_time - now).total_seconds()
         seconds = max(0.0, raw_seconds)
-        logging.info(f"Next run for {min_task} in {seconds} seconds at {min_time.time()}")
+        logging.info(f"----- Next run for {min_task} in {seconds} seconds at {min_time.time()} -----")
         time.sleep(seconds)
 
     def _run_single_task(self, task: RailRunnable) -> Optional[datetime]:
@@ -44,6 +44,6 @@ class MainLoopHandler(RailRunnable):
             if self.error_counter >= ERRORS_TO_RELOAD:
                 reload = reload_web()
                 if reload:
-                    logging.info(f"----- Run reload: Start at {datetime.datetime.now().time()} -----")
+                    logging.info(f"Run reload: Start at {datetime.datetime.now().time()}")
                     self.error_counter = 0
         return None

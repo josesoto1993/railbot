@@ -35,7 +35,7 @@ class BuildingBonus(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_building_bonus(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.WORLD_MAP.value)
         self._open_or_reopen_widget()
 
@@ -59,7 +59,7 @@ class BuildingBonus(RailRunnable):
 
     def _update_next_run_time(self):
         self.next_run_time = datetime.datetime.now() + datetime.timedelta(minutes=BONUS_MINUTES_TO_RECHECK)
-        logging.info(f"----- Next {self.__class__.__name__} at {self.next_run_time.time()} -----")
+        logging.info(f"Next {self.__class__.__name__} at {self.next_run_time.time()}")
 
 # open world map
 # close all

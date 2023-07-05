@@ -160,7 +160,7 @@ class WorkerBid(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_worker_bid(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
             logging.debug("Cant bid as is disabled")
@@ -233,4 +233,4 @@ class WorkerBid(RailRunnable):
 
     def _update_next_run_time(self, skip_till_next_worker=True):
         self.next_run_time = get_target_datetime(skip_till_next_worker)
-        logging.info(f"----- Next {self.__class__.__name__} check at {self.next_run_time.time()} -----")
+        logging.info(f"Next {self.__class__.__name__} check at {self.next_run_time.time()}")

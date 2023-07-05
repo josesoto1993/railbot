@@ -46,7 +46,7 @@ class IndustryInvest(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_invest(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.RANKINGS.value)
         self._select_subtab_industries()
         self._select_subsubtab_invest()
@@ -55,12 +55,12 @@ class IndustryInvest(RailRunnable):
 
     def _update_next_run_time(self, invest_done=True):
         if invest_done:
-            logging.info("----- May have more industries to invest, next loop invest another one -----")
+            logging.info("May have more industries to invest, next loop invest another one")
         else:
             target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
             self.next_run_time = target_datetime
-            logging.info(f"----- Next {self.__class__.__name__} at {target_datetime.time()} -----")
+            logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")
 
     def _select_subtab_industries(self):
         subtab_industries = [RANKING_SUBTAB_INDUSTRIES, RANKING_SUBTAB_INDUSTRIES_SMALL]
