@@ -1,4 +1,3 @@
-from association.building_bonus.building_bonus import BuildingBonus
 from association.worker_bid.worker_bid import WorkerBid
 from engines.pax_schedule.pax_schedule import PaxSchedule
 from engines.service_engine.service_engine import ServiceEngine
@@ -16,7 +15,7 @@ RUN_SERVICE_ENGINE_FLAG = True
 RUN_WORKER_BID_FLAG = True
 RUN_REDEEM_MEDAL_FLAG = True
 RUN_BUILDING_BONUS_FLAG = False
-BEEP_COUNTDOWN_FLAG = True
+BEEP_COUNTDOWN_FLAG = False
 
 
 def main():
@@ -35,10 +34,8 @@ def main():
         tasks.append(WorkerBid())
     if RUN_REDEEM_MEDAL_FLAG:
         tasks.append(MedalRedeem())
-    if RUN_BUILDING_BONUS_FLAG:
-        tasks.append(BuildingBonus())
 
-    loop = MainLoopHandler(tasks, BEEP_COUNTDOWN_FLAG)
+    loop = MainLoopHandler(tasks)
     loop.run()
 
 
