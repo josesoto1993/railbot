@@ -29,6 +29,8 @@ BTN_X_TICKET_BASE = GENERAL_FOLDER + "/close_redeem_ticket.png"
 BTN_X_TICKET_BASE_SMALL = GENERAL_FOLDER + "/close_redeem_ticket_small.png"
 BTN_CONTINUE_BASE = GENERAL_FOLDER + "/continue_playing.png"
 BTN_CONTINUE_BASE_SMALL = GENERAL_FOLDER + "/continue_playing_small.png"
+BTN_ACCEPT_COOKIES = GENERAL_FOLDER + "/accept_cookies.png"
+BTN_ACCEPT_COOKIES_SMALL = GENERAL_FOLDER + "/accept_cookies_small.png"
 ALL_CLOSE_BTN = [BTN_X_CLOSE_MAIN,
                  BTN_X_CLOSE_MAIN_SMALL,
                  BTN_X_CLOSE_ALTER,
@@ -36,7 +38,9 @@ ALL_CLOSE_BTN = [BTN_X_CLOSE_MAIN,
                  BTN_X_TICKET_BASE,
                  BTN_X_TICKET_BASE_SMALL,
                  BTN_CONTINUE_BASE,
-                 BTN_CONTINUE_BASE_SMALL]
+                 BTN_CONTINUE_BASE_SMALL,
+                 BTN_ACCEPT_COOKIES,
+                 BTN_ACCEPT_COOKIES_SMALL]
 
 logging.basicConfig(level=logging.INFO)
 
