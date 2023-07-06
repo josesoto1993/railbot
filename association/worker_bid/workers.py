@@ -27,7 +27,7 @@ WORKER_SCIENCE = "data/workers/worker_science.png"
 WORKER_SERVICE_DISCOUNT = "data/workers/worker_service_discount.png"
 WORKER_SERVICE_DISCOUNT_SMALL = "data/workers/worker_service_discount_small.png"
 WORKER_SPEED = "data/workers/worker_speed.png"
-# TODO: WORKER_SPEED_SMALL
+WORKER_SPEED_SMALL = "data/workers/worker_speed_small.png"
 WORKER_TRACK_DISCOUNT = "data/workers/worker_track_discount.png"
 WORKER_TRACK_DISCOUNT_SMALL = "data/workers/worker_track_discount_small.png"
 WORKER_WAGGONS_DISCOUNT = "data/workers/worker_waggons_discount.png"
