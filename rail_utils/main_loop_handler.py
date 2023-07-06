@@ -9,6 +9,8 @@ from rail_utils.web_utils import reload_web
 
 ERRORS_TO_RELOAD = 10
 
+logging.root.setLevel(logging.INFO)
+
 
 class MainLoopHandler(RailRunnable):
     def __init__(self, tasks: List[RailRunnable], enable_count_down=False):
