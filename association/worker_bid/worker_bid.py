@@ -226,6 +226,7 @@ class WorkerBid(RailRunnable):
             sleep_random(self.sleep_character_input)
 
     def _click_send_bid(self):
+        sleep_random(self.sleep_click_send_bid)
         worker_details_send_btn = [ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN,
                                    ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN_SMALL]
         find_image_and_click(worker_details_send_btn, msg="bid send btn")
