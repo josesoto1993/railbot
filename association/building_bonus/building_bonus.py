@@ -40,7 +40,7 @@ class BuildingBonus(RailRunnable):
         self._open_or_reopen_widget()
 
     def _open_or_reopen_widget(self):
-        on_screen, position, _, image_path = any_image_on_screen(ALL_WIDGET, precision=0.8)
+        on_screen, position, _, image_path = any_image_on_screen(ALL_WIDGET)
         if not on_screen:
             filename = timestamped_filename(filename="errors/error_widget")
             get_screenshot(save=True, filename=filename)
@@ -57,22 +57,19 @@ class BuildingBonus(RailRunnable):
             click_on_rect_area(position, size=size_to_click)
             sleep_random(self.sleep_open_widget)
 
+    # check / open association widget
+    # reload association bonus (just in case..)
+    # while money symbol on screen:
+    #   claim bonus (click image)
+    #   wait
+    #   close if needed
+    #   money symbol on screen
+    # while pp symbol on screen:
+    #   claim bonus (click image)
+    #   wait
+    #   close if needed
+    #   pp symbol on screen
+
     def _update_next_run_time(self):
         self.next_run_time = datetime.datetime.now() + datetime.timedelta(minutes=BONUS_MINUTES_TO_RECHECK)
         logging.info(f"Next {self.__class__.__name__} at {self.next_run_time.time()}")
-
-# open world map
-# close all
-# check / open widget
-# check / open association widget
-# reload association bonus (just in case..)
-# while money symbol on screen:
-#   claim bonus (click image)
-#   wait
-#   close if needed
-#   money symbol on screen
-# while pp symbol on screen:
-#   claim bonus (click image)
-#   wait
-#   close if needed
-#   pp symbol on screen

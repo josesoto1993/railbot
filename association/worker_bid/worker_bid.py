@@ -203,7 +203,7 @@ class WorkerBid(RailRunnable):
     def _get_bid_amount(self):
         screenshot = get_worker_info_screenshot()
         for img_path, amount in self.worker_data:
-            on_screen, _, _ = image_on_screen(img_path, screenshot=screenshot, precision=0.95)
+            on_screen, _, _ = image_on_screen(img_path, screenshot=screenshot)
             if on_screen:
                 return amount
 

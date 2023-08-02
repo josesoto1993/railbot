@@ -129,13 +129,12 @@ class CityInvest(RailRunnable):
         self._center_map()
 
     def _zoom_max(self):
-        precision = 0.95
-        on_screen, _, _, _ = any_image_on_screen(ZOOM_IN_BTN, precision=precision)
+        on_screen, _, _, _ = any_image_on_screen(ZOOM_IN_BTN)
         tries = 0
         while on_screen and tries < MAX_ZOOM_CLICKS:
             tries += 1
             self._zoom_once()
-            on_screen, _, _, _ = any_image_on_screen(ZOOM_IN_BTN, precision=precision)
+            on_screen, _, _, _ = any_image_on_screen(ZOOM_IN_BTN)
 
     def _zoom_once(self):
         find_image_and_click(ZOOM_IN_BTN, msg="zoom")
