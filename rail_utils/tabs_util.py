@@ -39,9 +39,10 @@ def _prepare_screen(tab_enum: Tab):
 
 
 def _open_world_map_if_needed(tab_enum: Tab):
-    is_on_world_map = _is_tab_selected(Tabs.WORLD_MAP.value)
-    if tab_enum.needs_be_on_world_map and not is_on_world_map:
-        open_tab(Tabs.WORLD_MAP.value)
+    if tab_enum.needs_be_on_world_map:
+        is_on_world_map = _is_tab_selected(Tabs.WORLD_MAP.value)
+        if not is_on_world_map:
+            open_tab(Tabs.WORLD_MAP.value)
 
 
 def _is_tab_selected(tab_enum: Tab):
