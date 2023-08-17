@@ -190,15 +190,12 @@ def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
 
 
 def get_image_paths_from_folder(folder: str) -> list[str]:
-    image_extensions = ['.png', '.jpg', '.jpeg']
-    image_paths = []
-
-    for root, _, files in os.walk(folder):
-        for file in files:
-            if any(file.lower().endswith(ext) for ext in image_extensions):
-                image_paths.append(os.path.join(root, file))
-
-    return image_paths
+    return [
+        os.path.join(root, file)
+        for root, _, files in os.walk(folder)
+        for file in files
+        if file.lower().endswith('.png')
+    ]
 
 
 def get_screenshot_with_black_box_in(top_left_corner,
