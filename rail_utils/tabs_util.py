@@ -1,3 +1,4 @@
+import glob
 import logging
 import os
 
@@ -15,7 +16,7 @@ TAB_STATUS_DIR = 'data/tabs_status'
 
 logging.basicConfig(level=logging.INFO)
 
-RETRIES_TO_LOAD = 5
+RETRIES_TO_LOAD_TAB = 5
 
 
 def open_tab(tab_enum: Tab):
@@ -25,6 +26,7 @@ def open_tab(tab_enum: Tab):
     on_screen_tabs = [tab_state for tab_state in tabs_state if tab_state[1]]
 
     if not on_screen_tabs:
+        get_screenshot(save=True, filename=f"{tab_enum.name}_not_found")
         raise TabNotFoundException(f"{tab_enum.name} tab not found.")
     else:
         _open_or_reopen_tab(on_screen_tabs=on_screen_tabs, tab_enum=tab_enum)
@@ -87,7 +89,7 @@ def _open_another(tab_enum: Tab):
         open_tab(Tabs.ENGINES.value)
 
 
-def _find_tab_state(tab_enum: Tab):
+def _find_tab_state(tab_enum: Tab) -> list[list[str | bool | tuple[int, int] | None]]:
     tabs_state = []
     screenshot = get_screenshot()
     for file_name in os.listdir(TAB_STATUS_DIR):
@@ -97,10 +99,6 @@ def _find_tab_state(tab_enum: Tab):
                                                         screenshot=screenshot)
             _log_find_tab_state(file_name, is_on_screen, position)
             tabs_state.append([file_path, is_on_screen, position])
-
-    on_screen_images = len([tab_state for tab_state in tabs_state if tab_state[1]])
-    if on_screen_images > 1:
-        logging.warning(f"Found {on_screen_images} images for tab {tab_enum.name}, expected 1 or 0.")
 
     return tabs_state
 
@@ -113,18 +111,18 @@ def _log_find_tab_state(file_name, is_on_screen, position):
 
 
 def _check_if_tab_open(tab_enum: Tab):
-    for _ in range(RETRIES_TO_LOAD):
+    for _ in range(RETRIES_TO_LOAD_TAB):
         wait_rail_response()
 
-        partial_path = TAB_STATUS_DIR + "/" + tab_enum.prefix + "on_load"
-        tab_on_load_base = partial_path + ".png"
-        tab_on_load_small = partial_path + "_small.png"
+        partial_path = os.path.join(TAB_STATUS_DIR, tab_enum.prefix + "on_load")
+        tab_on_load_files = glob.glob(partial_path + "*.png")
 
-        tab_on_load = [tab_on_load_base, tab_on_load_small]
-        on_screen, _, _, _ = any_image_on_screen(tab_on_load)
+        on_screen, _, _, _ = any_image_on_screen(tab_on_load_files)
         if on_screen:
             logging.debug(f"Tab {tab_enum.name} opened")
             return
+
+    get_screenshot(save=True, filename=f"{tab_enum.name}_not_found")
     raise TabNotFoundException(f"{tab_enum.name} tab not opened.")
 
 
