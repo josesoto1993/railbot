@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 import random
 import time
 from typing import Tuple, Optional
@@ -17,42 +18,27 @@ BASE_SCREENSHOT_NAME = 'screenshot.png'
 RETRIES_TO_LOAD = 5
 
 GENERAL_FOLDER = "data/general"
-BTN_X_CLOSE_MAIN = GENERAL_FOLDER + "/btn_x_close_main.png"
-BTN_X_CLOSE_MAIN_SMALL = GENERAL_FOLDER + "/btn_x_close_main_small.png"
-BTN_X_CLOSE_ALTER = GENERAL_FOLDER + "/btn_x_close_alter.png"
-BTN_X_CLOSE_ALTER_SMALL = GENERAL_FOLDER + "/btn_x_close_alter_small.png"
-BTN_X_CLOSE = [BTN_X_CLOSE_MAIN,
-               BTN_X_CLOSE_MAIN_SMALL,
-               BTN_X_CLOSE_ALTER,
-               BTN_X_CLOSE_ALTER_SMALL]
-BTN_X_TICKET_BASE = GENERAL_FOLDER + "/close_redeem_ticket.png"
-BTN_X_TICKET_BASE_SMALL = GENERAL_FOLDER + "/close_redeem_ticket_small.png"
-BTN_CONTINUE_BASE = GENERAL_FOLDER + "/continue_playing.png"
-BTN_CONTINUE_BASE_SMALL = GENERAL_FOLDER + "/continue_playing_small.png"
-BTN_ACCEPT_COOKIES = GENERAL_FOLDER + "/accept_cookies.png"
-BTN_ACCEPT_COOKIES_SMALL = GENERAL_FOLDER + "/accept_cookies_small.png"
-ALL_CLOSE_BTN = [BTN_X_CLOSE_MAIN,
-                 BTN_X_CLOSE_MAIN_SMALL,
-                 BTN_X_CLOSE_ALTER,
-                 BTN_X_CLOSE_ALTER_SMALL,
-                 BTN_X_TICKET_BASE,
-                 BTN_X_TICKET_BASE_SMALL,
-                 BTN_CONTINUE_BASE,
-                 BTN_CONTINUE_BASE_SMALL,
-                 BTN_ACCEPT_COOKIES,
-                 BTN_ACCEPT_COOKIES_SMALL]
+BTN_X_FOLDER = GENERAL_FOLDER + "/btn_x"
+CONTINUE_FOLDER = GENERAL_FOLDER + "/continue"
+INTERRUPT_FOLDER = GENERAL_FOLDER + "/interrupt"
 
 logging.basicConfig(level=logging.INFO)
 
 
 def close_all_pop_ups():
-    on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN)
+    pop_up_close_img_paths = (
+            get_image_paths_from_folder(BTN_X_FOLDER) +
+            get_image_paths_from_folder(CONTINUE_FOLDER) +
+            get_image_paths_from_folder(INTERRUPT_FOLDER)
+    )
+
+    on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
     while on_screen:
-        find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1)
+        find_image_and_click(pop_up_close_img_paths, msg="close pop-up", retries=1)
         sleep_random(1)
-        move_mouse_close_to_center()
+        move_mouse_close_to_top_right()
         sleep_random(1)
-        on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN)
+        on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
 
 
 def find_image_and_click(
@@ -80,7 +66,7 @@ def find_image_and_click(
 
 def _find_image_and_click_log_error(filepaths, msg):
     filename = timestamped_filename(filename="errors/error_find_and_click")
-    get_screenshot(save=False, filename=filename) # TODO set auto delete, till then, do not enable (true)
+    get_screenshot(save=False, filename=filename)  # TODO set auto delete, till then, do not enable (true)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
 
@@ -201,6 +187,18 @@ def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
         screenshot.save(DATA_FOLDER + filename)
         logging.debug(f"Screenshot captured and saved as {filename}.")
     return screenshot
+
+
+def get_image_paths_from_folder(folder: str) -> list[str]:
+    image_extensions = ['.png', '.jpg', '.jpeg']
+    image_paths = []
+
+    for root, _, files in os.walk(folder):
+        for file in files:
+            if any(file.lower().endswith(ext) for ext in image_extensions):
+                image_paths.append(os.path.join(root, file))
+
+    return image_paths
 
 
 def get_screenshot_with_black_box_in(top_left_corner,
