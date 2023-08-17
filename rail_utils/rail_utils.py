@@ -46,20 +46,19 @@ logging.basicConfig(level=logging.INFO)
 
 
 def close_all_pop_ups():
-    precision = 0.9
-    on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+    on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN)
     while on_screen:
-        find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1, precision=precision)
+        find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1)
         sleep_random(1)
         move_mouse_close_to_center()
         sleep_random(1)
-        on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN, precision=precision)
+        on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN)
 
 
 def find_image_and_click(
         filepaths: list[str],
         msg=None,
-        precision=0.95,
+        precision=0.8,
         screenshot=None,
         gray_scale=True,
         retries=RETRIES_TO_LOAD
@@ -80,8 +79,8 @@ def find_image_and_click(
 
 
 def _find_image_and_click_log_error(filepaths, msg):
-    filename = timestamped_filename(filename="errors/error")
-    get_screenshot(save=True, filename=filename)
+    filename = timestamped_filename(filename="errors/error_find_and_click")
+    get_screenshot(save=False, filename=filename) # TODO set auto delete, till then, do not enable (true)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
 
@@ -279,6 +278,15 @@ def beep():
     frequency = 1000
     duration = 200
     winsound.Beep(frequency, duration)
+
+
+def count_down():
+    time.sleep(1)
+    beep()
+    time.sleep(1)
+    beep()
+    time.sleep(1)
+    beep()
 
 
 def timestamped_filename(filename="") -> str:

@@ -46,7 +46,7 @@ class IndustryInvest(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_invest(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.RANKINGS.value)
         self._select_subtab_industries()
         self._select_subsubtab_invest()
@@ -55,12 +55,12 @@ class IndustryInvest(RailRunnable):
 
     def _update_next_run_time(self, invest_done=True):
         if invest_done:
-            logging.info("----- May have more industries to invest, next loop invest another one -----")
+            logging.info("May have more industries to invest, next loop invest another one")
         else:
             target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
             self.next_run_time = target_datetime
-            logging.info(f"----- Next {self.__class__.__name__} at {target_datetime.time()} -----")
+            logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")
 
     def _select_subtab_industries(self):
         subtab_industries = [RANKING_SUBTAB_INDUSTRIES, RANKING_SUBTAB_INDUSTRIES_SMALL]
@@ -74,13 +74,13 @@ class IndustryInvest(RailRunnable):
 
     def _show_last(self):
         show_more_btn = [RANKING_SHOW_MORE, RANKING_SHOW_MORE_SMALL]
-        on_screen, _, _, _ = any_image_on_screen(show_more_btn, precision=0.9)
+        on_screen, _, _, _ = any_image_on_screen(show_more_btn)
         while on_screen:
-            find_image_and_click(show_more_btn, msg="show more", precision=0.9)
+            find_image_and_click(show_more_btn, msg="show more")
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
-            on_screen, _, _, _ = any_image_on_screen(show_more_btn, precision=0.9)
+            on_screen, _, _, _ = any_image_on_screen(show_more_btn)
 
     def _invest_if_needed(self):
         any_zero_invest_industry = self._select_zero_investment()
@@ -91,7 +91,7 @@ class IndustryInvest(RailRunnable):
 
     def _select_zero_investment(self):
         invest_zero_label = [RANKING_SUBSUBTAB_INVEST_ZERO, RANKING_SUBSUBTAB_INVEST_ZERO_SMALL]
-        on_screen, _, _, _ = any_image_on_screen(invest_zero_label, precision=0.95)
+        on_screen, _, _, _ = any_image_on_screen(invest_zero_label)
         if on_screen:
             find_image_and_click(invest_zero_label, msg="zero investment")
             sleep_random(self.sleep_select_zero_investment)

@@ -35,7 +35,7 @@ class ServiceEngine(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_service(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.ENGINES.value)
         self._select_service_multiple()
         self._select_all_needing_service()
@@ -64,4 +64,4 @@ class ServiceEngine(RailRunnable):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=SERVICE_ENGINE_MINUTES_TO_RECHECK)
 
         self.next_run_time = target_datetime
-        logging.info(f"----- Next {self.__class__.__name__} at {target_datetime.time()} -----")
+        logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")

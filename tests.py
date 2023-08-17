@@ -1,24 +1,15 @@
 import logging
 import unittest
-from time import sleep
 
 import pyautogui
 
 from association.worker_bid.worker_bid import WorkerBid
-from rail_utils.rail_utils import get_screenshot, image_on_screen, beep
-from rail_utils.tabs_enum import Tabs, Tab
+from engines.pax_schedule.pax_schedule import POPUP_TIMETABLE_BASE_SMALL
+from rail_utils.rail_utils import get_screenshot, image_on_screen, count_down
+from rail_utils.tabs_enum import Tab
 from rail_utils.tabs_util import open_tab
 
 logging.root.setLevel(logging.DEBUG)
-
-
-def count_down():
-    sleep(1)
-    beep()
-    sleep(1)
-    beep()
-    sleep(1)
-    beep()
 
 
 def try_get_bid_amount():
@@ -30,9 +21,8 @@ def try_get_bid_amount():
     return is_ok
 
 
-def try_get_image():
+def try_get_image(file_path: str):
     count_down()
-    file_path = "data/general/continue_playing_small.png"
     screenshot = get_screenshot()
     screenshot.save("data/screenshot.png")
     precision = 0.1
@@ -56,7 +46,7 @@ def try_open_tab(tab_enum: Tab):
 
 class IsImageOnScreen(unittest.TestCase):
     def test(self):
-        self.assertTrue(try_open_tab(Tabs.WORLD_MAP.value))
+        self.assertTrue(try_get_image(POPUP_TIMETABLE_BASE_SMALL))
 
 
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ from rail_utils.tabs_util import open_tab
 
 TAB_ENGINE_FOLDER = "data/tab_engine"
 PAX_ENGINE_FILES = glob.glob(f"{TAB_ENGINE_FOLDER}/paxengine_*.png")
+PAX_ENGINE_FILES.sort(key=lambda x: ("main" not in x, x))
 
 ENGINE_FOLDER = "data/engine_schedule"
 POPUP_TIMETABLE_BASE = ENGINE_FOLDER + "/popup_engine_timetable_calculator_base.png"
@@ -95,7 +96,6 @@ class PaxSchedule(RailRunnable):
         self.sleep_adopt_schedule = 20
         self.sleep_select_all = 30
         self.sleep_lets_go = 30
-        print(f"PAX_ENGINE_FILES: {PAX_ENGINE_FILES}")
 
     def run(self) -> datetime:
         if self._should_run():
@@ -107,7 +107,7 @@ class PaxSchedule(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_pax_engine_schedule(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.ENGINES.value)
         self._select_pax_engine()
         self._open_timetable()
@@ -129,7 +129,7 @@ class PaxSchedule(RailRunnable):
             target_datetime += datetime.timedelta(days=1)
 
         self.next_run_time = target_datetime
-        logging.info(f"----- Next {self.__class__.__name__} schedule at {target_datetime.time()} -----")
+        logging.info(f"Next {self.__class__.__name__} schedule at {target_datetime.time()}")
 
     def _select_pax_engine(self):
         find_image_and_click(PAX_ENGINE_FILES, msg="pax engine")

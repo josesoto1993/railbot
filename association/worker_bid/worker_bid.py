@@ -160,7 +160,7 @@ class WorkerBid(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_worker_bid(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
             logging.debug("Cant bid as is disabled")
@@ -203,7 +203,7 @@ class WorkerBid(RailRunnable):
     def _get_bid_amount(self):
         screenshot = get_worker_info_screenshot()
         for img_path, amount in self.worker_data:
-            on_screen, _, _ = image_on_screen(img_path, screenshot=screenshot, precision=0.95)
+            on_screen, _, _ = image_on_screen(img_path, screenshot=screenshot)
             if on_screen:
                 return amount
 
@@ -226,6 +226,7 @@ class WorkerBid(RailRunnable):
             sleep_random(self.sleep_character_input)
 
     def _click_send_bid(self):
+        sleep_random(self.sleep_click_send_bid)
         worker_details_send_btn = [ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN,
                                    ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN_SMALL]
         find_image_and_click(worker_details_send_btn, msg="bid send btn")
@@ -233,4 +234,4 @@ class WorkerBid(RailRunnable):
 
     def _update_next_run_time(self, skip_till_next_worker=True):
         self.next_run_time = get_target_datetime(skip_till_next_worker)
-        logging.info(f"----- Next {self.__class__.__name__} check at {self.next_run_time.time()} -----")
+        logging.info(f"Next {self.__class__.__name__} check at {self.next_run_time.time()}")

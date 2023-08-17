@@ -30,7 +30,7 @@ class MedalRedeem(RailRunnable):
         return datetime.datetime.now() >= self.next_run_time
 
     def _run_medal_redeem(self):
-        logging.info(f"----- Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()} -----")
+        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.MEDALS.value)
         self._redeem_all()
 
@@ -50,4 +50,4 @@ class MedalRedeem(RailRunnable):
         target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=MEDAL_REDEEM_MINUTES_TO_RECHECK)
 
         self.next_run_time = target_datetime
-        logging.info(f"----- Next {self.__class__.__name__} check at {target_datetime.time()} -----")
+        logging.info(f"Next {self.__class__.__name__} check at {target_datetime.time()}")
