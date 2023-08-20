@@ -41,11 +41,21 @@ class MainLoopHandler(RailRunnable):
         try:
             return task.run()
         except Exception as e:
-            self.error_counter += 1
-            logging.error(str(e))
-            if self.error_counter >= ERRORS_TO_RELOAD:
-                reload = reload_web()
-                if reload:
-                    logging.info(f"Run reload: Start at {datetime.datetime.now().time()}")
-                    self.error_counter = 0
+            self._handle_run_exception(e)
+
         return None
+
+    def _handle_run_exception(self, e):
+        self.error_counter += 1
+        logging.error(str(e))
+        if self.error_counter >= ERRORS_TO_RELOAD:
+            self._try_reload()
+
+    def _try_reload(self):
+        try:
+            reload_web()
+            logging.info(f"Run reload: Start at {datetime.datetime.now().time()}")
+        except Exception as e:
+            logging.error(f"Run reload: error -> {e}")
+        finally:
+            self.error_counter = 0
