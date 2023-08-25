@@ -16,7 +16,7 @@ RANKING_SHOW_MORE_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/show_mo
 RANKING_INVEST_ZERO_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/invest_zero")
 
 INDUSTRY_FOLDER = "data/industry"
-INDUSTRY_INVEST_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/invest")
+INDUSTRY_INVEST_FILES = get_image_paths_from_folder(INDUSTRY_FOLDER + "/invest")
 
 logging.basicConfig(level=logging.INFO)
 
