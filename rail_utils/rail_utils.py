@@ -26,6 +26,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 def close_all_pop_ups():
+    logging.debug("close all pop ups")
     pop_up_close_img_paths = (
             get_image_paths_from_folder(BTN_X_FOLDER) +
             get_image_paths_from_folder(CONTINUE_FOLDER) +
@@ -33,12 +34,14 @@ def close_all_pop_ups():
     )
 
     on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
+    logging.debug(f"any to close? {on_screen}")
     while on_screen:
         find_image_and_click(pop_up_close_img_paths, msg="close pop-up", retries=1)
         sleep_random(1)
         move_mouse_close_to_top_right()
         sleep_random(1)
         on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
+        logging.debug(f"any to close? {on_screen}")
 
 
 def find_image_and_click(
@@ -77,6 +80,7 @@ def sleep_random(sleep_time):
 
 def wait_rail_response():
     sleep_duration = random.uniform(2, 5)
+    logging.debug(f"sleep for: {sleep_duration} sec")
     time.sleep(sleep_duration)
 
 
@@ -90,6 +94,7 @@ def move_mouse_close_to_center():
 
 
 def move_mouse_close_to_top_right():
+    logging.debug("move_mouse_close_to_top_right")
     screen_width, _ = pyautogui.size()
     offset = 10
     pyautogui.moveTo(screen_width - offset, offset)
@@ -180,6 +185,7 @@ def image_on_screen(img_str: str,
 
 
 def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
+    logging.debug("get_screenshot")
     if '.' not in filename:
         filename += '.png'
     screenshot = pyautogui.screenshot()

@@ -20,6 +20,7 @@ RETRIES_TO_LOAD_TAB = 5
 
 
 def open_tab(tab_enum: Tab):
+    logging.debug(f"try oppen tab: {tab_enum.name}")
     _prepare_screen(tab_enum)
 
     tabs_state = _find_tab_state(tab_enum)
@@ -34,6 +35,7 @@ def open_tab(tab_enum: Tab):
 
 
 def _prepare_screen(tab_enum: Tab):
+    logging.debug("_prepare_screen")
     _open_world_map_if_needed(tab_enum)
     close_all_pop_ups()
     move_mouse_close_to_top_right()
@@ -41,13 +43,17 @@ def _prepare_screen(tab_enum: Tab):
 
 
 def _open_world_map_if_needed(tab_enum: Tab):
+    logging.debug("_open_world_map_if_needed")
+    logging.debug(f"needs_be_on_world_map? {tab_enum.needs_be_on_world_map}")
     if tab_enum.needs_be_on_world_map:
         is_on_world_map = _is_tab_selected(Tabs.WORLD_MAP.value)
+        logging.debug(f"is_on_world_map? {is_on_world_map}")
         if not is_on_world_map:
             open_tab(Tabs.WORLD_MAP.value)
 
 
 def _is_tab_selected(tab_enum: Tab):
+    logging.debug(f"_is_tab_selected? {tab_enum.name}")
     screenshot = get_screenshot()
     for file_name in os.listdir(TAB_STATUS_DIR):
         if file_name.startswith(tab_enum.prefix) and (SELECTED_REGEX in file_name):
@@ -56,11 +62,14 @@ def _is_tab_selected(tab_enum: Tab):
                 file_path,
                 screenshot=screenshot)
             if is_on_screen:
+                logging.debug(f"_is_tab_selected ({tab_enum.name})? {True}")
                 return True
+    logging.debug(f"_is_tab_selected ({tab_enum.name})? {True}")
     return False
 
 
 def _open_or_reopen_tab(on_screen_tabs, tab_enum: Tab):
+    logging.debug(f"_open_or_reopen_tab: {tab_enum.name}")
     base_images = [tab for tab in on_screen_tabs if BASE_REGEX in tab[0]]
     if base_images:
         _click_on_tab(base_images[0])
@@ -69,6 +78,7 @@ def _open_or_reopen_tab(on_screen_tabs, tab_enum: Tab):
 
 
 def _reopen_tab(on_screen_tabs, tab_enum: Tab):
+    logging.debug("_reopen_tab")
     if tab_enum != Tabs.WORLD_MAP.value:
         logging.debug(f"{tab_enum.name} tab is already opened, open another then open.")
         _open_another(tab_enum)
@@ -77,6 +87,7 @@ def _reopen_tab(on_screen_tabs, tab_enum: Tab):
 
 
 def _click_on_tab(image_on_screen_data):
+    logging.debug("_click_on_tab")
     start_position = image_on_screen_data[2]
     image_path = image_on_screen_data[0]
     click_on_rect_area(top_left_corner=start_position, size=get_image_size(image_path))
@@ -90,6 +101,7 @@ def _open_another(tab_enum: Tab):
 
 
 def _find_tab_state(tab_enum: Tab) -> list[list[str | bool | tuple[int, int] | None]]:
+    logging.debug(f"_find_tab_state for: {tab_enum.name}")
     tabs_state = []
     screenshot = get_screenshot()
     for file_name in os.listdir(TAB_STATUS_DIR):
@@ -99,7 +111,6 @@ def _find_tab_state(tab_enum: Tab) -> list[list[str | bool | tuple[int, int] | N
                                                         screenshot=screenshot)
             _log_find_tab_state(file_name, is_on_screen, position)
             tabs_state.append([file_path, is_on_screen, position])
-
     return tabs_state
 
 
@@ -111,6 +122,7 @@ def _log_find_tab_state(file_name, is_on_screen, position):
 
 
 def _check_if_tab_open(tab_enum: Tab):
+    logging.debug(f"_check_if_tab_open: {tab_enum.name}")
     for _ in range(RETRIES_TO_LOAD_TAB):
         wait_rail_response()
 
