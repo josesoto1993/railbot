@@ -2,18 +2,17 @@ import datetime
 import logging
 
 from rail_utils.rail_runnable import RailRunnable
-from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen
+from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen, get_image_paths_from_folder
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 SERVICE_ENGINE_MINUTES_TO_RECHECK = 90
 
-SERVICE_MULTIPLE_BTN = "data/tab_engine/service_multiple_btn.png"
-SERVICE_MULTIPLE_BTN_SMALL = "data/tab_engine/service_multiple_btn_small.png"
-ALL_NEEDING_SERVICE_BTN = "data/tab_engine/all_needing_service_btn.png"
-ALL_NEEDING_SERVICE_BTN_SMALL = "data/tab_engine/all_needing_service_btn_small.png"
-SERVICE_ALL_LABEL = "data/tab_engine/service_all_label.png"
-SERVICE_ALL_LABEL_SMALL = "data/tab_engine/service_all_label_small.png"
+TAB_ENGINE_FOLDER = "data/tab_engine"
+
+SERVICE_MULTIPLE_FOLDER = TAB_ENGINE_FOLDER + "/all_needing_service"
+ALL_NEEDING_SERVICE_FOLDER = TAB_ENGINE_FOLDER + "/service_all"
+SERVICE_ALL_LABEL_FOLDER = TAB_ENGINE_FOLDER + "/service_multiple"
 
 logging.basicConfig(level=logging.INFO)
 
@@ -42,17 +41,17 @@ class ServiceEngine(RailRunnable):
         self._select_service_all()
 
     def _select_service_multiple(self):
-        service_multiple_btn = [SERVICE_MULTIPLE_BTN, SERVICE_MULTIPLE_BTN_SMALL]
+        service_multiple_btn = get_image_paths_from_folder(SERVICE_MULTIPLE_FOLDER)
         find_image_and_click(service_multiple_btn, msg="service multiple btn")
         sleep_random(self.sleep_service_multiple)
 
     def _select_all_needing_service(self):
-        all_needing_service_btn = [ALL_NEEDING_SERVICE_BTN, ALL_NEEDING_SERVICE_BTN_SMALL]
+        all_needing_service_btn = get_image_paths_from_folder(ALL_NEEDING_SERVICE_FOLDER)
         find_image_and_click(all_needing_service_btn, msg="all needing service btn")
         sleep_random(self.sleep_all_needing_service)
 
     def _select_service_all(self):
-        service_all_label = [SERVICE_ALL_LABEL, SERVICE_ALL_LABEL_SMALL]
+        service_all_label = get_image_paths_from_folder(SERVICE_ALL_LABEL_FOLDER)
         on_screen, _, _, _ = any_image_on_screen(service_all_label)
         if on_screen:
             find_image_and_click(service_all_label, msg="service all")

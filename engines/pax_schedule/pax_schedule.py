@@ -1,5 +1,4 @@
 import datetime
-import glob
 import logging
 import random
 
@@ -10,7 +9,7 @@ from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 TAB_ENGINE_FOLDER = "data/tab_engine"
-PAX_ENGINE_FILES = glob.glob(f"{TAB_ENGINE_FOLDER}/paxengine_*.png")
+PAX_ENGINE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/engines_label")
 PAX_ENGINE_FILES.sort(key=lambda x: ("main" not in x, x))
 
 ENGINE_FOLDER = "data/engine_schedule"
