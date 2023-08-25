@@ -41,17 +41,23 @@ class ServiceEngine(RailRunnable):
         self._select_service_all()
 
     def _select_service_multiple(self):
-        find_image_and_click(SERVICE_MULTIPLE_FILES, msg="service multiple btn")
+        find_image_and_click(SERVICE_MULTIPLE_FILES,
+                             msg="service multiple btn",
+                             error_filename="fail_select_service_multiple")
         sleep_random(self.sleep_service_multiple)
 
     def _select_all_needing_service(self):
-        find_image_and_click(ALL_NEEDING_SERVICE_FILES, msg="all needing service btn")
+        find_image_and_click(ALL_NEEDING_SERVICE_FILES,
+                             msg="all needing service btn",
+                             error_filename="fail_select_all_needing_service")
         sleep_random(self.sleep_all_needing_service)
 
     def _select_service_all(self):
         on_screen, _, _, _ = any_image_on_screen(SERVICE_ALL_LABEL_FILES)
         if on_screen:
-            find_image_and_click(SERVICE_ALL_LABEL_FILES, msg="service all")
+            find_image_and_click(SERVICE_ALL_LABEL_FILES,
+                                 msg="service all",
+                                 error_filename="fail_select_service_all")
             sleep_random(self.sleep_service_all)
         else:
             logging.debug("No need to service any engine")

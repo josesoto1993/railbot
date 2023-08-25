@@ -112,13 +112,17 @@ class CityInvest(RailRunnable):
             on_screen, _, _, _ = any_image_on_screen(MAP_ZOOM_IN_FILES)
 
     def _zoom_once(self):
-        find_image_and_click(MAP_ZOOM_IN_FILES, msg="zoom")
+        find_image_and_click(MAP_ZOOM_IN_FILES,
+                             msg="zoom",
+                             error_filename="fail_zoom_once")
         sleep_random(self.sleep_zoom / 2)
         move_mouse_close_to_center()
         sleep_random(self.sleep_zoom / 2)
 
     def _center_map(self):
-        find_image_and_click(MAP_CENTER_FILES, msg="center map")
+        find_image_and_click(MAP_CENTER_FILES,
+                             msg="center map",
+                             error_filename="fail_center_map")
         sleep_random(self.sleep_center_city)
 
     def _select_city(self):
@@ -132,7 +136,9 @@ class CityInvest(RailRunnable):
 
     def _select_subtab_city_project(self):
         logging.debug("start CityInvest._select_subtab_city_project")
-        find_image_and_click(CITY_PROJECT_FILES, msg="subtab city project")
+        find_image_and_click(CITY_PROJECT_FILES,
+                             msg="subtab city project",
+                             error_filename="fail_select_subtab_city_project")
         sleep_random(self.sleep_select_subtab_city_project)
 
     def _check_all_cities(self):
@@ -150,20 +156,28 @@ class CityInvest(RailRunnable):
         logging.debug("start CityInvest._donate_if_needed")
         have_contributions, _, _, _ = any_image_on_screen(USER_LABEL_FILES)
         if not have_contributions:
-            find_image_and_click(CONTRIBUTE_COIN_ICON_FILES, msg="city contribute")
-            find_image_and_click(CONTRIBUTE_BAR_FILES, msg="city contribute sub btn")
+            find_image_and_click(CONTRIBUTE_COIN_ICON_FILES,
+                                 msg="city contribute",
+                                 error_filename="fail_select_donate_if_needed_CONTRIBUTE_COIN_ICON_FILES")
+            find_image_and_click(CONTRIBUTE_BAR_FILES,
+                                 msg="city contribute sub btn",
+                                 error_filename="fail_select_donate_if_needed_CONTRIBUTE_BAR_FILES")
             screenshot_contribute_pop_up = get_screenshot_contribute_pop_up()
 
             x_close_img_paths = get_image_paths_from_folder(BTN_X_FOLDER)
-            find_image_and_click(x_close_img_paths, screenshot=screenshot_contribute_pop_up,
-                                 msg="close city contribute pop-up")
+            find_image_and_click(x_close_img_paths,
+                                 screenshot=screenshot_contribute_pop_up,
+                                 msg="close city contribute pop-up",
+                                 error_filename="fail_select_donate_if_needed_BTN_X_FOLDER")
             sleep_random(self.sleep_donate)
         else:
             logging.debug("No need donation")
 
     def _select_next_city(self):
         logging.debug("start CityInvest._select_next_city")
-        find_image_and_click(CITY_GO_RIGHT_FILES, msg="next city")
+        find_image_and_click(CITY_GO_RIGHT_FILES,
+                             msg="next city",
+                             error_filename="fail_select_next_city")
         sleep_random(self.sleep_select_next_city)
 
     def _update_next_run_time(self):

@@ -160,7 +160,10 @@ class WorkerBid(RailRunnable):
 
         screenshot = get_screenshot_with_black_out_of_box(position, size)
 
-        find_image_and_click(WORKER_DETAILS_FILES, msg="worker details", screenshot=screenshot)
+        find_image_and_click(WORKER_DETAILS_FILES,
+                             msg="worker details",
+                             screenshot=screenshot,
+                             error_filename="fail_select_worker_details")
         sleep_random(self.sleep_select_worker_details)
 
     def _get_bid_amount(self):
@@ -190,7 +193,9 @@ class WorkerBid(RailRunnable):
 
     def _click_send_bid(self):
         sleep_random(self.sleep_click_send_bid)
-        find_image_and_click(SEND_BID_FILES, msg="bid send btn")
+        find_image_and_click(SEND_BID_FILES,
+                             msg="bid send btn",
+                             error_filename="fail_click_send_bid")
         sleep_random(self.sleep_click_send_bid)
 
     def _update_next_run_time(self, skip_till_next_worker=True):

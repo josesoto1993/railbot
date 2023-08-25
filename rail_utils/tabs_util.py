@@ -27,7 +27,7 @@ def open_tab(tab_enum: Tab):
     on_screen_tabs = [tab_state for tab_state in tabs_state if tab_state[1]]
 
     if not on_screen_tabs:
-        get_screenshot(save=True, filename=f"{tab_enum.name}_not_found")
+        get_screenshot(save=True, filename=f"errors/{tab_enum.name}_not_found")
         raise TabNotFoundException(f"{tab_enum.name} tab not found.")
     else:
         _open_or_reopen_tab(on_screen_tabs=on_screen_tabs, tab_enum=tab_enum)
@@ -134,7 +134,7 @@ def _check_if_tab_open(tab_enum: Tab):
             logging.debug(f"Tab {tab_enum.name} opened")
             return
 
-    get_screenshot(save=True, filename=f"{tab_enum.name}_not_found")
+    get_screenshot(save=True, filename=f"errors/{tab_enum.name}_not_found")
     raise TabNotFoundException(f"{tab_enum.name} tab not opened.")
 
 

@@ -40,7 +40,9 @@ class MedalRedeem(RailRunnable):
             return
 
         while on_screen:
-            find_image_and_click(REDEEM_MEDAL_LABEL_FILES, msg="redeem medal")
+            find_image_and_click(REDEEM_MEDAL_LABEL_FILES,
+                                 msg="redeem medal",
+                                 error_filename="fail_redeem_all")
             sleep_random(self.sleep_redeem_all)
             on_screen, _, _, _ = any_image_on_screen(REDEEM_MEDAL_LABEL_FILES)
 

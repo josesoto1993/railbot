@@ -19,7 +19,9 @@ def reload_web() -> bool:
     start_time = time.time()
 
     reload_image_paths = get_image_paths_from_folder(RELOAD_FOLDER)
-    find_image_and_click(reload_image_paths, msg="reload btn")
+    find_image_and_click(reload_image_paths,
+                         msg="reload btn",
+                         error_filename="fail_reload_web")
     while time.time() - start_time < RELOAD_MAX_TIME:
         time.sleep(RELOAD_LOOP_TIME)
         on_screen, _, _, _ = any_image_on_screen(possible_states)

@@ -36,7 +36,10 @@ def close_all_pop_ups():
     on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
     logging.debug(f"any to close? {on_screen}")
     while on_screen:
-        find_image_and_click(pop_up_close_img_paths, msg="close pop-up", retries=1)
+        find_image_and_click(pop_up_close_img_paths,
+                             msg="close pop-up",
+                             retries=1,
+                             error_filename="fail_close_all_pop_ups")
         sleep_random(1)
         move_mouse_close_to_top_right()
         sleep_random(1)
@@ -50,7 +53,8 @@ def find_image_and_click(
         precision=0.8,
         screenshot=None,
         gray_scale=True,
-        retries=RETRIES_TO_LOAD
+        retries=RETRIES_TO_LOAD,
+        error_filename=None
 ):
     for _ in range(retries):
         wait_rail_response()
@@ -64,12 +68,15 @@ def find_image_and_click(
                     logging.debug(f"Select: {msg}")
                 click_on_rect_area(top_left_corner=position, filepath=filepath)
                 return
-    _find_image_and_click_log_error(filepaths, msg)
+    _find_image_and_click_log_error(filepaths, msg=msg, filename=error_filename)
 
 
-def _find_image_and_click_log_error(filepaths, msg):
-    filename = timestamped_filename(filename="errors/error_find_and_click")
-    get_screenshot(save=False, filename=filename)  # TODO set auto delete, till then, do not enable (true)
+def _find_image_and_click_log_error(filepaths, msg, filename=None):
+    if filename is None:
+        filename = timestamped_filename(filename="errors/error_find_and_click")
+    else:
+        filename = "errors/" + filename
+    get_screenshot(save=True, filename=filename)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
 

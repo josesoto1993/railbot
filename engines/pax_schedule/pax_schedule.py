@@ -107,11 +107,15 @@ class PaxSchedule(RailRunnable):
         logging.info(f"Next {self.__class__.__name__} schedule at {target_datetime.time()}")
 
     def _select_pax_engine(self):
-        find_image_and_click(PAX_ENGINE_FILES, msg="pax engine")
+        find_image_and_click(PAX_ENGINE_FILES,
+                             msg="pax engine",
+                             error_filename="fail_select_pax_engine")
         sleep_random(self.sleep_select_pax_engine)
 
     def _open_timetable(self):
-        find_image_and_click(POPUP_TIMETABLE_BTN_FILES, msg="timetable")
+        find_image_and_click(POPUP_TIMETABLE_BTN_FILES,
+                             msg="timetable",
+                             error_filename="fail_open_timetable")
         sleep_random(self.sleep_timetable)
 
     def _click_schedule(self):
@@ -120,9 +124,13 @@ class PaxSchedule(RailRunnable):
         sleep_random(self.sleep_adopt_schedule)
 
     def _select_all_engines(self):
-        find_image_and_click(POPUP_SELECT_ALL_FILES, msg="all engines")
+        find_image_and_click(POPUP_SELECT_ALL_FILES,
+                             msg="all engines",
+                             error_filename="fail_select_all_engines")
         sleep_random(self.sleep_select_all)
 
     def _select_lets_go(self):
-        find_image_and_click(POPUP_SELECT_LETS_GO_FILES, msg="lets go")
+        find_image_and_click(POPUP_SELECT_LETS_GO_FILES,
+                             msg="lets go",
+                             error_filename="fail_select_lets_go")
         sleep_random(self.sleep_lets_go)

@@ -57,17 +57,23 @@ class IndustryInvest(RailRunnable):
             logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")
 
     def _select_subtab_industries(self):
-        find_image_and_click(RANKING_INDUSTRIES_FILES, msg="subtab industries")
+        find_image_and_click(RANKING_INDUSTRIES_FILES,
+                             msg="subtab industries",
+                             error_filename="fail_select_subtab_industries")
         sleep_random(self.sleep_select_subtab_industries)
 
     def _select_subsubtab_invest(self):
-        find_image_and_click(RANKING_INDUSTRIES_INVEST_FILES, msg="subsubtab invest")
+        find_image_and_click(RANKING_INDUSTRIES_INVEST_FILES,
+                             msg="subsubtab invest",
+                             error_filename="fail_select_subsubtab_invest")
         sleep_random(self.sleep_select_subsubtab_invest)
 
     def _show_last(self):
         on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES)
         while on_screen:
-            find_image_and_click(RANKING_SHOW_MORE_FILES, msg="show more")
+            find_image_and_click(RANKING_SHOW_MORE_FILES,
+                                 msg="show more",
+                                 error_filename="fail_show_last")
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
@@ -83,7 +89,9 @@ class IndustryInvest(RailRunnable):
     def _select_zero_investment(self):
         on_screen, _, _, _ = any_image_on_screen(RANKING_INVEST_ZERO_FILES)
         if on_screen:
-            find_image_and_click(RANKING_INVEST_ZERO_FILES, msg="zero investment")
+            find_image_and_click(RANKING_INVEST_ZERO_FILES,
+                                 msg="zero investment",
+                                 error_filename="fail_select_zero_investment")
             sleep_random(self.sleep_select_zero_investment)
             return True
         else:
@@ -91,5 +99,7 @@ class IndustryInvest(RailRunnable):
             return False
 
     def _industry_invest(self):
-        find_image_and_click(INDUSTRY_INVEST_FILES, msg="invest")
+        find_image_and_click(INDUSTRY_INVEST_FILES,
+                             msg="invest",
+                             error_filename="fail_industry_invest")
         sleep_random(self.sleep_industry_invest)
