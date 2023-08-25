@@ -5,7 +5,7 @@ import random
 
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, sleep_random, any_image_on_screen, \
-    get_screenshot, get_image_size, get_screenshot_with_black_box_in
+    get_screenshot, get_image_size, get_screenshot_with_black_box_in, get_image_paths_from_folder
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -14,41 +14,20 @@ PAX_ENGINE_FILES = glob.glob(f"{TAB_ENGINE_FOLDER}/paxengine_*.png")
 PAX_ENGINE_FILES.sort(key=lambda x: ("main" not in x, x))
 
 ENGINE_FOLDER = "data/engine_schedule"
-POPUP_TIMETABLE_BASE = ENGINE_FOLDER + "/popup_engine_timetable_calculator_base.png"
-POPUP_TIMETABLE_BASE_SMALL = ENGINE_FOLDER + "/popup_engine_timetable_calculator_base_small.png"
-POPUP_TIMETABLE_HOVER = ENGINE_FOLDER + "/popup_engine_timetable_calculator_hover.png"
-POPUP_TIMETABLE_HOVER_SMALL = ENGINE_FOLDER + "/popup_engine_timetable_calculator_hover_small.png"
-POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE = ENGINE_FOLDER + "/popup_engine_timetable_adopt_schedule_base.png"
-POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE_SMALL = ENGINE_FOLDER + "/popup_engine_timetable_adopt_schedule_base_small.png"
-POPUP_TIMETABLE_ADOPT_SCHEDULE_HOVER = ENGINE_FOLDER + "/popup_engine_timetable_adopt_schedule_hover.png"
-POPUP_TIMETABLE_ADOPT_SCHEDULE_HOVER_SMALL = ENGINE_FOLDER + "/popup_engine_timetable_adopt_schedule_hover_small.png"
-POPUP_TIMETABLE_KEEP_SCHEDULE_BASE = ENGINE_FOLDER + "/popup_engine_timetable_keep_schedule_base.png"
-POPUP_TIMETABLE_KEEP_SCHEDULE_BASE_SMALL = ENGINE_FOLDER + "/popup_engine_timetable_keep_schedule_base_small.png"
-POPUP_TIMETABLE_KEEP_SCHEDULE_HOVER = ENGINE_FOLDER + "/popup_engine_timetable_keep_schedule_hover.png"
-POPUP_TIMETABLE_KEEP_SCHEDULE_HOVER_SMALL = ENGINE_FOLDER + "/popup_engine_timetable_keep_schedule_hover_small.png"
-POPUP_SELECT_ALL_BASE = ENGINE_FOLDER + "/popup_engine_schedule_select_all_base.png"
-POPUP_SELECT_ALL_BASE_SMALL = ENGINE_FOLDER + "/popup_engine_schedule_select_all_base_small.png"
-POPUP_SELECT_ALL_HOVER = ENGINE_FOLDER + "/popup_engine_schedule_select_all_hover.png"
-POPUP_SELECT_ALL_HOVER_SMALL = ENGINE_FOLDER + "/popup_engine_schedule_select_all_hover_small.png"
-POPUP_SELECT_LETS_GO_BASE = ENGINE_FOLDER + "/popup_engine_schedule_lests_go_base.png"
-POPUP_SELECT_LETS_GO_BASE_SMALL = ENGINE_FOLDER + "/popup_engine_schedule_lests_go_base_small.png"
-POPUP_SELECT_LETS_GO_HOVER = ENGINE_FOLDER + "/popup_engine_schedule_lests_go_hover.png"
-POPUP_SELECT_LETS_GO_HOVER_SMALL = ENGINE_FOLDER + "/popup_engine_schedule_lests_go_hover_small.png"
-POPUP_SELECT_LETS_GO_DISABLED = ENGINE_FOLDER + "/popup_engine_schedule_lests_go_disabled.png"
-POPUP_SELECT_LETS_GO_DISABLED_SMALL = ENGINE_FOLDER + "/popup_engine_schedule_lests_go_disabled_small.png"
+POPUP_TIMETABLE_BTN_FOLDER = ENGINE_FOLDER + "/timetable_btn"
+POPUP_TIMETABLE_KEEP_FOLDER = ENGINE_FOLDER + "/timetable_keep"
+POPUP_TIMETABLE_ADOPT_FOLDER = ENGINE_FOLDER + "/timetable_adopt"
+POPUP_SELECT_ALL_FOLDER = ENGINE_FOLDER + "/select_all"
+POPUP_SELECT_LETS_GO_FOLDER = ENGINE_FOLDER + "/letsgo"
 
 logging.basicConfig(level=logging.INFO)
 
 
 def get_top_schedule():
-    schedule_labels = [POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE,
-                       POPUP_TIMETABLE_ADOPT_SCHEDULE_BASE_SMALL,
-                       POPUP_TIMETABLE_ADOPT_SCHEDULE_HOVER,
-                       POPUP_TIMETABLE_ADOPT_SCHEDULE_HOVER_SMALL,
-                       POPUP_TIMETABLE_KEEP_SCHEDULE_BASE,
-                       POPUP_TIMETABLE_KEEP_SCHEDULE_BASE_SMALL,
-                       POPUP_TIMETABLE_KEEP_SCHEDULE_HOVER,
-                       POPUP_TIMETABLE_KEEP_SCHEDULE_HOVER_SMALL]
+    schedule_labels = (
+            get_image_paths_from_folder(POPUP_TIMETABLE_ADOPT_FOLDER) +
+            get_image_paths_from_folder(POPUP_TIMETABLE_KEEP_FOLDER)
+    )
 
     matches = find_and_blackout_matches(schedule_labels)
     return select_top_schedule(matches)
@@ -136,10 +115,7 @@ class PaxSchedule(RailRunnable):
         sleep_random(self.sleep_select_pax_engine)
 
     def _open_timetable(self):
-        popup_timetable = [POPUP_TIMETABLE_BASE,
-                           POPUP_TIMETABLE_BASE_SMALL,
-                           POPUP_TIMETABLE_HOVER,
-                           POPUP_TIMETABLE_HOVER_SMALL]
+        popup_timetable = get_image_paths_from_folder(POPUP_TIMETABLE_BTN_FOLDER)
         find_image_and_click(popup_timetable, msg="timetable")
         sleep_random(self.sleep_timetable)
 
@@ -149,20 +125,12 @@ class PaxSchedule(RailRunnable):
         sleep_random(self.sleep_adopt_schedule)
 
     def _select_all_engines(self):
-        select_all_btn = [POPUP_SELECT_ALL_BASE,
-                          POPUP_SELECT_ALL_BASE_SMALL,
-                          POPUP_SELECT_ALL_HOVER,
-                          POPUP_SELECT_ALL_HOVER_SMALL]
+        select_all_btn = get_image_paths_from_folder(POPUP_SELECT_ALL_FOLDER)
         find_image_and_click(select_all_btn, msg="all engines")
 
         sleep_random(self.sleep_select_all)
 
     def _select_lets_go(self):
-        lets_go_paths = [POPUP_SELECT_LETS_GO_BASE,
-                         POPUP_SELECT_LETS_GO_BASE_SMALL,
-                         POPUP_SELECT_LETS_GO_HOVER,
-                         POPUP_SELECT_LETS_GO_HOVER_SMALL,
-                         POPUP_SELECT_LETS_GO_DISABLED,
-                         POPUP_SELECT_LETS_GO_DISABLED_SMALL]
+        lets_go_paths = get_image_paths_from_folder(POPUP_SELECT_LETS_GO_FOLDER)
         find_image_and_click(lets_go_paths, msg="lets go")
         sleep_random(self.sleep_lets_go)
