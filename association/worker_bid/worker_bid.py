@@ -6,7 +6,8 @@ import pyautogui
 from association.worker_bid.worker_price_data import get_worker_data
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
-    find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException, any_image_on_screen
+    find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException, any_image_on_screen, \
+    get_image_paths_from_folder
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -15,58 +16,33 @@ WORKER_BID_MINUTES_TO_RECHECK = 15
 WORKER_BID_MINUTE_FINISH = 55
 
 ASSOCIATION_FOLDER = "data/tab_association"
-ASSOCIATION_BID_DISABLED = ASSOCIATION_FOLDER + "/bid_disabled.png"
-ASSOCIATION_BID_DISABLED_SMALL = ASSOCIATION_FOLDER + "/bid_disabled_small.png"
-ASSOCIATION_NO_ROOM_FOR_WORKER = ASSOCIATION_FOLDER + "/no_room_for_worker.png"
-ASSOCIATION_NO_ROOM_FOR_WORKER_SMALL = ASSOCIATION_FOLDER + "/no_room_for_worker_small.png"
-ASSOCIATION_NO_WORKER_AVAILABLE = ASSOCIATION_FOLDER + "/no_worker_available.png"
-ASSOCIATION_NO_WORKER_AVAILABLE_SMALL = ASSOCIATION_FOLDER + "/no_worker_available_small.png"
-ASSOCIATION_WORKER_LABEL = ASSOCIATION_FOLDER + "/worker_label.png"
-ASSOCIATION_WORKER_LABEL_SMALL = ASSOCIATION_FOLDER + "/worker_label_small.png"
-ASSOCIATION_WORKER_DETAILS = ASSOCIATION_FOLDER + "/worker_details_btn.png"
-ASSOCIATION_WORKER_DETAILS_SMALL = ASSOCIATION_FOLDER + "/worker_details_btn_small.png"
-ASSOCIATION_WORKER_DETAILS_USER_LABEL = ASSOCIATION_FOLDER + "/user_bid_label.png"
-ASSOCIATION_WORKER_DETAILS_USER_LABEL_SMALL = ASSOCIATION_FOLDER + "/user_bid_label_small.png"
-ASSOCIATION_WORKER_DETAILS_USER_LABEL_HOVER = ASSOCIATION_FOLDER + "/user_bid_label_hover.png"
-ASSOCIATION_WORKER_DETAILS_USER_LABEL_HOVER_SMALL = ASSOCIATION_FOLDER + "/user_bid_label_hover_small.png"
-ASSOCIATION_WORKER_DETAILS_BID_LESS_ENABLED = ASSOCIATION_FOLDER + "/minus_bid_btn_enabled.png"
-ASSOCIATION_WORKER_DETAILS_BID_LESS_ENABLED_SMALL = ASSOCIATION_FOLDER + "/minus_bid_btn_enabled_small.png"
-ASSOCIATION_WORKER_DETAILS_BID_LESS_DISABLED = ASSOCIATION_FOLDER + "/minus_bid_btn_disabled.png"
-ASSOCIATION_WORKER_DETAILS_BID_LESS_DISABLED_SMALL = ASSOCIATION_FOLDER + "/minus_bid_btn_disabled_small.png"
-ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED = ASSOCIATION_FOLDER + "/plus_bid_btn_enabled.png"
-ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED_SMALL = ASSOCIATION_FOLDER + "/plus_bid_btn_enabled_small.png"
-ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED = ASSOCIATION_FOLDER + "/plus_bid_btn_disabled.png"
-ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED_SMALL = ASSOCIATION_FOLDER + "/plus_bid_btn_disabled_small.png"
-ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN = ASSOCIATION_FOLDER + "/send_bid_btn.png"
-ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN_SMALL = ASSOCIATION_FOLDER + "/send_bid_btn_small.png"
-CURRENT_WORKER_LABEL = ASSOCIATION_FOLDER + "/current_worker_label.png"
-CURRENT_WORKER_LABEL_SMALL = ASSOCIATION_FOLDER + "/current_worker_label_small.png"
-BIDS_BY_YOUR_ASSOCIATION_LABEL = ASSOCIATION_FOLDER + "/bids_by_aso_label.png"
-BIDS_BY_YOUR_ASSOCIATION_LABEL_SMALL = ASSOCIATION_FOLDER + "/bids_by_aso_label_small.png"
-HIGHEST_BID_LABEL = ASSOCIATION_FOLDER + "/highest_bid_label.png"
-HIGHEST_BID_LABEL_SMALL = ASSOCIATION_FOLDER + "/highest_bid_label_small.png"
+
+ASSOCIATION_BID_DISABLED_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/bid_disabled")
+BIDS_BY_YOUR_ASSOCIATION_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/bids_by_aso")
+CURRENT_WORKER_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/current_worker")
+HIGHEST_BID_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/highest_bid")
+NO_ROOM_FOR_WORKER_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/no_room_for_worker")
+NO_WORKER_AVAILABLE_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/no_worker_available")
+SEND_BID_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/send_bid")
+USER_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/user_label")
+WORKER_BID_LESS_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_bid_less")
+WORKER_BID_MORE_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_bid_more")
+WORKER_DETAILS_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_details")
+WORKER_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_label")
 
 logging.basicConfig(level=logging.INFO)
 
 
 def have_bid():
-    on_screen, _, _, _ = any_image_on_screen(
-        [ASSOCIATION_WORKER_DETAILS_USER_LABEL,
-         ASSOCIATION_WORKER_DETAILS_USER_LABEL_SMALL,
-         ASSOCIATION_WORKER_DETAILS_USER_LABEL_HOVER,
-         ASSOCIATION_WORKER_DETAILS_USER_LABEL_HOVER_SMALL])
-
+    on_screen, _, _, _ = any_image_on_screen(USER_LABEL_FILES)
     return on_screen
 
 
 def get_worker_info_screenshot():
     # Find positions of the images
-    worker_label = [CURRENT_WORKER_LABEL, CURRENT_WORKER_LABEL_SMALL]
-    on_screen_worker, position_worker, _, _ = any_image_on_screen(worker_label)
-    bids_by_your_association_label = [BIDS_BY_YOUR_ASSOCIATION_LABEL, BIDS_BY_YOUR_ASSOCIATION_LABEL_SMALL]
-    on_screen_association, position_association, _, _ = any_image_on_screen(bids_by_your_association_label)
-    highest_bid_label = [HIGHEST_BID_LABEL, HIGHEST_BID_LABEL_SMALL]
-    on_screen_bid, position_bid, _, _ = any_image_on_screen(highest_bid_label)
+    on_screen_worker, position_worker, _, _ = any_image_on_screen(CURRENT_WORKER_LABEL_FILES)
+    on_screen_association, position_association, _, _ = any_image_on_screen(BIDS_BY_YOUR_ASSOCIATION_LABEL_FILES)
+    on_screen_bid, position_bid, _, _ = any_image_on_screen(HIGHEST_BID_LABEL_FILES)
 
     # Raise exception if any of the images is not found
     if not (on_screen_worker and on_screen_association and on_screen_bid):
@@ -81,11 +57,7 @@ def get_worker_info_screenshot():
 
 
 def get_bid_left_corner():
-    worker_details_bid_less = [ASSOCIATION_WORKER_DETAILS_BID_LESS_ENABLED,
-                               ASSOCIATION_WORKER_DETAILS_BID_LESS_ENABLED_SMALL,
-                               ASSOCIATION_WORKER_DETAILS_BID_LESS_DISABLED,
-                               ASSOCIATION_WORKER_DETAILS_BID_LESS_DISABLED_SMALL]
-    on_screen, position, _, image_path = any_image_on_screen(worker_details_bid_less)
+    on_screen, position, _, image_path = any_image_on_screen(WORKER_BID_LESS_FILES)
     if on_screen:
         return position, image_path
 
@@ -93,11 +65,7 @@ def get_bid_left_corner():
 
 
 def get_bid_right_corner():
-    worker_details_bid_more = [ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED,
-                               ASSOCIATION_WORKER_DETAILS_BID_MORE_ENABLED_SMALL,
-                               ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED,
-                               ASSOCIATION_WORKER_DETAILS_BID_MORE_DISABLED_SMALL]
-    on_screen, position, _, image_path = any_image_on_screen(worker_details_bid_more)
+    on_screen, position, _, image_path = any_image_on_screen(WORKER_BID_MORE_FILES)
     if on_screen:
         return position, image_path
 
@@ -178,26 +146,21 @@ class WorkerBid(RailRunnable):
 
     def _is_bid_disabled(self):
         sleep_random(self.sleep_is_bid_disabled)
-        bid_disabled = [ASSOCIATION_BID_DISABLED, ASSOCIATION_BID_DISABLED_SMALL]
-        on_screen_disabled, _, _, _ = any_image_on_screen(bid_disabled, gray_scale=False)
-        no_room_for_worker = [ASSOCIATION_NO_ROOM_FOR_WORKER, ASSOCIATION_NO_ROOM_FOR_WORKER_SMALL]
-        on_screen_no_room, _, _, _ = any_image_on_screen(no_room_for_worker)
-        no_worker_available = [ASSOCIATION_NO_WORKER_AVAILABLE, ASSOCIATION_NO_WORKER_AVAILABLE_SMALL]
-        on_screen_no_worker, _, _, _ = any_image_on_screen(no_worker_available)
+        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES, gray_scale=False)
+        on_screen_no_room, _, _, _ = any_image_on_screen(NO_ROOM_FOR_WORKER_FILES)
+        on_screen_no_worker, _, _, _ = any_image_on_screen(NO_WORKER_AVAILABLE_FILES)
 
         return on_screen_disabled or on_screen_no_room or on_screen_no_worker
 
     def _select_worker_details(self):
-        worker_label = [ASSOCIATION_WORKER_LABEL, ASSOCIATION_WORKER_LABEL_SMALL]
-        _, position, _, image_path = any_image_on_screen(worker_label)
+        _, position, _, image_path = any_image_on_screen(WORKER_LABEL_FILES)
         _, image_height = get_image_size(image_path)
 
         size = (pyautogui.size()[0], image_height)
 
         screenshot = get_screenshot_with_black_out_of_box(position, size)
 
-        worker_details = [ASSOCIATION_WORKER_DETAILS, ASSOCIATION_WORKER_DETAILS_SMALL]
-        find_image_and_click(worker_details, msg="worker details", screenshot=screenshot)
+        find_image_and_click(WORKER_DETAILS_FILES, msg="worker details", screenshot=screenshot)
         sleep_random(self.sleep_select_worker_details)
 
     def _get_bid_amount(self):
@@ -227,9 +190,7 @@ class WorkerBid(RailRunnable):
 
     def _click_send_bid(self):
         sleep_random(self.sleep_click_send_bid)
-        worker_details_send_btn = [ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN,
-                                   ASSOCIATION_WORKER_DETAILS_SEND_BID_BTN_SMALL]
-        find_image_and_click(worker_details_send_btn, msg="bid send btn")
+        find_image_and_click(SEND_BID_FILES, msg="bid send btn")
         sleep_random(self.sleep_click_send_bid)
 
     def _update_next_run_time(self, skip_till_next_worker=True):
