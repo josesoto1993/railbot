@@ -69,15 +69,17 @@ class IndustryInvest(RailRunnable):
         sleep_random(self.sleep_select_subsubtab_invest)
 
     def _show_last(self):
-        on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES)
+        precision = 0.95
+        on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES, precision=precision)
         while on_screen:
             find_image_and_click(RANKING_SHOW_MORE_FILES,
                                  msg="show more",
+                                 precision=precision,
                                  error_filename="fail_show_last")
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
-            on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES)
+            on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES, precision=precision)
 
     def _invest_if_needed(self):
         any_zero_invest_industry = self._select_zero_investment()
