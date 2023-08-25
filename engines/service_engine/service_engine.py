@@ -10,9 +10,9 @@ SERVICE_ENGINE_MINUTES_TO_RECHECK = 90
 
 TAB_ENGINE_FOLDER = "data/tab_engine"
 
-SERVICE_MULTIPLE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/all_needing_service")
-ALL_NEEDING_SERVICE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_all")
-SERVICE_ALL_LABEL_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_multiple")
+SERVICE_MULTIPLE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_multiple")
+ALL_NEEDING_SERVICE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/all_needing_service")
+SERVICE_ALL_LABEL_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_all")
 
 logging.basicConfig(level=logging.INFO)
 
