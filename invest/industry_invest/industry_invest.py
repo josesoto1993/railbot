@@ -2,27 +2,21 @@ import datetime
 import logging
 
 from rail_utils.rail_runnable import RailRunnable
-from rail_utils.rail_utils import find_image_and_click, sleep_random, move_mouse_close_to_center, any_image_on_screen
+from rail_utils.rail_utils import find_image_and_click, sleep_random, move_mouse_close_to_center, any_image_on_screen, \
+    get_image_paths_from_folder
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 INVEST_MINUTES_TO_RECHECK = 180
 
 RANKING_FOLDER = "data/tab_ranking"
-RANKING_SUBTAB_INDUSTRIES = RANKING_FOLDER + "/ranking_subtab_industries_base.png"
-RANKING_SUBTAB_INDUSTRIES_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_base_small.png"
-RANKING_SUBSUBTAB_INVEST = RANKING_FOLDER + "/ranking_subtab_industries_invest_base.png"
-RANKING_SUBSUBTAB_INVEST_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_invest_base_small.png"
-RANKING_SHOW_MORE = RANKING_FOLDER + "/ranking_subtab_industries_show_more_base.png"
-RANKING_SHOW_MORE_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_show_more_base_small.png"
-RANKING_SUBSUBTAB_INVEST_ZERO = RANKING_FOLDER + "/ranking_subtab_industries_invest_zero_base.png"
-RANKING_SUBSUBTAB_INVEST_ZERO_SMALL = RANKING_FOLDER + "/ranking_subtab_industries_invest_zero_base_small.png"
+RANKING_INDUSTRIES_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/ranking_industries")
+RANKING_INDUSTRIES_INVEST_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/ranking_industries_invest")
+RANKING_SHOW_MORE_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/show_more")
+RANKING_INVEST_ZERO_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/invest_zero")
 
 INDUSTRY_FOLDER = "data/industry"
-INDUSTRY_INVEST_BASE = INDUSTRY_FOLDER + "/industry_invest_base.png"
-INDUSTRY_INVEST_BASE_SMALL = INDUSTRY_FOLDER + "/industry_invest_base_small.png"
-INDUSTRY_INVEST_VOUCHER_BASE = INDUSTRY_FOLDER + "/industry_invest_voucher_base.png"
-INDUSTRY_INVEST_VOUCHER_BASE_SMALL = INDUSTRY_FOLDER + "/industry_invest_voucher_base_small.png"
+INDUSTRY_INVEST_FILES = get_image_paths_from_folder(RANKING_FOLDER + "/invest")
 
 logging.basicConfig(level=logging.INFO)
 
@@ -63,24 +57,21 @@ class IndustryInvest(RailRunnable):
             logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")
 
     def _select_subtab_industries(self):
-        subtab_industries = [RANKING_SUBTAB_INDUSTRIES, RANKING_SUBTAB_INDUSTRIES_SMALL]
-        find_image_and_click(subtab_industries, msg="subtab industries")
+        find_image_and_click(RANKING_INDUSTRIES_FILES, msg="subtab industries")
         sleep_random(self.sleep_select_subtab_industries)
 
     def _select_subsubtab_invest(self):
-        subsubtab_invest = [RANKING_SUBSUBTAB_INVEST, RANKING_SUBSUBTAB_INVEST_SMALL]
-        find_image_and_click(subsubtab_invest, msg="subsubtab invest")
+        find_image_and_click(RANKING_INDUSTRIES_INVEST_FILES, msg="subsubtab invest")
         sleep_random(self.sleep_select_subsubtab_invest)
 
     def _show_last(self):
-        show_more_btn = [RANKING_SHOW_MORE, RANKING_SHOW_MORE_SMALL]
-        on_screen, _, _, _ = any_image_on_screen(show_more_btn)
+        on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES)
         while on_screen:
-            find_image_and_click(show_more_btn, msg="show more")
+            find_image_and_click(RANKING_SHOW_MORE_FILES, msg="show more")
             sleep_random(self.sleep_show_last / 2)
             move_mouse_close_to_center()
             sleep_random(self.sleep_show_last / 2)
-            on_screen, _, _, _ = any_image_on_screen(show_more_btn)
+            on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES)
 
     def _invest_if_needed(self):
         any_zero_invest_industry = self._select_zero_investment()
@@ -90,10 +81,9 @@ class IndustryInvest(RailRunnable):
         return True
 
     def _select_zero_investment(self):
-        invest_zero_label = [RANKING_SUBSUBTAB_INVEST_ZERO, RANKING_SUBSUBTAB_INVEST_ZERO_SMALL]
-        on_screen, _, _, _ = any_image_on_screen(invest_zero_label)
+        on_screen, _, _, _ = any_image_on_screen(RANKING_INVEST_ZERO_FILES)
         if on_screen:
-            find_image_and_click(invest_zero_label, msg="zero investment")
+            find_image_and_click(RANKING_INVEST_ZERO_FILES, msg="zero investment")
             sleep_random(self.sleep_select_zero_investment)
             return True
         else:
@@ -101,9 +91,5 @@ class IndustryInvest(RailRunnable):
             return False
 
     def _industry_invest(self):
-        invest_label = [INDUSTRY_INVEST_BASE,
-                        INDUSTRY_INVEST_BASE_SMALL,
-                        INDUSTRY_INVEST_VOUCHER_BASE,
-                        INDUSTRY_INVEST_VOUCHER_BASE_SMALL]
-        find_image_and_click(invest_label, msg="invest")
+        find_image_and_click(INDUSTRY_INVEST_FILES, msg="invest")
         sleep_random(self.sleep_industry_invest)
