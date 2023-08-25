@@ -10,7 +10,7 @@ from redeem.medals.medal_redeem import MedalRedeem
 START_PAX_SCHEDULE_MINUTE = 0
 RUN_PAX_SCHEDULE_FLAG = True
 RUN_INDUSTRY_INVEST_FLAG = False # TODO hacer que no quede pegado en filter ya que intenta abrir y cerrar mil veces
-RUN_CITY_INVEST_FLAG = False # TODO arreglar esta vaina
+RUN_CITY_INVEST_FLAG = False
 RUN_SERVICE_ENGINE_FLAG = True
 RUN_WORKER_BID_FLAG = True
 RUN_REDEEM_MEDAL_FLAG = True
