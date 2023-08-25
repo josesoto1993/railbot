@@ -13,22 +13,19 @@ PAX_ENGINE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/engines_lab
 PAX_ENGINE_FILES.sort(key=lambda x: ("main" not in x, x))
 
 ENGINE_FOLDER = "data/engine_schedule"
-POPUP_TIMETABLE_BTN_FOLDER = ENGINE_FOLDER + "/timetable_btn"
-POPUP_TIMETABLE_KEEP_FOLDER = ENGINE_FOLDER + "/timetable_keep"
-POPUP_TIMETABLE_ADOPT_FOLDER = ENGINE_FOLDER + "/timetable_adopt"
-POPUP_SELECT_ALL_FOLDER = ENGINE_FOLDER + "/select_all"
-POPUP_SELECT_LETS_GO_FOLDER = ENGINE_FOLDER + "/letsgo"
+POPUP_TIMETABLE_ADOPT_OR_KEEP_FILES = (
+        get_image_paths_from_folder(ENGINE_FOLDER + "/timetable_adopt") +
+        get_image_paths_from_folder(ENGINE_FOLDER + "/timetable_keep")
+)
+POPUP_TIMETABLE_BTN_FILES = get_image_paths_from_folder(ENGINE_FOLDER + "/timetable_btn")
+POPUP_SELECT_ALL_FILES = get_image_paths_from_folder(ENGINE_FOLDER + "/select_all")
+POPUP_SELECT_LETS_GO_FILES = get_image_paths_from_folder(ENGINE_FOLDER + "/letsgo")
 
 logging.basicConfig(level=logging.INFO)
 
 
 def get_top_schedule():
-    schedule_labels = (
-            get_image_paths_from_folder(POPUP_TIMETABLE_ADOPT_FOLDER) +
-            get_image_paths_from_folder(POPUP_TIMETABLE_KEEP_FOLDER)
-    )
-
-    matches = find_and_blackout_matches(schedule_labels)
+    matches = find_and_blackout_matches(POPUP_TIMETABLE_ADOPT_OR_KEEP_FILES)
     return select_top_schedule(matches)
 
 
@@ -114,8 +111,7 @@ class PaxSchedule(RailRunnable):
         sleep_random(self.sleep_select_pax_engine)
 
     def _open_timetable(self):
-        popup_timetable = get_image_paths_from_folder(POPUP_TIMETABLE_BTN_FOLDER)
-        find_image_and_click(popup_timetable, msg="timetable")
+        find_image_and_click(POPUP_TIMETABLE_BTN_FILES, msg="timetable")
         sleep_random(self.sleep_timetable)
 
     def _click_schedule(self):
@@ -124,12 +120,9 @@ class PaxSchedule(RailRunnable):
         sleep_random(self.sleep_adopt_schedule)
 
     def _select_all_engines(self):
-        select_all_btn = get_image_paths_from_folder(POPUP_SELECT_ALL_FOLDER)
-        find_image_and_click(select_all_btn, msg="all engines")
-
+        find_image_and_click(POPUP_SELECT_ALL_FILES, msg="all engines")
         sleep_random(self.sleep_select_all)
 
     def _select_lets_go(self):
-        lets_go_paths = get_image_paths_from_folder(POPUP_SELECT_LETS_GO_FOLDER)
-        find_image_and_click(lets_go_paths, msg="lets go")
+        find_image_and_click(POPUP_SELECT_LETS_GO_FILES, msg="lets go")
         sleep_random(self.sleep_lets_go)
