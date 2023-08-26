@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 import random
 import time
 from typing import Tuple, Optional
@@ -17,42 +18,33 @@ BASE_SCREENSHOT_NAME = 'screenshot.png'
 RETRIES_TO_LOAD = 5
 
 GENERAL_FOLDER = "data/general"
-BTN_X_CLOSE_MAIN = GENERAL_FOLDER + "/btn_x_close_main.png"
-BTN_X_CLOSE_MAIN_SMALL = GENERAL_FOLDER + "/btn_x_close_main_small.png"
-BTN_X_CLOSE_ALTER = GENERAL_FOLDER + "/btn_x_close_alter.png"
-BTN_X_CLOSE_ALTER_SMALL = GENERAL_FOLDER + "/btn_x_close_alter_small.png"
-BTN_X_CLOSE = [BTN_X_CLOSE_MAIN,
-               BTN_X_CLOSE_MAIN_SMALL,
-               BTN_X_CLOSE_ALTER,
-               BTN_X_CLOSE_ALTER_SMALL]
-BTN_X_TICKET_BASE = GENERAL_FOLDER + "/close_redeem_ticket.png"
-BTN_X_TICKET_BASE_SMALL = GENERAL_FOLDER + "/close_redeem_ticket_small.png"
-BTN_CONTINUE_BASE = GENERAL_FOLDER + "/continue_playing.png"
-BTN_CONTINUE_BASE_SMALL = GENERAL_FOLDER + "/continue_playing_small.png"
-BTN_ACCEPT_COOKIES = GENERAL_FOLDER + "/accept_cookies.png"
-BTN_ACCEPT_COOKIES_SMALL = GENERAL_FOLDER + "/accept_cookies_small.png"
-ALL_CLOSE_BTN = [BTN_X_CLOSE_MAIN,
-                 BTN_X_CLOSE_MAIN_SMALL,
-                 BTN_X_CLOSE_ALTER,
-                 BTN_X_CLOSE_ALTER_SMALL,
-                 BTN_X_TICKET_BASE,
-                 BTN_X_TICKET_BASE_SMALL,
-                 BTN_CONTINUE_BASE,
-                 BTN_CONTINUE_BASE_SMALL,
-                 BTN_ACCEPT_COOKIES,
-                 BTN_ACCEPT_COOKIES_SMALL]
+BTN_X_FOLDER = GENERAL_FOLDER + "/btn_x"
+CONTINUE_FOLDER = GENERAL_FOLDER + "/continue"
+INTERRUPT_FOLDER = GENERAL_FOLDER + "/interrupt"
 
 logging.basicConfig(level=logging.INFO)
 
 
 def close_all_pop_ups():
-    on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN)
+    logging.debug("close all pop ups")
+    pop_up_close_img_paths = (
+            get_image_paths_from_folder(BTN_X_FOLDER) +
+            get_image_paths_from_folder(CONTINUE_FOLDER) +
+            get_image_paths_from_folder(INTERRUPT_FOLDER)
+    )
+
+    on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
+    logging.debug(f"any to close? {on_screen}")
     while on_screen:
-        find_image_and_click(ALL_CLOSE_BTN, msg="close pop-up", retries=1)
+        find_image_and_click(pop_up_close_img_paths,
+                             msg="close pop-up",
+                             retries=1,
+                             error_filename="fail_close_all_pop_ups")
         sleep_random(1)
-        move_mouse_close_to_center()
+        move_mouse_close_to_top_right()
         sleep_random(1)
-        on_screen, _, _, _ = any_image_on_screen(ALL_CLOSE_BTN)
+        on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
+        logging.debug(f"any to close? {on_screen}")
 
 
 def find_image_and_click(
@@ -61,36 +53,46 @@ def find_image_and_click(
         precision=0.8,
         screenshot=None,
         gray_scale=True,
-        retries=RETRIES_TO_LOAD
+        retries=RETRIES_TO_LOAD,
+        error_filename=None
 ):
     for _ in range(retries):
         wait_rail_response()
-        for filepath in filepaths:
-            on_screen, position, _ = image_on_screen(filepath,
-                                                     precision=precision,
-                                                     screenshot=screenshot,
-                                                     gray_scale=gray_scale)
-            if on_screen:
-                if msg:
-                    logging.debug(f"Select: {msg}")
-                click_on_rect_area(top_left_corner=position, filepath=filepath)
-                return
-    _find_image_and_click_log_error(filepaths, msg)
+        on_screen, position, _, best_match_filepath = any_image_on_screen(
+            filepaths,
+            precision=precision,
+            screenshot=screenshot,
+            gray_scale=gray_scale
+        )
+
+        if on_screen:
+            if msg:
+                logging.debug(f"Select: {msg} - best image is: {best_match_filepath}")
+            click_on_rect_area(top_left_corner=position, filepath=best_match_filepath)
+            return
+
+    _find_image_and_click_log_error(filepaths, msg=msg, filename=error_filename)
 
 
-def _find_image_and_click_log_error(filepaths, msg):
-    filename = timestamped_filename(filename="errors/error_find_and_click")
-    get_screenshot(save=False, filename=filename) # TODO set auto delete, till then, do not enable (true)
+def _find_image_and_click_log_error(filepaths, msg, filename=None):
+    if filename is None:
+        filename = timestamped_filename(filename="errors/error_find_and_click")
+    else:
+        filename = "errors/" + filename
+    get_screenshot(save=True, filename=filename)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
 
 
 def sleep_random(sleep_time):
-    time.sleep(random.uniform(sleep_time, sleep_time * 1.5))
+    sleep_duration = random.uniform(sleep_time, sleep_time * 1.5)
+    logging.debug(f"sleep for: {sleep_duration} sec")
+    time.sleep(sleep_duration)
 
 
 def wait_rail_response():
     sleep_duration = random.uniform(2, 5)
+    logging.debug(f"sleep for: {sleep_duration} sec")
     time.sleep(sleep_duration)
 
 
@@ -104,6 +106,7 @@ def move_mouse_close_to_center():
 
 
 def move_mouse_close_to_top_right():
+    logging.debug("move_mouse_close_to_top_right")
     screen_width, _ = pyautogui.size()
     offset = 10
     pyautogui.moveTo(screen_width - offset, offset)
@@ -194,6 +197,7 @@ def image_on_screen(img_str: str,
 
 
 def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
+    logging.debug("get_screenshot")
     if '.' not in filename:
         filename += '.png'
     screenshot = pyautogui.screenshot()
@@ -201,6 +205,15 @@ def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
         screenshot.save(DATA_FOLDER + filename)
         logging.debug(f"Screenshot captured and saved as {filename}.")
     return screenshot
+
+
+def get_image_paths_from_folder(folder: str) -> list[str]:
+    return [
+        os.path.join(root, file)
+        for root, _, files in os.walk(folder)
+        for file in files
+        if file.lower().endswith('.png')
+    ]
 
 
 def get_screenshot_with_black_box_in(top_left_corner,

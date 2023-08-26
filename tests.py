@@ -4,9 +4,8 @@ import unittest
 import pyautogui
 
 from association.worker_bid.worker_bid import WorkerBid
-from engines.pax_schedule.pax_schedule import POPUP_TIMETABLE_BASE_SMALL
 from rail_utils.rail_utils import get_screenshot, image_on_screen, count_down
-from rail_utils.tabs_enum import Tab
+from rail_utils.tabs_enum import Tab, Tabs
 from rail_utils.tabs_util import open_tab
 
 logging.root.setLevel(logging.DEBUG)
@@ -44,9 +43,9 @@ def try_open_tab(tab_enum: Tab):
         return False
 
 
-class IsImageOnScreen(unittest.TestCase):
+class MainTest(unittest.TestCase):
     def test(self):
-        self.assertTrue(try_get_image(POPUP_TIMETABLE_BASE_SMALL))
+        self.assertTrue(try_open_tab(Tabs.ENGINES.value))
 
 
 if __name__ == '__main__':
