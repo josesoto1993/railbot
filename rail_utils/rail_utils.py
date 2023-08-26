@@ -58,16 +58,19 @@ def find_image_and_click(
 ):
     for _ in range(retries):
         wait_rail_response()
-        for filepath in filepaths:
-            on_screen, position, _ = image_on_screen(filepath,
-                                                     precision=precision,
-                                                     screenshot=screenshot,
-                                                     gray_scale=gray_scale)
-            if on_screen:
-                if msg:
-                    logging.debug(f"Select: {msg}")
-                click_on_rect_area(top_left_corner=position, filepath=filepath)
-                return
+        on_screen, position, _, best_match_filepath = any_image_on_screen(
+            filepaths,
+            precision=precision,
+            screenshot=screenshot,
+            gray_scale=gray_scale
+        )
+
+        if on_screen:
+            if msg:
+                logging.debug(f"Select: {msg} - best image is: {best_match_filepath}")
+            click_on_rect_area(top_left_corner=position, filepath=best_match_filepath)
+            return
+
     _find_image_and_click_log_error(filepaths, msg=msg, filename=error_filename)
 
 
