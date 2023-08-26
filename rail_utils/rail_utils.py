@@ -85,7 +85,9 @@ def _find_image_and_click_log_error(filepaths, msg, filename=None):
 
 
 def sleep_random(sleep_time):
-    time.sleep(random.uniform(sleep_time, sleep_time * 1.5))
+    sleep_duration = random.uniform(sleep_time, sleep_time * 1.5)
+    logging.debug(f"sleep for: {sleep_duration} sec")
+    time.sleep(sleep_duration)
 
 
 def wait_rail_response():
