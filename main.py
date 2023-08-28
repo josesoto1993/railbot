@@ -38,7 +38,6 @@ def main():
         tasks.append(ServiceEngine())
     if RUN_WORKER_BID_FLAG:
         tasks.append(WorkerBid())
-        # TODO: que se chequeen TODOS los workers, y tener una lista de los que interesan o algo
     if RUN_REDEEM_MEDAL_FLAG:
         tasks.append(MedalRedeem())
     if RUN_BUILDING_BONUS_FLAG:
