@@ -196,7 +196,7 @@ class WorkerBid(RailRunnable):
 
     def _click_send_bid(self):
         sleep_random(self.sleep_click_send_bid)
-        find_image_and_click(SEND_BID_FILES,
+        find_image_and_click(SEND_BID_FILES,  # TODO no debe poder encontrarlo si es gris, debería dar error
                              msg="bid send btn",
                              error_filename="fail_click_send_bid")
         sleep_random(self.sleep_click_send_bid)

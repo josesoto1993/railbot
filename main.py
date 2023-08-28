@@ -25,6 +25,8 @@ logging.root.setLevel(logging.INFO)
 def main():
     get_screenshot(save=True)
 
+    # TODO: sonar beep al iniciar si la carpeta errors tiene algun archivo
+
     tasks = []
     if RUN_PAX_SCHEDULE_FLAG:
         tasks.append(PaxSchedule(start_minute=START_PAX_SCHEDULE_MINUTE))
@@ -36,12 +38,12 @@ def main():
         tasks.append(ServiceEngine())
     if RUN_WORKER_BID_FLAG:
         tasks.append(WorkerBid())
-        # TODO: puede pasar que no bidee por que agarro mal el numero (piensa es <10k sale alerta dinero
-        #  insuficiente), Si sale esa alerta, repetir el loop con tiempo 0, como si fuera un mal investment
-        # TODO: que entre a descipción, vea si interesa el worker y luego es que skipea, para no re intentar en useless
         # TODO: que se chequeen TODOS los workers, y tener una lista de los que interesan o algo
     if RUN_REDEEM_MEDAL_FLAG:
         tasks.append(MedalRedeem())
+    if RUN_BUILDING_BONUS_FLAG:
+        logging.info("Cant run BuildingBonus as is disabled")
+        # tasks.append(BuildingBonus())
 
     loop = MainLoopHandler(tasks, enable_count_down=BEEP_COUNTDOWN_FLAG)
     loop.run()

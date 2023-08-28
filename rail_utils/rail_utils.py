@@ -228,6 +228,14 @@ def get_image_paths_from_folder(folder: str) -> list[str]:
     ]
 
 
+def get_folder_paths_from_folder(folder: str) -> list[str]:
+    return [
+        os.path.join(root, subfolder)
+        for root, subfolders, _ in os.walk(folder)
+        for subfolder in subfolders
+    ]
+
+
 def get_screenshot_with_black_box_in(top_left_corner,
                                      size,
                                      screenshot=None,
