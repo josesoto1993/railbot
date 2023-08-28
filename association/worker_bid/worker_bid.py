@@ -5,11 +5,11 @@ import random
 import pyautogui
 from PIL import Image
 
-from association.worker_bid.worker_price_data import get_worker_data
+from association.worker_bid.workers import get_worker_data
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
     find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException, any_image_on_screen, \
-    get_image_paths_from_folder, timestamped_filename, save_screenshot
+    get_image_paths_from_folder, timestamped_filename, save_screenshot, ERROR_FOLDER
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -176,7 +176,7 @@ class WorkerBid(RailRunnable):
             if on_screen:
                 return amount
 
-        filename = timestamped_filename(filename="errors/error_worker_not_exist")
+        filename = timestamped_filename(filename=ERROR_FOLDER + "/error_worker_not_exist")
         save_screenshot(screenshot=screenshot, filename=filename)
         return 0
 

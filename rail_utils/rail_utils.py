@@ -12,6 +12,7 @@ import winsound
 from PIL import Image
 
 DATA_FOLDER = "data/"
+ERROR_FOLDER = "errors"
 
 BASE_SCREENSHOT_NAME = 'screenshot.png'
 
@@ -55,7 +56,7 @@ def close_all_pop_ups():
         retries += 1
 
     if retries == max_retries:
-        get_screenshot(save=True, filename="errors/error_close_popup_max_retries")
+        get_screenshot(save=True, filename=ERROR_FOLDER + "/error_close_popup_max_retries")
         raise MaxClosePopUpRetriesExceededError("Exceeded maximum retries for closing pop-ups.")
 
 
@@ -88,9 +89,9 @@ def find_image_and_click(
 
 def _find_image_and_click_log_error(filepaths, msg, filename=None):
     if filename is None:
-        filename = timestamped_filename(filename="errors/error_find_and_click")
+        filename = timestamped_filename(filename=ERROR_FOLDER + "/error_find_and_click")
     else:
-        filename = "errors/" + filename
+        filename = ERROR_FOLDER + "/" + filename
     get_screenshot(save=True, filename=filename)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
