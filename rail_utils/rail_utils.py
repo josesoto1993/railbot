@@ -214,9 +214,13 @@ def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
         filename += '.png'
     screenshot = pyautogui.screenshot()
     if save:
-        screenshot.save(DATA_FOLDER + filename)
-        logging.debug(f"Screenshot captured and saved as {filename}.")
+        save_screenshot(filename, screenshot)
     return screenshot
+
+
+def save_screenshot(filename, screenshot):
+    screenshot.save(DATA_FOLDER + filename)
+    logging.debug(f"Screenshot captured and saved as {filename}.")
 
 
 def get_image_paths_from_folder(folder: str) -> list[str]:
