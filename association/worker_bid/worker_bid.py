@@ -149,7 +149,7 @@ class WorkerBid(RailRunnable):
 
     def _is_bid_disabled(self) -> bool:
         sleep_random(self.sleep_is_bid_disabled)
-        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES, gray_scale=False)
+        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES)  # TODO: Revisar
         on_screen_no_room, _, _, _ = any_image_on_screen(NO_ROOM_FOR_WORKER_FILES)
         on_screen_no_worker, _, _, _ = any_image_on_screen(NO_WORKER_AVAILABLE_FILES)
 
@@ -198,9 +198,11 @@ class WorkerBid(RailRunnable):
 
     def _click_send_bid(self):
         sleep_random(self.sleep_click_send_bid)
-        find_image_and_click(SEND_BID_FILES,  # TODO no debe poder encontrarlo si es gris, debería dar error
+        find_image_and_click(SEND_BID_FILES,
                              msg="bid send btn",
-                             error_filename="fail_click_send_bid")
+                             error_filename="fail_click_send_bid",
+                             gray_scale=False,
+                             precision=0.95)
         sleep_random(self.sleep_click_send_bid)
 
     def _update_next_run_time(self, skip_till_next_worker=True):
