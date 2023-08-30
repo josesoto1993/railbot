@@ -101,7 +101,7 @@ def get_target_datetime(skip_till_next_worker: bool) -> datetime:
 def get_target_datetime_if_skip_till_next_worker(current_datetime: datetime) -> datetime:
     # Set next run time to the next hour with adjusted minutes
     target_hour = (current_datetime.hour + 1) % 24
-    time_gap = random.uniform(WORKER_BID_MINUTES_TO_RECHECK * 2, WORKER_BID_MINUTES_TO_RECHECK * 3) // 4
+    time_gap = round(random.uniform(WORKER_BID_MINUTES_TO_RECHECK * 2, WORKER_BID_MINUTES_TO_RECHECK * 3) // 4)
     target_minute = WORKER_BID_MINUTE_FINISH - time_gap
     target_datetime = current_datetime.replace(hour=target_hour, minute=target_minute, second=0, microsecond=0)
 
