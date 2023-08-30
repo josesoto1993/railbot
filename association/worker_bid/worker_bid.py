@@ -149,7 +149,9 @@ class WorkerBid(RailRunnable):
 
     def _is_bid_disabled(self) -> bool:
         sleep_random(self.sleep_is_bid_disabled)
-        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES)  # TODO: Revisar
+        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES,
+                                                          gray_scale=False,
+                                                          precision=0.95)
         on_screen_no_room, _, _, _ = any_image_on_screen(NO_ROOM_FOR_WORKER_FILES)
         on_screen_no_worker, _, _, _ = any_image_on_screen(NO_WORKER_AVAILABLE_FILES)
 
