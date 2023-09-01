@@ -211,8 +211,6 @@ def image_on_screen(img_str: str,
 
 def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
     logging.debug("get_screenshot")
-    if '.' not in filename:
-        filename += '.png'
     screenshot = pyautogui.screenshot()
     if save:
         save_screenshot(filename, screenshot)
@@ -220,6 +218,8 @@ def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
 
 
 def save_screenshot(filename, screenshot):
+    if '.' not in filename:
+        filename += '.png'
     screenshot.save(DATA_FOLDER + filename)
     logging.debug(f"Screenshot captured and saved as {filename}.")
 
