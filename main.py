@@ -50,7 +50,7 @@ def main():
 
 
 def check_errors_folder():
-    if any(os.listdir(DATA_FOLDER + ERROR_FOLDER)):
+    if any(os.listdir(DATA_FOLDER + ERROR_FOLDER)) and BEEP_COUNTDOWN_FLAG:
         for _ in range(3):
             count_down()
 
