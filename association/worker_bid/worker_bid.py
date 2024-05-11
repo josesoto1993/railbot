@@ -1,13 +1,15 @@
 import datetime
 import logging
+import random
 
 import pyautogui
+from PIL import Image
 
-from association.worker_bid.worker_price_data import get_worker_data
+from association.worker_bid.workers import get_worker_data
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
     find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException, any_image_on_screen, \
-    get_image_paths_from_folder
+    get_image_paths_from_folder, timestamped_filename, save_screenshot, ERROR_FOLDER
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -33,12 +35,12 @@ WORKER_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_l
 logging.basicConfig(level=logging.INFO)
 
 
-def have_bid():
+def have_bid() -> bool:
     on_screen, _, _, _ = any_image_on_screen(USER_LABEL_FILES)
     return on_screen
 
 
-def get_worker_info_screenshot():
+def get_worker_info_screenshot() -> Image:
     # Find positions of the images
     on_screen_worker, position_worker, _, _ = any_image_on_screen(CURRENT_WORKER_LABEL_FILES)
     on_screen_association, position_association, _, _ = any_image_on_screen(BIDS_BY_YOUR_ASSOCIATION_LABEL_FILES)
@@ -87,7 +89,7 @@ def click_amount_input():
     click_on_rect_area(target, size=size)
 
 
-def get_target_datetime(skip_till_next_worker):
+def get_target_datetime(skip_till_next_worker: bool) -> datetime:
     current_datetime = datetime.datetime.now()
     if skip_till_next_worker:
         target_datetime = get_target_datetime_if_skip_till_next_worker(current_datetime)
@@ -96,10 +98,11 @@ def get_target_datetime(skip_till_next_worker):
     return target_datetime
 
 
-def get_target_datetime_if_skip_till_next_worker(current_datetime):
+def get_target_datetime_if_skip_till_next_worker(current_datetime: datetime) -> datetime:
     # Set next run time to the next hour with adjusted minutes
     target_hour = (current_datetime.hour + 1) % 24
-    target_minute = WORKER_BID_MINUTE_FINISH - WORKER_BID_MINUTES_TO_RECHECK * 3 // 4
+    time_gap = round(random.uniform(WORKER_BID_MINUTES_TO_RECHECK * 2, WORKER_BID_MINUTES_TO_RECHECK * 3) // 4)
+    target_minute = WORKER_BID_MINUTE_FINISH - time_gap
     target_datetime = current_datetime.replace(hour=target_hour, minute=target_minute, second=0, microsecond=0)
 
     # If the target time is in the past, add 1 day
@@ -124,10 +127,10 @@ class WorkerBid(RailRunnable):
             self._update_next_run_time(skip_till_next_worker)
         return self.next_run_time
 
-    def _should_run(self):
+    def _should_run(self) -> bool:
         return datetime.datetime.now() >= self.next_run_time
 
-    def _run_worker_bid(self):
+    def _run_worker_bid(self) -> bool:
         logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
@@ -144,9 +147,11 @@ class WorkerBid(RailRunnable):
         self._do_bid(bid_amount)
         return True
 
-    def _is_bid_disabled(self):
+    def _is_bid_disabled(self) -> bool:
         sleep_random(self.sleep_is_bid_disabled)
-        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES, gray_scale=False)
+        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES,
+                                                          gray_scale=False,
+                                                          precision=0.95)
         on_screen_no_room, _, _, _ = any_image_on_screen(NO_ROOM_FOR_WORKER_FILES)
         on_screen_no_worker, _, _, _ = any_image_on_screen(NO_WORKER_AVAILABLE_FILES)
 
@@ -166,19 +171,21 @@ class WorkerBid(RailRunnable):
                              error_filename="fail_select_worker_details")
         sleep_random(self.sleep_select_worker_details)
 
-    def _get_bid_amount(self):
+    def _get_bid_amount(self) -> int:
         screenshot = get_worker_info_screenshot()
         for img_path, amount in self.worker_data:
             on_screen, _, _ = image_on_screen(img_path, screenshot=screenshot)
             if on_screen:
                 return amount
 
+        filename = timestamped_filename(filename=ERROR_FOLDER + "/error_worker_not_exist")
+        save_screenshot(screenshot=screenshot, filename=filename)
         return 0
 
-    def _do_bid(self, bid_amount):
+    def _do_bid(self, bid_amount: int):
         click_amount_input()
         self._delete_actual_value()
-        self._type_investment_amount(bid_amount)
+        self._type_bid_amount(bid_amount)
         self._click_send_bid()
 
     def _delete_actual_value(self):
@@ -186,8 +193,8 @@ class WorkerBid(RailRunnable):
             pyautogui.press('backspace')
             sleep_random(self.sleep_character_input)
 
-    def _type_investment_amount(self, investment_amount):
-        for char in str(investment_amount):
+    def _type_bid_amount(self, bid_amount: int):
+        for char in str(bid_amount):
             pyautogui.typewrite(char)
             sleep_random(self.sleep_character_input)
 
@@ -195,7 +202,9 @@ class WorkerBid(RailRunnable):
         sleep_random(self.sleep_click_send_bid)
         find_image_and_click(SEND_BID_FILES,
                              msg="bid send btn",
-                             error_filename="fail_click_send_bid")
+                             error_filename="fail_click_send_bid",
+                             gray_scale=False,
+                             precision=0.95)
         sleep_random(self.sleep_click_send_bid)
 
     def _update_next_run_time(self, skip_till_next_worker=True):

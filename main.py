@@ -1,22 +1,24 @@
 import logging
+import os
 
+from association.building_bonus.building_bonus import BuildingBonus
 from association.worker_bid.worker_bid import WorkerBid
 from engines.pax_schedule.pax_schedule import PaxSchedule
 from engines.service_engine.service_engine import ServiceEngine
 from invest.city_invest.city_invest import CityInvest
 from invest.industry_invest.industry_invest import IndustryInvest
 from rail_utils.main_loop_handler import MainLoopHandler
-from rail_utils.rail_utils import get_screenshot
+from rail_utils.rail_utils import get_screenshot, ERROR_FOLDER, DATA_FOLDER, count_down
 from redeem.medals.medal_redeem import MedalRedeem
 
-START_PAX_SCHEDULE_MINUTE = 0
+START_PAX_SCHEDULE_MINUTE = 55
 RUN_PAX_SCHEDULE_FLAG = True
-RUN_INDUSTRY_INVEST_FLAG = True
+RUN_INDUSTRY_INVEST_FLAG = False
 RUN_CITY_INVEST_FLAG = True
 RUN_SERVICE_ENGINE_FLAG = True
-RUN_WORKER_BID_FLAG = True
+RUN_WORKER_BID_FLAG = False
 RUN_REDEEM_MEDAL_FLAG = True
-RUN_BUILDING_BONUS_FLAG = False
+RUN_BUILDING_BONUS_FLAG = True
 BEEP_COUNTDOWN_FLAG = False
 
 logging.root.setLevel(logging.INFO)
@@ -24,6 +26,8 @@ logging.root.setLevel(logging.INFO)
 
 def main():
     get_screenshot(save=True)
+
+    check_errors_folder()
 
     tasks = []
     if RUN_PAX_SCHEDULE_FLAG:
@@ -36,15 +40,20 @@ def main():
         tasks.append(ServiceEngine())
     if RUN_WORKER_BID_FLAG:
         tasks.append(WorkerBid())
-        # TODO: puede pasar que no bidee por que agarro mal el numero (piensa es <10k sale alerta dinero
-        #  insuficiente), Si sale esa alerta, repetir el loop con tiempo 0, como si fuera un mal investment
-        # TODO: que entre a descipción, vea si interesa el worker y luego es que skipea, para no re intentar en useless
-        # TODO: que se chequeen TODOS los workers, y tener una lista de los que interesan o algo
     if RUN_REDEEM_MEDAL_FLAG:
         tasks.append(MedalRedeem())
+    if RUN_BUILDING_BONUS_FLAG and False:
+        logging.info("Cant run BuildingBonus as is disabled")
+        tasks.append(BuildingBonus())
 
     loop = MainLoopHandler(tasks, enable_count_down=BEEP_COUNTDOWN_FLAG)
     loop.run()
+
+
+def check_errors_folder():
+    if any(os.listdir(DATA_FOLDER + ERROR_FOLDER)) and BEEP_COUNTDOWN_FLAG:
+        for _ in range(3):
+            count_down()
 
 
 if __name__ == "__main__":

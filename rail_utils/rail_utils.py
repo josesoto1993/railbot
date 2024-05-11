@@ -12,10 +12,12 @@ import winsound
 from PIL import Image
 
 DATA_FOLDER = "data/"
+ERROR_FOLDER = "errors"
 
 BASE_SCREENSHOT_NAME = 'screenshot.png'
 
 RETRIES_TO_LOAD = 5
+MAX_CLOSE_RETRIES = 20
 
 GENERAL_FOLDER = "data/general"
 BTN_X_FOLDER = GENERAL_FOLDER + "/btn_x"
@@ -33,9 +35,16 @@ def close_all_pop_ups():
             get_image_paths_from_folder(INTERRUPT_FOLDER)
     )
 
-    on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
-    logging.debug(f"any to close? {on_screen}")
-    while on_screen:
+    max_retries = MAX_CLOSE_RETRIES
+    retries = 0
+
+    while retries < max_retries:
+        on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
+        logging.debug(f"any to close? {on_screen}")
+
+        if not on_screen:
+            break
+
         find_image_and_click(pop_up_close_img_paths,
                              msg="close pop-up",
                              retries=1,
@@ -43,8 +52,12 @@ def close_all_pop_ups():
         sleep_random(1)
         move_mouse_close_to_top_right()
         sleep_random(1)
-        on_screen, _, _, _ = any_image_on_screen(pop_up_close_img_paths)
-        logging.debug(f"any to close? {on_screen}")
+
+        retries += 1
+
+    if retries == max_retries:
+        get_screenshot(save=True, filename=ERROR_FOLDER + "/error_close_popup_max_retries")
+        raise MaxClosePopUpRetriesExceededError("Exceeded maximum retries for closing pop-ups.")
 
 
 def find_image_and_click(
@@ -76,9 +89,9 @@ def find_image_and_click(
 
 def _find_image_and_click_log_error(filepaths, msg, filename=None):
     if filename is None:
-        filename = timestamped_filename(filename="errors/error_find_and_click")
+        filename = timestamped_filename(filename=ERROR_FOLDER + "/error_find_and_click")
     else:
-        filename = "errors/" + filename
+        filename = ERROR_FOLDER + "/" + filename
     get_screenshot(save=True, filename=filename)
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
@@ -171,7 +184,7 @@ def any_image_on_screen(paths_array: list[str],
 
 def image_on_screen(img_str: str,
                     precision=0.8,
-                    screenshot=None,
+                    screenshot: Image = None,
                     gray_scale=True) -> Tuple[bool, Optional[Tuple[int, int]], Optional[float]]:
     if screenshot is None:
         screenshot = pyautogui.screenshot()
@@ -198,13 +211,17 @@ def image_on_screen(img_str: str,
 
 def get_screenshot(save=False, filename=BASE_SCREENSHOT_NAME) -> Image:
     logging.debug("get_screenshot")
-    if '.' not in filename:
-        filename += '.png'
     screenshot = pyautogui.screenshot()
     if save:
-        screenshot.save(DATA_FOLDER + filename)
-        logging.debug(f"Screenshot captured and saved as {filename}.")
+        save_screenshot(filename, screenshot)
     return screenshot
+
+
+def save_screenshot(filename, screenshot):
+    if '.' not in filename:
+        filename += '.png'
+    screenshot.save(DATA_FOLDER + filename)
+    logging.debug(f"Screenshot captured and saved as {filename}.")
 
 
 def get_image_paths_from_folder(folder: str) -> list[str]:
@@ -213,6 +230,14 @@ def get_image_paths_from_folder(folder: str) -> list[str]:
         for root, _, files in os.walk(folder)
         for file in files
         if file.lower().endswith('.png')
+    ]
+
+
+def get_folder_paths_from_folder(folder: str) -> list[str]:
+    return [
+        os.path.join(root, subfolder)
+        for root, subfolders, _ in os.walk(folder)
+        for subfolder in subfolders
     ]
 
 
@@ -309,4 +334,8 @@ def timestamped_filename(filename="") -> str:
 
 
 class ImageNotFoundException(Exception):
+    pass
+
+
+class MaxClosePopUpRetriesExceededError(Exception):
     pass
