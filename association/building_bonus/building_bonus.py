@@ -3,12 +3,13 @@ import logging
 
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import any_image_on_screen, ImageNotFoundException, timestamped_filename, get_screenshot, \
-    click_on_rect_area, sleep_random, get_image_size
+    click_on_rect_area, sleep_random, get_image_size, ERROR_FOLDER
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 BONUS_MINUTES_TO_RECHECK = 3
 
+# TODO: revisar toda la carpeta data/widget y verificar se usan todas las imagenes
 WIDGET_FOLDER = "data/widget"
 WIDGET_BASE = WIDGET_FOLDER + "/widget_base.png"
 WIDGET_BASE_SMALL = WIDGET_FOLDER + "/widget_base_small.png"
@@ -42,7 +43,7 @@ class BuildingBonus(RailRunnable):
     def _open_or_reopen_widget(self):
         on_screen, position, _, image_path = any_image_on_screen(ALL_WIDGET)
         if not on_screen:
-            filename = timestamped_filename(filename="errors/error_widget")
+            filename = timestamped_filename(filename=ERROR_FOLDER + "/error_widget")
             get_screenshot(save=True, filename=filename)
             raise ImageNotFoundException(f"Fail find any widget for images: {ALL_WIDGET}")
 
