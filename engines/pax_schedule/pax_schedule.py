@@ -4,7 +4,8 @@ import random
 
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, sleep_random, any_image_on_screen, \
-    get_screenshot, get_image_size, get_screenshot_with_black_box_in, get_image_paths_from_folder
+    get_screenshot, get_image_size, get_screenshot_with_black_box_in, get_image_paths_from_folder, \
+    ImageNotFoundException, ERROR_FOLDER
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -60,6 +61,11 @@ def find_and_blackout_matches(schedule_labels):
 
 
 def select_top_schedule(matches):
+    # There should be matches, otherwise is an error
+    if not matches:
+        get_screenshot(save=True, filename=ERROR_FOLDER + "/cant_find_timetable_adopt_or_keep")
+        raise ImageNotFoundException("Cant find timetable adopt or keep")
+
     # Sort the matches based on the y-coordinate (position[1]) in ascending order
     matches.sort(key=lambda match: match[0][1])
     # Select the match with the lowest y-coordinate (which is the first one in the sorted list)
