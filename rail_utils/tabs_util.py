@@ -27,7 +27,7 @@ def open_tab(tab_enum: Tab):
     on_screen_tabs = [tab_state for tab_state in tabs_state if tab_state[1]]
 
     if not on_screen_tabs:
-        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/{tab_enum.name}_not_found")
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/{tab_enum.name}_tab_to_open_not_found")
         raise TabNotFoundException(f"{tab_enum.name} tab not found.")
     else:
         _open_or_reopen_tab(on_screen_tabs=on_screen_tabs, tab_enum=tab_enum)
@@ -108,6 +108,7 @@ def _find_tab_state(tab_enum: Tab) -> list[list[str | bool | tuple[int, int] | N
         if file_name.startswith(tab_enum.prefix) and (BASE_REGEX in file_name or SELECTED_REGEX in file_name):
             file_path = os.path.join(TAB_STATUS_DIR, file_name)
             is_on_screen, position, _ = image_on_screen(file_path,
+                                                        precision=0.9,
                                                         screenshot=screenshot)
             _log_find_tab_state(file_name, is_on_screen, position)
             tabs_state.append([file_path, is_on_screen, position])
@@ -134,7 +135,7 @@ def _check_if_tab_open(tab_enum: Tab):
             logging.debug(f"Tab {tab_enum.name} opened")
             return
 
-    get_screenshot(save=True, filename=f"{ERROR_FOLDER}/{tab_enum.name}_not_found")
+    get_screenshot(save=True, filename=f"{ERROR_FOLDER}/{tab_enum.name}_tab_on_load_not_found")
     raise TabNotFoundException(f"{tab_enum.name} tab not opened.")
 
 
