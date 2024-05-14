@@ -3,7 +3,7 @@ import logging
 
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import find_image_and_click, sleep_random, move_mouse_close_to_center, any_image_on_screen, \
-    get_image_paths_from_folder
+    get_image_paths_from_folder, ERROR_FOLDER, get_screenshot
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -71,6 +71,7 @@ class IndustryInvest(RailRunnable):
     def _show_last(self):
         precision = 0.95
         on_screen, _, _, _ = any_image_on_screen(RANKING_SHOW_MORE_FILES, precision=precision)
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/warning_cant_find_show_more_on_initial_ranking")
         while on_screen:
             find_image_and_click(RANKING_SHOW_MORE_FILES,
                                  msg="show more",
