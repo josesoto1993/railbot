@@ -64,7 +64,7 @@ def _is_tab_selected(tab_enum: Tab):
             if is_on_screen:
                 logging.debug(f"_is_tab_selected ({tab_enum.name})? {True}")
                 return True
-    logging.debug(f"_is_tab_selected ({tab_enum.name})? {True}")
+    logging.debug(f"_is_tab_selected ({tab_enum.name})? {False}")
     return False
 
 
