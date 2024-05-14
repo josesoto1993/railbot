@@ -63,7 +63,7 @@ def find_and_blackout_matches(schedule_labels):
 def select_top_schedule(matches):
     # There should be matches, otherwise is an error
     if not matches:
-        get_screenshot(save=True, filename=ERROR_FOLDER + "/cant_find_timetable_adopt_or_keep")
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/cant_find_timetable_adopt_or_keep")
         raise ImageNotFoundException("Cant find timetable adopt or keep")
 
     # Sort the matches based on the y-coordinate (position[1]) in ascending order

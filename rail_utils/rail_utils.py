@@ -56,7 +56,7 @@ def close_all_pop_ups():
         retries += 1
 
     if retries == max_retries:
-        get_screenshot(save=True, filename=ERROR_FOLDER + "/error_close_popup_max_retries")
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/error_close_popup_max_retries")
         raise MaxClosePopUpRetriesExceededError("Exceeded maximum retries for closing pop-ups.")
 
 
@@ -89,7 +89,7 @@ def find_image_and_click(
 
 def _find_image_and_click_log_error(filepaths, msg, filename=None):
     if filename is None:
-        filename = timestamped_filename(filename=ERROR_FOLDER + "/error_find_and_click")
+        filename = timestamped_filename(filename=f"{ERROR_FOLDER}/error_find_and_click")
     else:
         filename = ERROR_FOLDER + "/" + filename
     get_screenshot(save=True, filename=filename)
