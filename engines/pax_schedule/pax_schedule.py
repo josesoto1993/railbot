@@ -8,6 +8,11 @@ from rail_utils.rail_utils import find_image_and_click, click_on_rect_area, slee
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
+RANDOM_MINUTES_TO_ADD = 10
+
+NEXT_RUN_MIN_POSSIBLE_SECONDS = 30 * 60
+NEXT_RUN_MAX_POSSIBLE_SECONDS = 90 * 60
+
 TAB_ENGINE_FOLDER = "data/tab_engine"
 PAX_ENGINE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/engines_label")
 PAX_ENGINE_FILES.sort(key=lambda x: ("main" not in x, x))
@@ -62,6 +67,20 @@ def select_top_schedule(matches):
     return top_left_corner, image_path
 
 
+def adjust_target_time(current_datetime, target_minute):
+    target_datetime = current_datetime.replace(minute=target_minute)
+
+    time_difference = target_datetime - current_datetime
+    while not (NEXT_RUN_MIN_POSSIBLE_SECONDS <= time_difference.total_seconds() <= NEXT_RUN_MAX_POSSIBLE_SECONDS):
+        if time_difference.total_seconds() < NEXT_RUN_MIN_POSSIBLE_SECONDS:
+            target_datetime += datetime.timedelta(hours=1)
+        elif time_difference.total_seconds() > NEXT_RUN_MAX_POSSIBLE_SECONDS:
+            target_datetime -= datetime.timedelta(hours=1)
+
+        time_difference = target_datetime - current_datetime
+    return target_datetime
+
+
 class PaxSchedule(RailRunnable):
     def __init__(self, start_minute=5):
         self.next_run_time = datetime.datetime.now()
@@ -92,16 +111,8 @@ class PaxSchedule(RailRunnable):
 
     def _update_next_run_time(self):
         current_datetime = datetime.datetime.now()
-        target_hour = (current_datetime.hour + 1) % 24
-        target_minute = random.randint(self.start_minute, self.start_minute + 10)
-        if target_minute >= 60:
-            target_minute = target_minute - 60
-            target_hour = (target_hour + 1) % 24
-
-        target_datetime = current_datetime.replace(hour=target_hour, minute=target_minute)
-
-        if target_datetime < current_datetime:
-            target_datetime += datetime.timedelta(days=1)
+        target_minute = random.randint(self.start_minute, self.start_minute + RANDOM_MINUTES_TO_ADD) % 60
+        target_datetime = adjust_target_time(current_datetime, target_minute)
 
         self.next_run_time = target_datetime
         logging.info(f"Next {self.__class__.__name__} schedule at {target_datetime.time()}")
