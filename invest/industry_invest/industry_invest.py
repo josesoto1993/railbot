@@ -90,9 +90,12 @@ class IndustryInvest(RailRunnable):
         return True
 
     def _select_zero_investment(self):
-        on_screen, _, _, _ = any_image_on_screen(RANKING_INVEST_ZERO_FILES)
+        invest_precision = 0.9
+        on_screen, _, _, _ = any_image_on_screen(RANKING_INVEST_ZERO_FILES,
+                                                 precision=invest_precision)
         if on_screen:
             find_image_and_click(RANKING_INVEST_ZERO_FILES,
+                                 precision=invest_precision,
                                  msg="zero investment",
                                  error_filename="fail_select_zero_investment")
             sleep_random(self.sleep_select_zero_investment)
