@@ -71,7 +71,10 @@ def get_screenshot_contribute_pop_up():
 
 
 class CityInvest(RailRunnable):
+
     def __init__(self):
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.next_run_time = datetime.datetime.now()
         self.sleep_center_city = 10
         self.sleep_zoom = 2
@@ -80,17 +83,18 @@ class CityInvest(RailRunnable):
         self.sleep_donate = 5
         self.sleep_select_next_city = 5
 
-    def run(self) -> datetime:
-        if self._should_run():
-            self._run_invest()
-            self._update_next_run_time()
-        return self.next_run_time
+    def _run(self):
+        self._run_city_invest()
 
-    def _should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
+    def _update_next_run_time(self):
+        logging.debug("start CityInvest._update_next_run_time")
+        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
-    def _run_invest(self):
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+        self.next_run_time = target_datetime
+        logging.debug(f"Next {self.__class__.__name__} at {target_datetime.time()}")
+
+    def _run_city_invest(self):
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.WORLD_MAP.value)
         self._center_and_zoom_to_city()
         self._select_city()
@@ -179,10 +183,3 @@ class CityInvest(RailRunnable):
                              msg="next city",
                              error_filename="fail_select_next_city")
         sleep_random(self.sleep_select_next_city)
-
-    def _update_next_run_time(self):
-        logging.debug("start CityInvest._update_next_run_time")
-        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
-
-        self.next_run_time = target_datetime
-        logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")

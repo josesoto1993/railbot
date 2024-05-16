@@ -23,38 +23,35 @@ logging.basicConfig(level=logging.INFO)
 
 class IndustryInvest(RailRunnable):
     def __init__(self):
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.next_run_time = datetime.datetime.now()
         self.sleep_select_subtab_industries = 5
         self.sleep_select_subsubtab_invest = 10
         self.sleep_show_last = 2
         self.sleep_select_zero_investment = 5
         self.sleep_industry_invest = 5
+        self.invest_done = False
 
-    def run(self) -> datetime:
-        if self._should_run():
-            invest_done = self._run_invest()
-            self._update_next_run_time(invest_done)
-        return self.next_run_time
-
-    def _should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
-
-    def _run_invest(self):
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
-        open_tab(Tabs.RANKINGS.value)
-        self._select_subtab_industries()
-        self._select_subsubtab_invest()
-        self._show_last()
-        return self._invest_if_needed()
+    def _run(self):
+        self._run_industry_invest()
 
     def _update_next_run_time(self, invest_done=True):
-        if invest_done:
-            logging.info("May have more industries to invest, next loop invest another one")
+        if self.invest_done:
+            logging.debug("May have more industries to invest, next loop invest another one")
         else:
             target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
             self.next_run_time = target_datetime
-            logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")
+            logging.debug(f"Next {self.__class__.__name__} at {target_datetime.time()}")
+
+    def _run_industry_invest(self):
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+        open_tab(Tabs.RANKINGS.value)
+        self._select_subtab_industries()
+        self._select_subsubtab_invest()
+        self._show_last()
+        self.invest_done = self._invest_if_needed()
 
     def _select_subtab_industries(self):
         find_image_and_click(RANKING_INDUSTRIES_FILES,

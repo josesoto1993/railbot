@@ -114,38 +114,42 @@ def get_target_datetime_if_skip_till_next_worker(current_datetime: datetime) -> 
 
 class WorkerBid(RailRunnable):
     def __init__(self):
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.next_run_time = datetime.datetime.now()
         self.sleep_is_bid_disabled = 5
         self.sleep_select_worker_details = 5
         self.sleep_click_send_bid = 10
         self.sleep_character_input = 0.5
         self.worker_data = get_worker_data()
+        self.skip_till_next_worker = False
 
-    def run(self) -> datetime:
-        if self._should_run():
-            skip_till_next_worker = self._run_worker_bid()
-            self._update_next_run_time(skip_till_next_worker)
-        return self.next_run_time
+    def _run(self):
+        self._run_worker_bid()
 
-    def _should_run(self) -> bool:
-        return datetime.datetime.now() >= self.next_run_time
+    def _update_next_run_time(self):
+        self.next_run_time = get_target_datetime(self.skip_till_next_worker)
+        logging.debug(f"Next {self.__class__.__name__} check at {self.next_run_time.time()}")
 
-    def _run_worker_bid(self) -> bool:
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+    def _run_worker_bid(self):
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.ASSOCIATION.value)
         if self._is_bid_disabled():
             logging.debug("Cant bid as is disabled")
-            return False
+            self.skip_till_next_worker = False
+            return
         self._select_worker_details()
         if have_bid():
             logging.debug("Already bid")
-            return True
+            self.skip_till_next_worker = True
+            return
         bid_amount = self._get_bid_amount()
         if bid_amount == 0:
             logging.debug("Not interested in this worker")
-            return True
+            self.skip_till_next_worker = True
+            return
         self._do_bid(bid_amount)
-        return True
+        self.skip_till_next_worker = True
 
     def _is_bid_disabled(self) -> bool:
         sleep_random(self.sleep_is_bid_disabled)
@@ -206,7 +210,3 @@ class WorkerBid(RailRunnable):
                              gray_scale=False,
                              precision=0.95)
         sleep_random(self.sleep_click_send_bid)
-
-    def _update_next_run_time(self, skip_till_next_worker=True):
-        self.next_run_time = get_target_datetime(skip_till_next_worker)
-        logging.info(f"Next {self.__class__.__name__} check at {self.next_run_time.time()}")

@@ -12,14 +12,15 @@ ERRORS_TO_RELOAD = 10
 logging.root.setLevel(logging.INFO)
 
 
-class MainLoopHandler(RailRunnable):
+class MainLoopHandler:
     def __init__(self, tasks: List[RailRunnable], enable_count_down=False):
+        self.count = 0
         self.tasks = tasks
         self.next_run_times = {task.__class__.__name__: datetime.datetime.now() for task in self.tasks}
         self.error_counter = 0
         self.enable_count_down = enable_count_down
 
-    def run(self):
+    def start(self):
         while True:
             if self.enable_count_down:
                 count_down()
@@ -39,7 +40,7 @@ class MainLoopHandler(RailRunnable):
 
     def _run_single_task(self, task: RailRunnable) -> Optional[datetime]:
         try:
-            return task.run()
+            return task.handle_run()
         except Exception as e:
             self._handle_run_exception(e)
 
