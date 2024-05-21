@@ -84,15 +84,20 @@ def find_image_and_click(
             click_on_rect_area(top_left_corner=position, filepath=best_match_filepath)
             return
 
-    _find_image_and_click_log_error(filepaths, msg=msg, filename=error_filename)
+    _find_image_and_click_log_error(filepaths, msg=msg, filename=error_filename, screenshot=screenshot)
 
 
-def _find_image_and_click_log_error(filepaths, msg, filename=None):
+def _find_image_and_click_log_error(filepaths, msg, filename=None, screenshot=None):
     if filename is None:
         filename = timestamped_filename(filename=f"{ERROR_FOLDER}/error_find_and_click")
     else:
         filename = ERROR_FOLDER + "/" + filename
-    get_screenshot(save=True, filename=filename)
+
+    if screenshot is None:
+        get_screenshot(save=True, filename=filename)
+    else:
+        save_screenshot(filename=filename, screenshot=screenshot)
+
     msg = msg or "the image"
     raise ImageNotFoundException(f"Fail select: {msg}, for images {filepaths}")
 

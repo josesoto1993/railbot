@@ -9,7 +9,7 @@ from association.worker_bid.workers import get_worker_data
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
     find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException, any_image_on_screen, \
-    get_image_paths_from_folder, timestamped_filename, save_screenshot, ERROR_FOLDER
+    get_image_paths_from_folder, timestamped_filename, save_screenshot, ERROR_FOLDER, get_screenshot
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -48,6 +48,7 @@ def get_worker_info_screenshot() -> Image:
 
     # Raise exception if any of the images is not found
     if not (on_screen_worker and on_screen_association and on_screen_bid):
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/worker_not_found")
         raise ImageNotFoundException("Failed to find one or more required images on screen for worker info")
 
     # Define the size and the top-left corner of the screenshot box
@@ -63,6 +64,7 @@ def get_bid_left_corner():
     if on_screen:
         return position, image_path
 
+    get_screenshot(save=True, filename=f"{ERROR_FOLDER}/bid_left_corner_not_found")
     raise ImageNotFoundException("Cant find left corner of bid")
 
 
@@ -71,6 +73,7 @@ def get_bid_right_corner():
     if on_screen:
         return position, image_path
 
+    get_screenshot(save=True, filename=f"{ERROR_FOLDER}/bid_right_corner_not_found")
     raise ImageNotFoundException("Cant find right corner of bid")
 
 

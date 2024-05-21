@@ -6,7 +6,7 @@ import pyautogui
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import any_image_on_screen, image_on_screen, ImageNotFoundException, get_image_size, \
     get_screenshot, get_screenshot_with_black_out_of_box, close_all_pop_ups, sleep_random, find_image_and_click, \
-    move_mouse_close_to_center, click_on_rect_area, get_image_paths_from_folder, BTN_X_FOLDER
+    move_mouse_close_to_center, click_on_rect_area, get_image_paths_from_folder, BTN_X_FOLDER, ERROR_FOLDER
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -40,7 +40,8 @@ def get_city_label():
     right_on_screen, right_position, _, right_image = any_image_on_screen(CITY_GO_RIGHT_FILES)
 
     if not left_on_screen and not right_on_screen:
-        raise ImageNotFoundException("Fail cet city label.")
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/get_city_label_fail")
+        raise ImageNotFoundException("Fail get city label.")
 
     left_width, _ = get_image_size(left_image)
     _, right_height = get_image_size(right_image)
@@ -62,6 +63,7 @@ def get_screenshot_contribute_pop_up():
     screenshot = get_screenshot()
     on_screen, position, _, _ = any_image_on_screen(CONTRIBUTE_HEADER_FILES, screenshot=screenshot)
     if not on_screen:
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/contribute_header_not_found")
         raise ImageNotFoundException("Failed to find header on screen for city project")
     top_left_corner = (0, position[1])
     screenshot_width, screenshot_height = screenshot.size
@@ -160,6 +162,7 @@ class CityInvest(RailRunnable):
         logging.debug("start CityInvest._donate_if_needed")
         have_contributions, _, _, _ = any_image_on_screen(USER_LABEL_FILES)
         if not have_contributions:
+            logging.debug("Need donation")
             find_image_and_click(CONTRIBUTE_COIN_ICON_FILES,
                                  msg="city contribute",
                                  error_filename="fail_select_donate_if_needed_CONTRIBUTE_COIN_ICON_FILES")
