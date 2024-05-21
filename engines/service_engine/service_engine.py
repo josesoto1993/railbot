@@ -19,22 +19,24 @@ logging.basicConfig(level=logging.INFO)
 
 class ServiceEngine(RailRunnable):
     def __init__(self):
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.sleep_service_multiple = 5
         self.sleep_all_needing_service = 3
         self.sleep_service_all = 10
         self.next_run_time = datetime.datetime.now()
 
-    def run(self) -> datetime:
-        if self._should_run():
-            self._run_service()
-            self._update_next_run_time()
-        return self.next_run_time
+    def _run(self):
+        self._run_service()
 
-    def _should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
+    def _update_next_run_time(self):
+        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=SERVICE_ENGINE_MINUTES_TO_RECHECK)
+
+        self.next_run_time = target_datetime
+        logging.debug(f"Next {self.__class__.__name__} at {target_datetime.time()}")
 
     def _run_service(self):
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.ENGINES.value)
         self._select_service_multiple()
         self._select_all_needing_service()
@@ -61,9 +63,3 @@ class ServiceEngine(RailRunnable):
             sleep_random(self.sleep_service_all)
         else:
             logging.debug("No need to service any engine")
-
-    def _update_next_run_time(self):
-        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=SERVICE_ENGINE_MINUTES_TO_RECHECK)
-
-        self.next_run_time = target_datetime
-        logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")

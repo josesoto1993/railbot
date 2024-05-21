@@ -13,7 +13,7 @@ from redeem.medals.medal_redeem import MedalRedeem
 
 START_PAX_SCHEDULE_MINUTE = 55
 RUN_PAX_SCHEDULE_FLAG = True
-RUN_INDUSTRY_INVEST_FLAG = False
+RUN_INDUSTRY_INVEST_FLAG = True
 RUN_CITY_INVEST_FLAG = False
 RUN_SERVICE_ENGINE_FLAG = False
 RUN_WORKER_BID_FLAG = False
@@ -47,7 +47,7 @@ def main():
         tasks.append(BuildingBonus())
 
     loop = MainLoopHandler(tasks, enable_count_down=BEEP_COUNTDOWN_FLAG)
-    loop.run()
+    loop.start()
 
 
 def check_errors_folder():

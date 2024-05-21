@@ -22,21 +22,22 @@ ALL_WIDGET = [WIDGET_BASE,
 
 
 class BuildingBonus(RailRunnable):
+
     def __init__(self):
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.next_run_time = datetime.datetime.now()
         self.sleep_open_widget = 3
 
-    def run(self) -> datetime:
-        if self._should_run():
-            self._run_building_bonus()
-            self._update_next_run_time()
-        return self.next_run_time
+    def _run(self):
+        self._run_building_bonus()
 
-    def _should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
+    def _update_next_run_time(self):
+        self.next_run_time = datetime.datetime.now() + datetime.timedelta(minutes=BONUS_MINUTES_TO_RECHECK)
+        logging.debug(f"Next {self.__class__.__name__} at {self.next_run_time.time()}")
 
     def _run_building_bonus(self):
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.WORLD_MAP.value)
         self._open_or_reopen_widget()
 
@@ -48,15 +49,6 @@ class BuildingBonus(RailRunnable):
             raise ImageNotFoundException(f"Fail find any widget for images: {ALL_WIDGET}")
 
         self._open_or_reopen_widget_handle_click(image_path, position)
-
-    def _open_or_reopen_widget_handle_click(self, image_path, position):
-        width, height = get_image_size(image_path)
-        size_to_click = width, height * 4 // 10
-        click_on_rect_area(position, size=size_to_click)
-        sleep_random(self.sleep_open_widget)
-        if image_path == WIDGET_SELECTED or image_path == WIDGET_SELECTED_SMALL:
-            click_on_rect_area(position, size=size_to_click)
-            sleep_random(self.sleep_open_widget)
 
     # check / open association widget
     # reload association bonus (just in case..)
@@ -71,6 +63,11 @@ class BuildingBonus(RailRunnable):
     #   close if needed
     #   pp symbol on screen
 
-    def _update_next_run_time(self):
-        self.next_run_time = datetime.datetime.now() + datetime.timedelta(minutes=BONUS_MINUTES_TO_RECHECK)
-        logging.info(f"Next {self.__class__.__name__} at {self.next_run_time.time()}")
+    def _open_or_reopen_widget_handle_click(self, image_path, position):
+        width, height = get_image_size(image_path)
+        size_to_click = width, height * 4 // 10
+        click_on_rect_area(position, size=size_to_click)
+        sleep_random(self.sleep_open_widget)
+        if image_path == WIDGET_SELECTED or image_path == WIDGET_SELECTED_SMALL:
+            click_on_rect_area(position, size=size_to_click)
+            sleep_random(self.sleep_open_widget)

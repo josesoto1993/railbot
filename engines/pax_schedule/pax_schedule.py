@@ -89,7 +89,8 @@ def adjust_target_time(current_datetime, target_minute):
 
 class PaxSchedule(RailRunnable):
     def __init__(self, start_minute=5):
-        self.next_run_time = datetime.datetime.now()
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.start_minute = start_minute
         self.sleep_select_pax_engine = 10
         self.sleep_timetable = 10
@@ -97,23 +98,8 @@ class PaxSchedule(RailRunnable):
         self.sleep_select_all = 30
         self.sleep_lets_go = 30
 
-    def run(self) -> datetime:
-        if self._should_run():
-            self._run_pax_engine_schedule()
-            self._update_next_run_time()
-        return self.next_run_time
-
-    def _should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
-
-    def _run_pax_engine_schedule(self):
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
-        open_tab(Tabs.ENGINES.value)
-        self._select_pax_engine()
-        self._open_timetable()
-        self._click_schedule()
-        self._select_all_engines()
-        self._select_lets_go()
+    def _run(self):
+        self._run_pax_engine_schedule()
 
     def _update_next_run_time(self):
         current_datetime = datetime.datetime.now()
@@ -121,7 +107,16 @@ class PaxSchedule(RailRunnable):
         target_datetime = adjust_target_time(current_datetime, target_minute)
 
         self.next_run_time = target_datetime
-        logging.info(f"Next {self.__class__.__name__} schedule at {target_datetime.time()}")
+        logging.debug(f"Next {self.__class__.__name__} schedule at {target_datetime.time()}")
+
+    def _run_pax_engine_schedule(self):
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+        open_tab(Tabs.ENGINES.value)
+        self._select_pax_engine()
+        self._open_timetable()
+        self._click_schedule()
+        self._select_all_engines()
+        self._select_lets_go()
 
     def _select_pax_engine(self):
         find_image_and_click(PAX_ENGINE_FILES,

@@ -6,7 +6,7 @@ import pyautogui
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import any_image_on_screen, image_on_screen, ImageNotFoundException, get_image_size, \
     get_screenshot, get_screenshot_with_black_out_of_box, close_all_pop_ups, sleep_random, find_image_and_click, \
-    move_mouse_close_to_center, click_on_rect_area, get_image_paths_from_folder, BTN_X_FOLDER
+    move_mouse_close_to_center, click_on_rect_area, get_image_paths_from_folder, BTN_X_FOLDER, ERROR_FOLDER
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -40,7 +40,8 @@ def get_city_label():
     right_on_screen, right_position, _, right_image = any_image_on_screen(CITY_GO_RIGHT_FILES)
 
     if not left_on_screen and not right_on_screen:
-        raise ImageNotFoundException("Fail cet city label.")
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/get_city_label_fail")
+        raise ImageNotFoundException("Fail get city label.")
 
     left_width, _ = get_image_size(left_image)
     _, right_height = get_image_size(right_image)
@@ -62,6 +63,7 @@ def get_screenshot_contribute_pop_up():
     screenshot = get_screenshot()
     on_screen, position, _, _ = any_image_on_screen(CONTRIBUTE_HEADER_FILES, screenshot=screenshot)
     if not on_screen:
+        get_screenshot(save=True, filename=f"{ERROR_FOLDER}/contribute_header_not_found")
         raise ImageNotFoundException("Failed to find header on screen for city project")
     top_left_corner = (0, position[1])
     screenshot_width, screenshot_height = screenshot.size
@@ -71,7 +73,10 @@ def get_screenshot_contribute_pop_up():
 
 
 class CityInvest(RailRunnable):
+
     def __init__(self):
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.next_run_time = datetime.datetime.now()
         self.sleep_center_city = 10
         self.sleep_zoom = 2
@@ -80,17 +85,18 @@ class CityInvest(RailRunnable):
         self.sleep_donate = 5
         self.sleep_select_next_city = 5
 
-    def run(self) -> datetime:
-        if self._should_run():
-            self._run_invest()
-            self._update_next_run_time()
-        return self.next_run_time
+    def _run(self):
+        self._run_city_invest()
 
-    def _should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
+    def _update_next_run_time(self):
+        logging.debug("start CityInvest._update_next_run_time")
+        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
 
-    def _run_invest(self):
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+        self.next_run_time = target_datetime
+        logging.debug(f"Next {self.__class__.__name__} at {target_datetime.time()}")
+
+    def _run_city_invest(self):
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.WORLD_MAP.value)
         self._center_and_zoom_to_city()
         self._select_city()
@@ -156,6 +162,7 @@ class CityInvest(RailRunnable):
         logging.debug("start CityInvest._donate_if_needed")
         have_contributions, _, _, _ = any_image_on_screen(USER_LABEL_FILES)
         if not have_contributions:
+            logging.debug("Need donation")
             find_image_and_click(CONTRIBUTE_COIN_ICON_FILES,
                                  msg="city contribute",
                                  error_filename="fail_select_donate_if_needed_CONTRIBUTE_COIN_ICON_FILES")
@@ -179,10 +186,3 @@ class CityInvest(RailRunnable):
                              msg="next city",
                              error_filename="fail_select_next_city")
         sleep_random(self.sleep_select_next_city)
-
-    def _update_next_run_time(self):
-        logging.debug("start CityInvest._update_next_run_time")
-        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=INVEST_MINUTES_TO_RECHECK)
-
-        self.next_run_time = target_datetime
-        logging.info(f"Next {self.__class__.__name__} at {target_datetime.time()}")

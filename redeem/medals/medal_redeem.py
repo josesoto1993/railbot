@@ -14,21 +14,24 @@ logging.basicConfig(level=logging.INFO)
 
 
 class MedalRedeem(RailRunnable):
+
     def __init__(self):
+        super().__init__()
+        self.task_name = self.__class__.__name__
         self.next_run_time = datetime.datetime.now()
         self.sleep_redeem_all = 5
 
-    def run(self) -> datetime:
-        if self._should_run():
-            self._run_medal_redeem()
-            self._update_next_run_time()
-        return self.next_run_time
+    def _run(self):
+        self._run_medal_redeem()
 
-    def _should_run(self):
-        return datetime.datetime.now() >= self.next_run_time
+    def _update_next_run_time(self):
+        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=MEDAL_REDEEM_MINUTES_TO_RECHECK)
+
+        self.next_run_time = target_datetime
+        logging.debug(f"Next {self.__class__.__name__} check at {target_datetime.time()}")
 
     def _run_medal_redeem(self):
-        logging.info(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
+        logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")
         open_tab(Tabs.MEDALS.value)
         self._redeem_all()
 
@@ -45,9 +48,3 @@ class MedalRedeem(RailRunnable):
                                  error_filename="fail_redeem_all")
             sleep_random(self.sleep_redeem_all)
             on_screen, _, _, _ = any_image_on_screen(REDEEM_MEDAL_LABEL_FILES)
-
-    def _update_next_run_time(self):
-        target_datetime = datetime.datetime.now() + datetime.timedelta(minutes=MEDAL_REDEEM_MINUTES_TO_RECHECK)
-
-        self.next_run_time = target_datetime
-        logging.info(f"Next {self.__class__.__name__} check at {target_datetime.time()}")
