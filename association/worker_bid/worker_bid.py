@@ -6,6 +6,7 @@ import pyautogui
 from PIL import Image
 
 from association.worker_bid.workers import get_worker_data
+from rail_utils.folders_paths import ASSOCIATION_FOLDER
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import image_on_screen, get_image_size, get_screenshot_with_black_out_of_box, \
     find_image_and_click, sleep_random, click_on_rect_area, ImageNotFoundException, any_image_on_screen, \
@@ -17,34 +18,23 @@ INVESTMENT_TARGET_RDM_PX = 5
 WORKER_BID_MINUTES_TO_RECHECK = 15
 WORKER_BID_MINUTE_FINISH = 55
 
-ASSOCIATION_FOLDER = "data/tab_association"
-
-ASSOCIATION_BID_DISABLED_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/bid_disabled")
-BIDS_BY_YOUR_ASSOCIATION_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/bids_by_aso")
-CURRENT_WORKER_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/current_worker")
-HIGHEST_BID_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/highest_bid")
-NO_ROOM_FOR_WORKER_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/no_room_for_worker")
-NO_WORKER_AVAILABLE_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/no_worker_available")
-SEND_BID_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/send_bid")
-USER_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/user_label")
-WORKER_BID_LESS_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_bid_less")
-WORKER_BID_MORE_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_bid_more")
-WORKER_DETAILS_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_details")
-WORKER_LABEL_FILES = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_label")
-
 logging.basicConfig(level=logging.INFO)
 
 
 def have_bid() -> bool:
-    on_screen, _, _, _ = any_image_on_screen(USER_LABEL_FILES)
+    user_label_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/user_label")
+    on_screen, _, _, _ = any_image_on_screen(user_label_files)
     return on_screen
 
 
 def get_worker_info_screenshot() -> Image:
     # Find positions of the images
-    on_screen_worker, position_worker, _, _ = any_image_on_screen(CURRENT_WORKER_LABEL_FILES)
-    on_screen_association, position_association, _, _ = any_image_on_screen(BIDS_BY_YOUR_ASSOCIATION_LABEL_FILES)
-    on_screen_bid, position_bid, _, _ = any_image_on_screen(HIGHEST_BID_LABEL_FILES)
+    bids_by_your_association_label_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/bids_by_aso")
+    current_worker_label_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/current_worker")
+    highest_bid_label_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/highest_bid")
+    on_screen_worker, position_worker, _, _ = any_image_on_screen(current_worker_label_files)
+    on_screen_association, position_association, _, _ = any_image_on_screen(bids_by_your_association_label_files)
+    on_screen_bid, position_bid, _, _ = any_image_on_screen(highest_bid_label_files)
 
     # Raise exception if any of the images is not found
     if not (on_screen_worker and on_screen_association and on_screen_bid):
@@ -60,7 +50,9 @@ def get_worker_info_screenshot() -> Image:
 
 
 def get_bid_left_corner():
-    on_screen, position, _, image_path = any_image_on_screen(WORKER_BID_LESS_FILES)
+    worker_bid_less_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_bid_less")
+    on_screen, position, _, image_path = any_image_on_screen(worker_bid_less_files)
+
     if on_screen:
         return position, image_path
 
@@ -69,7 +61,9 @@ def get_bid_left_corner():
 
 
 def get_bid_right_corner():
-    on_screen, position, _, image_path = any_image_on_screen(WORKER_BID_MORE_FILES)
+    worker_bid_more_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_bid_more")
+    on_screen, position, _, image_path = any_image_on_screen(worker_bid_more_files)
+
     if on_screen:
         return position, image_path
 
@@ -156,23 +150,29 @@ class WorkerBid(RailRunnable):
 
     def _is_bid_disabled(self) -> bool:
         sleep_random(self.sleep_is_bid_disabled)
-        on_screen_disabled, _, _, _ = any_image_on_screen(ASSOCIATION_BID_DISABLED_FILES,
+        association_bid_disabled_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/bid_disabled")
+        no_room_for_worker_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/no_room_for_worker")
+        no_worker_available_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/no_worker_available")
+
+        on_screen_disabled, _, _, _ = any_image_on_screen(association_bid_disabled_files,
                                                           gray_scale=False,
                                                           precision=0.95)
-        on_screen_no_room, _, _, _ = any_image_on_screen(NO_ROOM_FOR_WORKER_FILES)
-        on_screen_no_worker, _, _, _ = any_image_on_screen(NO_WORKER_AVAILABLE_FILES)
+        on_screen_no_room, _, _, _ = any_image_on_screen(no_room_for_worker_files)
+        on_screen_no_worker, _, _, _ = any_image_on_screen(no_worker_available_files)
 
         return on_screen_disabled or on_screen_no_room or on_screen_no_worker
 
     def _select_worker_details(self):
-        _, position, _, image_path = any_image_on_screen(WORKER_LABEL_FILES)
+        worker_label_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_label")
+        _, position, _, image_path = any_image_on_screen(worker_label_files)
         _, image_height = get_image_size(image_path)
 
         size = (pyautogui.size()[0], image_height)
 
         screenshot = get_screenshot_with_black_out_of_box(position, size)
 
-        find_image_and_click(WORKER_DETAILS_FILES,
+        worker_details_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/worker_details")
+        find_image_and_click(worker_details_files,
                              msg="worker details",
                              screenshot=screenshot,
                              error_filename="fail_select_worker_details")
@@ -207,7 +207,9 @@ class WorkerBid(RailRunnable):
 
     def _click_send_bid(self):
         sleep_random(self.sleep_click_send_bid)
-        find_image_and_click(SEND_BID_FILES,
+        send_bid_files = get_image_paths_from_folder(ASSOCIATION_FOLDER + "/send_bid")
+
+        find_image_and_click(send_bid_files,
                              msg="bid send btn",
                              error_filename="fail_click_send_bid",
                              gray_scale=False,

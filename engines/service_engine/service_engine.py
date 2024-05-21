@@ -1,6 +1,7 @@
 import datetime
 import logging
 
+from rail_utils.folders_paths import TAB_ENGINE_FOLDER
 from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen, get_image_paths_from_folder, \
     ERROR_FOLDER, get_screenshot, ImageNotFoundException
@@ -8,13 +9,6 @@ from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
 SERVICE_ENGINE_MINUTES_TO_RECHECK = 90
-
-TAB_ENGINE_FOLDER = "data/tab_engine"
-
-SERVICE_MULTIPLE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_multiple")
-ALL_NEEDING_SERVICE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/all_needing_service")
-SERVICE_ALL_LABEL_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_all")
-SERVICE_UNAVAILABLE_LABEL_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_unavailable")
 
 logging.basicConfig(level=logging.INFO)
 
@@ -45,22 +39,28 @@ class ServiceEngine(RailRunnable):
         self._select_service_all()
 
     def _select_service_multiple(self):
-        find_image_and_click(SERVICE_MULTIPLE_FILES,
+        service_multiple_files = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_multiple")
+        find_image_and_click(service_multiple_files,
                              msg="service multiple btn",
                              error_filename="fail_select_service_multiple")
         sleep_random(self.sleep_service_multiple)
 
     def _select_all_needing_service(self):
-        find_image_and_click(ALL_NEEDING_SERVICE_FILES,
+        all_needing_service_files = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/all_needing_service")
+        find_image_and_click(all_needing_service_files,
                              msg="all needing service btn",
                              error_filename="fail_select_all_needing_service")
         sleep_random(self.sleep_all_needing_service)
 
     def _select_service_all(self):
-        on_screen_service_all, _, _, _ = any_image_on_screen(SERVICE_ALL_LABEL_FILES)
-        on_screen_service_unavailable, _, _, _ = any_image_on_screen(SERVICE_UNAVAILABLE_LABEL_FILES)
+        service_all_label_files = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_all")
+        service_unavailable_label_files = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_unavailable")
+
+        on_screen_service_all, _, _, _ = any_image_on_screen(service_all_label_files)
+        on_screen_service_unavailable, _, _, _ = any_image_on_screen(service_unavailable_label_files)
+
         if on_screen_service_all:
-            find_image_and_click(SERVICE_ALL_LABEL_FILES,
+            find_image_and_click(service_all_label_files,
                                  msg="service all",
                                  error_filename="fail_select_service_all")
             sleep_random(self.sleep_service_all)

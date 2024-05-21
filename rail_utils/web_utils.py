@@ -2,14 +2,13 @@ import logging
 import os
 import time
 
+from rail_utils.folders_paths import RELOAD_FOLDER
 from rail_utils.rail_utils import find_image_and_click, any_image_on_screen, close_all_pop_ups, \
     get_image_paths_from_folder
 from rail_utils.tabs_util import TAB_STATUS_DIR
 
 RELOAD_LOOP_TIME = 15
 RELOAD_MAX_TIME = 5 * 60
-GENERAL_FOLDER = "data/general"
-RELOAD_FOLDER = GENERAL_FOLDER + "/reload"
 
 logging.root.setLevel(logging.INFO)
 
@@ -22,6 +21,7 @@ def reload_web() -> bool:
     find_image_and_click(reload_image_paths,
                          msg="reload btn",
                          error_filename="fail_reload_web")
+
     while time.time() - start_time < RELOAD_MAX_TIME:
         time.sleep(RELOAD_LOOP_TIME)
         on_screen, _, _, _ = any_image_on_screen(possible_states)
