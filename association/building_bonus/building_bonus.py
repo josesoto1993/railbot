@@ -10,6 +10,7 @@ from rail_utils.tabs_util import open_tab
 BONUS_MINUTES_TO_RECHECK = 3
 
 # TODO: revisar toda la carpeta data/widget y verificar se usan todas las imagenes
+# TODO: esto esta super viejo, la carpeta no debe ir aqui, lo archivos se deben cargar por carpeta
 WIDGET_FOLDER = "data/widget"
 WIDGET_BASE = WIDGET_FOLDER + "/widget_base.png"
 WIDGET_BASE_SMALL = WIDGET_FOLDER + "/widget_base_small.png"

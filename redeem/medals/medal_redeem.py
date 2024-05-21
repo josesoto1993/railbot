@@ -8,8 +8,6 @@ from rail_utils.tabs_util import open_tab
 
 MEDAL_REDEEM_MINUTES_TO_RECHECK = 120
 
-REDEEM_MEDAL_LABEL_FILES = get_image_paths_from_folder("data/tab_medal/redeem")
-
 logging.basicConfig(level=logging.INFO)
 
 
@@ -36,15 +34,23 @@ class MedalRedeem(RailRunnable):
         self._redeem_all()
 
     def _redeem_all(self):
-        on_screen, _, _, _ = any_image_on_screen(REDEEM_MEDAL_LABEL_FILES)
+        logging.debug("Try redeem medals")
+        redeem_medal_label_files = get_image_paths_from_folder("data/tab_medal/redeem")
+        on_screen, _, _, _ = any_image_on_screen(redeem_medal_label_files)
 
         if not on_screen:
             logging.debug("No medal to redeem")
             return
 
         while on_screen:
-            find_image_and_click(REDEEM_MEDAL_LABEL_FILES,
-                                 msg="redeem medal",
-                                 error_filename="fail_redeem_all")
-            sleep_random(self.sleep_redeem_all)
-            on_screen, _, _, _ = any_image_on_screen(REDEEM_MEDAL_LABEL_FILES)
+            on_screen = self._redeem_one(filepaths=redeem_medal_label_files)
+
+    def _redeem_one(self, filepaths: list[str]):
+        logging.debug("try redeem one medal")
+        find_image_and_click(filepaths,
+                             msg="redeem medal",
+                             error_filename="fail_redeem_all")
+
+        sleep_random(self.sleep_redeem_all)
+        on_screen, _, _, _ = any_image_on_screen(filepaths)
+        return on_screen

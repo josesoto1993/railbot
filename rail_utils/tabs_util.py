@@ -2,21 +2,17 @@ import glob
 import logging
 import os
 
+from rail_utils.folders_paths import TAB_STATUS_DIR
 from rail_utils.rail_utils import image_on_screen, wait_rail_response, get_screenshot, click_on_rect_area, \
     get_image_size, move_mouse_close_to_top_right, any_image_on_screen, close_all_pop_ups, ERROR_FOLDER
 from rail_utils.tabs_enum import Tab, Tabs
 
 BASE_REGEX = "_base"
-
 SELECTED_REGEX = "_selected"
-
 DEFAULT_IMG_SUFFIX = '.png'
-
-TAB_STATUS_DIR = 'data/tabs_status'
+RETRIES_TO_LOAD_TAB = 5
 
 logging.basicConfig(level=logging.INFO)
-
-RETRIES_TO_LOAD_TAB = 5
 
 
 def open_tab(tab_enum: Tab):
