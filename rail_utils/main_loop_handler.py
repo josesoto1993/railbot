@@ -7,6 +7,8 @@ from rail_utils.rail_runnable import RailRunnable
 from rail_utils.rail_utils import count_down
 from rail_utils.web_utils import reload_web
 
+WAIT_HUMAN_CHECK_ERROR = 180
+
 ERRORS_TO_RELOAD = 10
 
 logging.root.setLevel(logging.INFO)
@@ -49,14 +51,25 @@ class MainLoopHandler:
     def _handle_run_exception(self, e):
         self.error_counter += 1
         logging.error(str(e))
-        if self.error_counter >= ERRORS_TO_RELOAD:
-            self._try_reload()
+        self._reload_if_needed()
+        self._wait_human_check_error()
 
-    def _try_reload(self):
-        try:
-            reload_web()
-            logging.info(f"Run reload: Start at {datetime.datetime.now().time()}")
-        except Exception as e:
-            logging.error(f"Run reload: error -> {e}")
-        finally:
-            self.error_counter = 0
+    def _reload_if_needed(self):
+        if self.error_counter >= ERRORS_TO_RELOAD:
+            try:
+                reload_web()
+                logging.info(f"Run reload: Start at {datetime.datetime.now().time()}")
+            except Exception as e:
+                logging.error(f"Run reload: error -> {e}")
+            finally:
+                self.error_counter = 0
+        else:
+            logging.info(f"No need reload, as {self.error_counter} errors is less than {ERRORS_TO_RELOAD}")
+
+    def _wait_human_check_error(self):
+        if self.enable_count_down:
+            count_down()
+            logging.info(f"Wait {WAIT_HUMAN_CHECK_ERROR} seconds to let an human check the error")
+            time.sleep(WAIT_HUMAN_CHECK_ERROR)
+        else:
+            logging.info("Human check wait disabled")

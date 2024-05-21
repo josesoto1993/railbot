@@ -4,9 +4,11 @@ import unittest
 import pyautogui
 
 from association.worker_bid.worker_bid import WorkerBid, ASSOCIATION_BID_DISABLED_FILES
-from rail_utils.rail_utils import get_screenshot, count_down, any_image_on_screen, image_on_screen
+from rail_utils.rail_utils import get_screenshot, count_down, any_image_on_screen, image_on_screen, \
+    get_image_paths_from_folder
 from rail_utils.tabs_enum import Tab
 from rail_utils.tabs_util import open_tab
+from rail_utils.web_utils import RELOAD_FOLDER
 
 logging.root.setLevel(logging.DEBUG)
 
@@ -57,8 +59,8 @@ def try_open_tab(tab_enum: Tab):
 
 class MainTest(unittest.TestCase):
     def test(self):
-        png_path = "data/tabs_status/engine_selected_small.png"
-        self.assertTrue(try_get_image(png_path, gray_scale=True))
+        reload_image_paths = get_image_paths_from_folder(RELOAD_FOLDER)
+        self.assertTrue(try_get_image_folder(reload_image_paths, gray_scale=True))
 
 
 if __name__ == '__main__':

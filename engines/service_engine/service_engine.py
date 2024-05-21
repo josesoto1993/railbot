@@ -2,7 +2,8 @@ import datetime
 import logging
 
 from rail_utils.rail_runnable import RailRunnable
-from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen, get_image_paths_from_folder
+from rail_utils.rail_utils import sleep_random, find_image_and_click, any_image_on_screen, get_image_paths_from_folder, \
+    ERROR_FOLDER, get_screenshot, ImageNotFoundException
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -13,6 +14,7 @@ TAB_ENGINE_FOLDER = "data/tab_engine"
 SERVICE_MULTIPLE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_multiple")
 ALL_NEEDING_SERVICE_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/all_needing_service")
 SERVICE_ALL_LABEL_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_all")
+SERVICE_UNAVAILABLE_LABEL_FILES = get_image_paths_from_folder(TAB_ENGINE_FOLDER + "/service_unavailable")
 
 logging.basicConfig(level=logging.INFO)
 
@@ -55,11 +57,15 @@ class ServiceEngine(RailRunnable):
         sleep_random(self.sleep_all_needing_service)
 
     def _select_service_all(self):
-        on_screen, _, _, _ = any_image_on_screen(SERVICE_ALL_LABEL_FILES)
-        if on_screen:
+        on_screen_service_all, _, _, _ = any_image_on_screen(SERVICE_ALL_LABEL_FILES)
+        on_screen_service_unavailable, _, _, _ = any_image_on_screen(SERVICE_UNAVAILABLE_LABEL_FILES)
+        if on_screen_service_all:
             find_image_and_click(SERVICE_ALL_LABEL_FILES,
                                  msg="service all",
                                  error_filename="fail_select_service_all")
             sleep_random(self.sleep_service_all)
-        else:
+        elif on_screen_service_unavailable:
             logging.debug("No need to service any engine")
+        else:
+            get_screenshot(save=True, filename=f"{ERROR_FOLDER}/service_all_or_none_not_found")
+            raise ImageNotFoundException("Service all or none not found")
