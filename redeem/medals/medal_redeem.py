@@ -2,7 +2,8 @@ import datetime
 import logging
 
 from rail_utils.rail_runnable import RailRunnable
-from rail_utils.rail_utils import find_image_and_click, sleep_random, any_image_on_screen, get_image_paths_from_folder
+from rail_utils.rail_utils import find_image_and_click, sleep_random, any_image_on_screen, get_image_paths_from_folder, \
+    image_on_screen
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
@@ -36,21 +37,21 @@ class MedalRedeem(RailRunnable):
     def _redeem_all(self):
         logging.debug("Try redeem medals")
         redeem_medal_label_files = get_image_paths_from_folder("data/tab_medal/redeem")
-        on_screen, _, _, _ = any_image_on_screen(redeem_medal_label_files)
+        on_screen, _, _, best_image = any_image_on_screen(redeem_medal_label_files)
 
         if not on_screen:
             logging.debug("No medal to redeem")
             return
 
         while on_screen:
-            on_screen = self._redeem_one(filepaths=redeem_medal_label_files)
+            on_screen = self._redeem_one(filepath=best_image)
 
-    def _redeem_one(self, filepaths: list[str]):
+    def _redeem_one(self, filepath: str):
         logging.debug("try redeem one medal")
-        find_image_and_click(filepaths,
+        find_image_and_click([filepath],
                              msg="redeem medal",
                              error_filename="fail_redeem_all")
 
         sleep_random(self.sleep_redeem_all)
-        on_screen, _, _, _ = any_image_on_screen(filepaths)
+        on_screen, _, _ = image_on_screen(filepath)
         return on_screen
