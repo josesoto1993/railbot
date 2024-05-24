@@ -68,7 +68,7 @@ class MainLoopHandler:
 
     def _wait_human_check_error(self):
         if self.enable_count_down:
-            count_down()
+            count_down(sleep_time=0.25, count=5)
             logging.info(f"Wait {WAIT_HUMAN_CHECK_ERROR} seconds to let an human check the error")
             time.sleep(WAIT_HUMAN_CHECK_ERROR)
         else:
