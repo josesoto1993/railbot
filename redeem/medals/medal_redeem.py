@@ -7,7 +7,7 @@ from rail_utils.rail_utils import find_image_and_click, sleep_random, any_image_
 from rail_utils.tabs_enum import Tabs
 from rail_utils.tabs_util import open_tab
 
-MEDAL_REDEEM_MINUTES_TO_RECHECK = 120
+MEDAL_REDEEM_MINUTES_TO_RECHECK = 600
 
 logging.basicConfig(level=logging.INFO)
 
