@@ -317,13 +317,10 @@ def beep():
     winsound.Beep(frequency, duration)
 
 
-def count_down():
-    time.sleep(1)
-    beep()
-    time.sleep(1)
-    beep()
-    time.sleep(1)
-    beep()
+def count_down(sleep_time=1, count=3):
+    for _ in range(count):
+        time.sleep(sleep_time)
+        beep()
 
 
 def timestamped_filename(filename="") -> str:

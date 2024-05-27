@@ -19,11 +19,11 @@ class RailRunnable(ABC):
 
     @abstractmethod
     def _run(self) -> None:
-        pass
+        raise NotImplementedError("Subclasses must implement _run")
 
     @abstractmethod
     def _update_next_run_time(self) -> None:
-        pass
+        raise NotImplementedError("Subclasses must implement _update_next_run_time")
 
     def _should_run(self) -> bool:
         return datetime.datetime.now() >= self.next_run_time
