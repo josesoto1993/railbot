@@ -1,7 +1,7 @@
 import os
 
 from association.worker_bid.worker_price_data import get_worker_preferences
-from association.worker_bid.workers_folders import WORKER_MAIN_FOLDER
+from rail_utils.folders_paths import WORKER_MAIN_FOLDER
 from rail_utils.rail_utils import get_folder_paths_from_folder
 
 

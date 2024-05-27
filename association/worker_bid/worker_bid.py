@@ -39,6 +39,7 @@ def get_worker_info_screenshot() -> Image:
     # Raise exception if any of the images is not found
     if not (on_screen_worker and on_screen_association and on_screen_bid):
         get_screenshot(save=True, filename=f"{ERROR_FOLDER}/worker_not_found")
+        logging.error(f"get_worker_info_screenshot error: {on_screen_worker}/{on_screen_association}/{on_screen_bid}")
         raise ImageNotFoundException("Failed to find one or more required images on screen for worker info")
 
     # Define the size and the top-left corner of the screenshot box
@@ -86,15 +87,6 @@ def click_amount_input():
     click_on_rect_area(target, size=size)
 
 
-def get_target_datetime(skip_till_next_worker: bool) -> datetime:
-    current_datetime = datetime.datetime.now()
-    if skip_till_next_worker:
-        target_datetime = get_target_datetime_if_skip_till_next_worker(current_datetime)
-    else:
-        target_datetime = current_datetime + datetime.timedelta(minutes=WORKER_BID_MINUTES_TO_RECHECK)
-    return target_datetime
-
-
 def get_target_datetime_if_skip_till_next_worker(current_datetime: datetime) -> datetime:
     # Set next run time to the next hour with adjusted minutes
     target_hour = (current_datetime.hour + 1) % 24
@@ -113,7 +105,6 @@ class WorkerBid(RailRunnable):
     def __init__(self):
         super().__init__()
         self.task_name = self.__class__.__name__
-        self.next_run_time = datetime.datetime.now()
         self.sleep_is_bid_disabled = 5
         self.sleep_select_worker_details = 5
         self.sleep_click_send_bid = 10
@@ -125,8 +116,15 @@ class WorkerBid(RailRunnable):
         self._run_worker_bid()
 
     def _update_next_run_time(self):
-        self.next_run_time = get_target_datetime(self.skip_till_next_worker)
+        self.next_run_time = self._get_target_datetime()
         logging.debug(f"Next {self.__class__.__name__} check at {self.next_run_time.time()}")
+
+    def _get_target_datetime(self) -> datetime:
+        current_datetime = datetime.datetime.now()
+        if self.skip_till_next_worker:
+            return get_target_datetime_if_skip_till_next_worker(current_datetime)
+        else:
+            return current_datetime + datetime.timedelta(minutes=WORKER_BID_MINUTES_TO_RECHECK)
 
     def _run_worker_bid(self):
         logging.debug(f"Run {self.__class__.__name__}: Start at {datetime.datetime.now().time()}")

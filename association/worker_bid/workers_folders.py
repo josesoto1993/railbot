@@ -1,5 +1,3 @@
-WORKER_MAIN_FOLDER = "data/workers"
-
 WORKER_ACCELERATION = "worker_acceleration"
 WORKER_BUILD_DISCOUNT = "worker_build_discount"
 WORKER_CITY_CONNECTOR = "worker_city_connector"
